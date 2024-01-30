@@ -1,0 +1,14 @@
+# Main
+
+*.png
+*.wav
+*.ogg
+
+# Other
+
+*.json
+*.kra
+*.ds_store
+*.pdn
+*.aseprite
+*.ini

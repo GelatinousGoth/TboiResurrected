@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <name>!! Tboi Resurrected</name>
+    <directory>!! resurrected</directory>
+    <id>2761134241</id>
+    <description>[h1]What is Tboi Resurrected? What does it add?[/h1]
+TR is a giant modpack with over 200 GFX/visual changing mods that I originally compiled for myself but decided to share with the community. I've also been adding alot of my own sprites and have been tweaking other peoples sprites over time as well. However, I would like to clarify something pretty important:
+None of these mods are my own and neither do I claim that they are, I just thought this would be useful for avoiding lag and mod compatibility.
+And yes, all the mods included have been made completely compatible with one another.
+
+Along with the many visual changes and upgrades, TR includes some game-play-changing mods as well. But, these I consider to be rather minor changes and are solely in the pack because I believe they are worthy of being added to the main game. These are:
+- HUD Toggle
+- Amazing Chest Ahead (No Haunted Chest Items)
+- Bomb-able Devil Statues (Balanced Better)
+- Fool's Goldmines
+- ??? Pill Rename
+- Seven Floors of Bad Luck
+- Item Chests Before Mother (Only 2 Chests)
+- Bell Chime for Good Items
+- Fallen Gabriel spawns an imp instead of an angelic baby
+
+Check the linked collection below to see all the specific mods within the pack too.
+If you have a suggestion for a mod that you'd like to see added, please use the suggestions discussion thread.
+
+[h1]Modpack details:[/h1]
+I have taken bits and pieces from all of these and if any of the mod creators want me to do stuff, naturally, I'd be happy to oblige. I will also be updating this regularly with every new worthwhile visual upgrading or game-play changing mod that comes out and I hope this mod helps out people with lag as it has done for me. It doesn't include jokey re-sprites because I like being true to the original game. This of course means if you have other visual changing mods active, they may conflict. If you have mods active that are already in this pack, nothing should happen.. Except that you'll be loading that duplicate mod for no reason.
+
+Needed Mods:
+- Custom Stage API is needed for Missing Tears GFX to work.
+- Improved &amp; Reworked Foes is needed otherwise some bosses will have broken sprites.
+
+Recommended Mods:
+- https://steamcommunity.com/sharedfiles/filedetails/?id=3057349799
+- https://steamcommunity.com/sharedfiles/filedetails/?id=2938562326
+- https://steamcommunity.com/sharedfiles/filedetails/?id=2808882244 
+- https://steamcommunity.com/sharedfiles/filedetails/?id=3107452586
+(These can't be added to TR due to the way they are coded).
+
+Known Mod Incompatibilities &amp; Conflicts:
+- Any mod that changes menu UI will conflict with this one. Remove the conflicting sprites from either mods files, depending on which you want to keep.
+- Detailed Respawn [REP] makes the health UI invisible.
+
+[h1]Thank you![/h1]
+Big thanks to all the creators of the mods within the pack, thank you for constantly adding your own additions and upgrades to Tboi and always keeping it fresh and interesting to play. You make both the community and the game better with what you create and I hope it continues for the foreseeable future.
+[img]https://i.imgur.com/81eM7ky.png[/img]</description>
+    <version>1.132</version>
+    <visibility>Public</visibility>
+    <tag id="Lua"/>
+    <tag id="Tweaks"/>
+    <tag id="Graphics"/>
+    <tag id="Shaders"/>
+    <tag id="Sound Effects"/>
+    <tag id="Music"/>
+</metadata>

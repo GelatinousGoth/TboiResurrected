@@ -1,0 +1,5 @@
+<sounds root = "sfx/">
+    <sound name = "Chime">
+        <sample weight = "1" path = "Chime.wav" />
+    </sound>
+</sounds>

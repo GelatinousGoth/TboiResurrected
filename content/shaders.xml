@@ -1,0 +1,62 @@
+<shaders>
+	 <shader name="Hot_HeatWave">
+        <parameters>
+            <param name="Time" type="float"/>
+            <param name="Intensity" type="float"/>
+            <param name="WaveSpeed" type="float"/>
+        </parameters>
+        <vertex><![CDATA[
+            attribute vec3 Position;
+            attribute vec4 Color;
+            attribute vec2 TexCoord;
+            attribute vec4 RenderData;
+            attribute float Scale;
+            attribute float Time;
+            attribute float Intensity;
+            attribute float WaveSpeed;
+            varying vec4 Color0;
+            varying vec2 TexCoord0;
+            varying vec4 RenderDataOut;
+            varying float ScaleOut;
+            varying float TimeOut;
+            varying float IntensityOut;
+            varying float WaveSpeedOut;
+            uniform mat4 Transform;
+
+            void main(void) {
+                Color0 = Color;
+                TexCoord0 = TexCoord;
+                TimeOut = Time;
+                IntensityOut = Intensity;
+                WaveSpeedOut = WaveSpeed;
+                gl_Position = Transform * vec4(Position.xyz, 1.0);
+            }
+        ]]></vertex>
+        <fragment><![CDATA[#version 130
+            varying lowp vec4 Color0;
+            varying mediump vec2 TexCoord0;
+            varying lowp vec4 RenderDataOut;
+            varying lowp float ScaleOut;
+            varying lowp float TimeOut;
+            varying lowp float IntensityOut;
+            varying lowp float WaveSpeedOut;
+            uniform sampler2D Texture0;
+
+            void main(void) {
+                float frequency = 60.0;
+                float amplitude = IntensityOut / 1000.0;
+                float speed = WaveSpeedOut / 100.0;
+                
+                vec2 uv = TexCoord0.xy;
+                float distortion = sin(uv.y * frequency + TimeOut * speed) * amplitude;
+
+                float ratio = TimeOut * 0.001;
+                uv.x += distortion * sin(ratio);
+                uv.y += distortion * (1.0 - cos(ratio));
+                            
+                vec4 tex = Color0 * texture(Texture0, uv);
+                gl_FragColor = tex;
+            }
+        ]]></fragment>
+    </shader>
+</shaders>

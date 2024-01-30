@@ -1,0 +1,6 @@
+<ItemPools>
+	<Pool Name="redChest">
+		<!--Red Key-->
+		<Item Id="580" Weight="0.2" DecreaseBy="0.05" RemoveOn="0.01"/>
+	</Pool>
+</ItemPools>
