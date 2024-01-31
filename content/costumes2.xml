@@ -1,0 +1,14 @@
+﻿<costumes anm2root="gfx/characters/">
+	<costume anm2path="character_08_azazel_toothandnail.anm2" type="none" priority="51" skinColor="5" overwriteColor="true" />
+
+	<costume anm2path="character_b05_bluebaby_ipecac.anm2" type="none" priority="99" />
+	<costume anm2path="character_b05_bluebaby_scorpio.anm2" type="none" priority="99" hasSkinAlt="true" />
+	<costume anm2path="character_b05_bluebaby_bluecap.anm2" type="none" priority="99" hasSkinAlt="true" />
+	<costume anm2path="character_b05_bluebaby_barofsoap.anm2" type="none" priority="99" hasSkinAlt="true" />
+	<costume anm2path="character_b05_bluebaby_knockoutdrops.anm2" type="none" priority="99" hasSkinAlt="true" />
+	<costume anm2path="character_b05_bluebaby_revelation.anm2" type="none" priority="99" hasSkinAlt="true" />
+
+	<costume anm2path="character_b15_theforgotten_mushroom.anm2" type="none" priority="19" />
+	<costume anm2path="character_b15_theforgotten_bob.anm2" type="none" priority="19" />
+	<costume anm2path="character_b15_theforgotten_poop.anm2" type="none" priority="19" />
+</costumes>
