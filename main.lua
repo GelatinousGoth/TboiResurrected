@@ -4,6 +4,7 @@ mod.json = require("json")
 Isaac.DebugString("[Tboi Resurrected] \"Tboi Resurrected\" initialized.")
 
 mod.Mods = {}
+mod.RemovedCallbacks = {}
 
 mod.CurrentModName = "Tboi Resurrected"
 mod.LockCallbackRecord = false
@@ -55,7 +56,7 @@ require("resurrected_modpack.shaders.hotter_mines")
 
 require("resurrected_modpack.graphics.better_donation_machines")
 
-require("resurrected_modpack.removals.items_renamed")
+require("resurrected_modpack.qol.items_renamed")
 
 require("resurrected_modpack.sounds.bell_chime_for_good_items")
 
