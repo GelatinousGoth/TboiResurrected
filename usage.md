@@ -11,12 +11,12 @@
 
     - if the original mod variable was a **global** variable, or if the mod reference is ever copied to a global variable (like ***FiendFolio = mod***) then [additional steps](#global_mod_reference) need to be taken.
 
-- Add a line ***mod.CurrentModName = "modName"***
+- Add a line ***mod.CurrentModName = "modName"*** (can be placed anywhere, as long as it's before any **AddCallback**)
 
 - Check for any instances of the **AddCallback**, **AddPriorityCallback** or **RemoveCallback** function that happens to be executed at run-time, rather than on mod load.
     - If any of them are found then follow the transformation guidelines within this [section](#runtime_callbacks)
 
-- Check if the **json** library is used, this can be done by searching for any instance of ***require()***
+- Check if the **json** library is used, this can be done by searching for any instance of ***require("json")***
     - If there are any, replace all instances of the **json** variable with **mod.json**
     - Then follow the guidelines proposed by the [Save Data](#save_data) section.
 
@@ -26,11 +26,11 @@
 
 The first thing that needs to be done is finding out **Why** the mod reference is global:
 
-- The mod reference is global because it needs to be **passed to other lua files** (usually you will find in other lua files the lines ***mod = FiendFolio***)
+- The mod reference is global because it needs to be **passed to other lua files** (usually you will find the lines ***mod = FiendFolio*** inside of the other **.lua** files)
     - In this case simply replace all instances of the global mod reference with ***require("resurrected_modpack.mod_reference")***
 - The mod reference is global because it **allows other mods to access it's features**
     - In this case you need to find all the functions/variables that are exposed to other mods and replace all instances of the mod reference which *do not belong to this group* with a local mod reference (whilst also renaming each of this instance).
-    - Then proceed to create a new table which has the name of the original mod reference, like this:***FiendFolio = {}***
+    - Then proceed to create a new table which has the name of the original mod reference, like this: ***FiendFolio = {}***
 
 #### Run-Time Callbacks <a id="runtime_callbacks"></a>
 
@@ -40,18 +40,18 @@ The first thing that needs to be done is finding out **Why** the mod reference i
 If these are not specified within the Add or Remove function then the **mod.CurrentModName** and **mod.LockCallbackRecord** variables are used instead.
 
 - **AddCallback**: ***mod:AddCallback(callbackId, callbackFn, entityId)*** becomes ***mod:AddCallback(callbackId, callbackFn, entityId, modName, lockCallbackRecord)***
-    - In those situation in which *entityId* is not present within the original source code simply replace it with **nil**
+    - In those situations in which *entityId* is not present within the original source code simply replace it with **nil**
 - **AddPriorityCallback**: ***mod:AddPriorityCallback(callbackId, priority, callbackFn, entityId)*** becomes ***mod:AddPriorityCallback(callbackId, priority, callbackFn, entityId, modName, lockCallbackRecord)***
-    - In those situation in which *entityId* is not present within the original source code simply replace it with **nil**
+    - In those situations in which *entityId* is not present within the original source code simply replace it with **nil**
 - **RemoveCallback**: ***mod:RemoveCallback(callbackId, callbackFn)*** becomes ***mod:RemoveCallback(callbackId, callbackFn, modName, lockCallbackRecord)***
 
 #### Save Data <a id="save_data"></a>
 
-There is not really a sure fire way of handling mods with Save Data, as they are a case by case scenario.
+There is not really a sure fire way of handling mods with Save Data, as they are a case by case scenario, but this is the general procedure you should follow:
 
 - The first thing to do is finding the functions that handle **Loading** and **Saving** Data.
-     They can both be easily found by searching for the **mod:LoadData()** (or **Isaac.LoadModData()**) and **mod:SaveData()** (or **Isaac.SaveModData()**) functions, respectively.
+     - They can both be easily found by searching for the **mod:LoadData()** (or **Isaac.LoadModData()**) and **mod:SaveData()** (or **Isaac.SaveModData()**) functions, respectively.
 
-- The **Loading** function is most likely fine the way it is, with the only minor adjustment being that must be taken from the respective mod's decoded table (which should be SaveData.Mods[**\<modName\>**], with modName being the string used for mod.CurrentModName)
+- The **Loading** function is most likely fine as is, with the only minor adjustment being that the data must be taken from the respective mod's decoded table (which should be DecodedTable.Mods[**\<modName\>**], with modName being the string used for mod.CurrentModName)
 
-- The **Saving** function needs to be remove from the AddCallback function, and renamed to **mod.Mods[\<modName\>].SaveData** and the data that is either decoded by *json.decode()* or passed to the *mod.SaveData()* function must be returned, instead, in the form of a table.
+- The **Saving** function needs to be removed from any AddCallback function, and must be renamed to **mod.Mods[\<modName\>].SaveData**. Then look for the data that is either being decoded by *json.decode()* or that's passed to the *mod.SaveData()* function  and, instead of saving it using those functions, return it in the form of a table.
