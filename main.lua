@@ -12,6 +12,7 @@ mod.LockCallbackRecord = false
 require("resurrected_modpack.api_overwrite.callback")
 require("resurrected_modpack.tools.custom_callbacks")
 require("resurrected_modpack.tools.console_commands")
+require("resurrected_modpack.tools.reworked_foes_compatibility")
 
 require("resurrected_modpack.tweaks.lamb_intro_invincibility")
 require("resurrected_modpack.tweaks.chests_before_mother")
@@ -36,6 +37,11 @@ require("resurrected_modpack.graphics.improved_backdrops_void_overlay")
 require("resurrected_modpack.graphics.improved_backdrops")
 require("resurrected_modpack.graphics.beast_laugh_on_damage")
 require("resurrected_modpack.graphics.gehenna_visual_tweaks")
+
+require("resurrected_modpack.graphics.crawlspaces_rebuilt")
+require("resurrected_modpack.graphics.antibirth_hornfel_trail")
+require("resurrected_modpack.graphics.forgotten_got_real_chain")
+require("resurrected_modpack.graphics.bygone_over_bb")
 
 require("resurrected_modpack.tweaks.amazing_chest_ahead")
 

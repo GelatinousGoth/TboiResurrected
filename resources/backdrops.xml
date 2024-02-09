@@ -246,7 +246,7 @@
 		pit			= "grid_pit_secret.png"
 	/>
 	
-	<backdrop id="24" gfx="0E_DiceRoom.png" walls="2" wallvariants="2" floors="1" floorvariants="6"
+	<backdrop id="24" gfx="0E_DiceRoom.png" walls="1" wallvariants="2" floors="1" floorvariants="6"
 		nfloorgfx	= "0E_DiceRoom_nfloor.png"
 		door		= "door_00_reddoor.png"
 		rocks		= "rocks_dice.png"
