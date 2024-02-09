@@ -1,5 +1,5 @@
 <entities anm2root="gfx/" version="5">
-	    <entity anm2path="102.001_ (final boss).anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="100" collisionRadius="0" friction="0" id="79" name="Blue Baby Corpse" numGridCollisionPoints="0" shadowSize="32" stageHP="0"
+    <entity anm2path="102.001_ (final boss).anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="100" collisionRadius="0" friction="0" id="79" name="Blue Baby Corpse" numGridCollisionPoints="0" shadowSize="32" stageHP="0"
     variant="2021" subtype="0">
         <gibs amount="9" blood="1" bone="1" eye="0" gut="1" large="1" worm="1" />
     </entity>
@@ -77,3 +77,9 @@
 
 </entities>
 <!-- OLD ENTRY <entity anm2path="dream_catcher_entity.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" id="960" name="Hanging Dream Catcher" numGridCollisionPoints="0" shadowSize="13" stageHP="0" variant="245" shutdoors="false"/> -->	
+
+<entities anm2root="gfx/" version="5" deathanm2="gfx/death_enemies.anm2">
+     <entity anm2path="none.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" id="1000" name="SW Cord helper" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="2650" >
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+     </entity>
+</entities>

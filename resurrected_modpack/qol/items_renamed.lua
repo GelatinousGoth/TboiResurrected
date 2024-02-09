@@ -5,7 +5,7 @@ mod.CurrentModName = "Items Renamed"
 -- {itemId, 'name', 'desc'}
 local items = {
     --$$$ITEMS-START$$$
-    {276, "Veyeral Heart", "Void Rains Upon It"}, {561, "Almond Water", "Backroom Beverage"}, {581, "Grey Matter", "Cerebral Discharge"}, {775, "Blue Milk", "HP + DMG Up, Perfect Freeze"}, {745, "Cool Shades", "Gold Rush"}, {809, "SPAM!", "Hunger Down"}, {904, "Fighter's Trophy", "It's The Winner!"}, {861, "Spherical Dice", "-0.1"}, {919, "Packed Lunch", "HP Up + Energy Up!"}, {844, "Hellhound Kibble", "DMG Up + It's all burnt"} 
+    {276, "Veyeral Heart", "Void Rains Upon It"}, {190, "Arson", "99 Bombs"}, {256, "Hot Bombs", "Incendiary Blast +5 Bombs"}, {561, "Almond Water", "Backroom Beverage"}, {581, "Grey Matter", "Cerebral Discharge"}, {775, "Blue Milk", "HP + DMG Up, Perfect Freeze"}, {745, "Cool Shades", "Gold Rush"}, {809, "SPAM!", "Hunger Down"}, {904, "Fighter's Trophy", "It's The Winner!"}, {861, "Spherical Dice", "-0.1"}, {919, "Packed Lunch", "HP Up + Energy Up!"}, {844, "Hellhound Kibble", "DMG Up + It's all burnt"} 
   
   }
   
