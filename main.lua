@@ -16,6 +16,7 @@ require("resurrected_modpack.tools.reworked_foes_compatibility")
 
 require("resurrected_modpack.tweaks.lamb_intro_invincibility")
 require("resurrected_modpack.tweaks.chests_before_mother")
+require("resurrected_modpack.tweaks.rare_chests")
 
 require("resurrected_modpack.sounds.shepard_tone")
 
