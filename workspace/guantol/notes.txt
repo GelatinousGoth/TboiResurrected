@@ -1,9 +1,6 @@
 - overall
 	Rework all functions that use the mod:SaveData() function.
 
-- chests_before_mother
-	Could just use IsFirstVisit() without needing to keep track of everything else or to save data
-
 - custom_corpse_chest
 	Can be Optimized
 	Is not compatible with mods that modify the Corpse stage name.
