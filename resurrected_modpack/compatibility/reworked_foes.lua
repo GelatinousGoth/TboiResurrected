@@ -20,15 +20,22 @@ local isDeliriumInRoom = false
 
 local delayedDeliriumAnm2 = {}
 
---------------------------------------------DATA TABLES--------------------------------------------
+local BossPortraitLayer = 4
+local BossNameLayer = 7
 
-if not REPENTOGON then -- Add A BossType if a new one needs to be added somewhere else (Technically not necessary just for clarity)
-    BossType = BossType or {}
-    BossType.GISH = BossType.GISH or 19
-    BossType.TRIACHNID = BossType.TRIACHNID or 42
-    BossType.BLUE_BABY = BossType.BLUE_BABY or 41
-    BossType.THE_FORSAKEN = BossType.THE_FORSAKEN or 59
+local isCustomVersusScreen
+local isOddFrame
+
+local versusBossSprite = Sprite()
+versusBossSprite:Load("gfx/ui/boss/versusscreen.anm2", false)
+
+local function ResetVersusSpriteSheet()
+    for i=0, versusBossSprite:GetLayerCount() do
+        versusBossSprite:ReplaceSpritesheet(i, "gfx/null.png")
+    end
 end
+
+--------------------------------------------DATA TABLES--------------------------------------------
 
 local reworkedAnm2 = { -- Add a new entry if the animation for the Reworked Enemy cannot be merged with Vanilla {EntityType, EntityVariant, Anm2Path}
     [BossType.GISH] = {EntityType.ENTITY_MONSTRO2, 1, "gfx/043.001_gish_reworked.anm2"},
@@ -65,6 +72,21 @@ local deliriumSprites = { -- When a new reworkedAnm2 entry is created add the de
 
 local deliriumAnm2 = { -- If the deliriumSprites method doesn't work create a specific anm2 file and add it here
     [BossType.TRIACHNID] = "gfx/bosses/afterbirthplus/deliriumforms/101.001_triachnid_reworked.anm2"
+}
+
+local VersusSprite = { -- If the Boss requires a different spritesheet for the Versus Screen Portrait then add it here
+    [BossType.BLUE_BABY] = {
+        [BossPortraitLayer] = {
+            Original = "gfx/ui/boss/portrait_102.1_bluebaby.png",
+            Vanilla = "gfx/ui/boss/portrait_102.1_bluebaby_vanilla.png",
+            Reworked = "gfx/ui/boss/portrait_102.1_bluebaby_reworked.png"
+        },
+        [BossNameLayer] = {
+            Original = "gfx/ui/boss/bossname_102.1_bluebaby.png",
+            Vanilla = "gfx/ui/boss/bossname_102.1_bluebaby_vanilla.png",
+            Reworked = "gfx/ui/boss/bossname_102.1_bluebaby_reworked.png"
+        }
+    }
 }
 
 ---------------------------------------------FUNCTIONS---------------------------------------------
@@ -177,5 +199,59 @@ mod:AddCallback(ModCallbacks.MC_POST_NPC_INIT, function() isDeliriumInRoom = tru
 mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, CheckForDeliriumPresence, EntityType.ENTITY_DELIRIUM)
 
 mod:AddCallback(ModCallbacks.MC_PRE_NPC_UPDATE, ApplyReworkedDeliriumSpriteSheet, EntityType.ENTITY_DELIRIUM)
+
+local function CheckForCustomVS()
+	isCustomVersusScreen = false
+	local room = Game():GetRoom()
+	if (room:GetType() == RoomType.ROOM_BOSS) and (not room:IsClear()) then
+        local BossId = room:GetBossID()
+        if not VersusSprite[BossId] then
+            return
+        end
+        if mod.Functions.GetStageAPIBossId() then
+            return
+        end
+
+        ResetVersusSpriteSheet()
+        local Mode = "Vanilla"
+        if ReworkedFoes then
+            Mode = "Reworked"
+        end
+        for layer, sheet in pairs(VersusSprite[BossId]) do
+            local spriteSheet = sheet[Mode] or sheet.Vanilla
+            versusBossSprite:ReplaceSpritesheet(layer, spriteSheet)
+        end
+        versusBossSprite:LoadGraphics()
+        isCustomVersusScreen = true
+    else
+        isCustomVersusScreen = false
+	end
+end
+
+local function RenderCustomVS()
+    isOddFrame = not isOddFrame
+    if isCustomVersusScreen then
+        if not Game():IsPaused() then
+            versusBossSprite:Stop()
+        end
+        if not versusBossSprite:IsPlaying("Scene") then
+            versusBossSprite:Play("Scene", true)
+        end
+        versusBossSprite:Render(mod.Functions.GetScreenSize() / 2, Vector.Zero, Vector.Zero)
+        if isOddFrame then
+            versusBossSprite:Update()
+        end
+    else
+        if versusBossSprite:IsPlaying("Scene") then
+            versusBossSprite:Stop()
+        end
+    end
+end
+
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, CheckForCustomVS)
+
+mod:AddCallback(ModCallbacks.MC_POST_RENDER, RenderCustomVS)
+
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function() isCustomVersusScreen = false end)
 
 mod.LockCallbackRecord = previousLockCallbackRecord
