@@ -1,9 +1,5 @@
 - overall
 	Rework all functions that use the mod:SaveData() function.
-
-- hanging_dream_catcher
-	Could use a Rework
-	Apparently Bugged as reported by some users in the comments of the workshop page
 	
 - items_renamed
 	apply changes only after all the mods are loaded
