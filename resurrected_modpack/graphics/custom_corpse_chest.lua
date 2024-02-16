@@ -2,21 +2,22 @@ local mod = require("resurrected_modpack.mod_reference")
 
 mod.CurrentModName = "Custom Corpse Chest"
 
-function mod:POST_UPDATE()		
+function mod:POST_BIGCHEST_INIT(entity)
 	local level = Game():GetLevel()
 	local stage = level:GetAbsoluteStage()
-	local name = level:GetName()
+	local stageType = level:GetStageType()
 
-	if ((stage == LevelStage.STAGE4_2) and (name == "Corpse II")) then
-		local entities = Isaac.GetRoomEntities()
-		for i = 1, #entities do
-			if entities[i].Type == EntityType.ENTITY_PICKUP and entities[i].Variant == PickupVariant.PICKUP_BIGCHEST and entities[i].SubType ~= 666 then
-				local pos = entities[i].Position
-				entities[i]:Remove()
-				Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 666, pos, Vector(0,0), null)
-			end		
-		end
+	if (stage == LevelStage.STAGE4_1 or stage == LevelStage.STAGE4_2) and stageType == StageType.STAGETYPE_REPENTANCE then
+
+		local chestSprite = entity:GetSprite()
+
+		chestSprite:ReplaceSpritesheet(0, "gfx/items/pick ups/pickup_corpse_chest.png")
+		chestSprite:ReplaceSpritesheet(2, "gfx/items/pick ups/pickup_corpse_chest.png")
+		chestSprite:LoadGraphics()
 	end
+
 end
 
-mod:AddCallback( ModCallbacks.MC_POST_UPDATE, mod.POST_UPDATE )
+--callback land
+
+mod:AddCallback( ModCallbacks.MC_POST_PICKUP_INIT, mod.POST_BIGCHEST_INIT, PickupVariant.PICKUP_BIGCHEST )
