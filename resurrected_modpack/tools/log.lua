@@ -28,7 +28,10 @@ local function PrintError(String, FunctionName, ModName)
     end
 end
 
-local function Diagnostic(Diagnose, String)
+local function Diagnostic(Diagnose, String, ModName)
+    if not ModName then
+        ModName = DefaultModName
+    end
     if mod.Diagnostics[Diagnose] then
         Print("[DIAGNOSTICS ".. ModName .."]: " .. String)
     end

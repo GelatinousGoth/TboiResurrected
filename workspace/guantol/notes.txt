@@ -1,15 +1,12 @@
 - overall
 	Rework all functions that use the mod:SaveData() function.
 
-- custom_corpse_chest
-	Can be Optimized
-	Is not compatible with mods that modify the Corpse stage name.
-	Does not work in Corpse XL
-	Could be merged with red_ending_chest
-
 - hanging_dream_catcher
 	Could use a Rework
 	Apparently Bugged as reported by some users in the comments of the workshop page
 	
 - items_renamed
 	apply changes only after all the mods are loaded
+	
+- rare_chests
+	quality check

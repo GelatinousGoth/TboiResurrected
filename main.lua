@@ -2,8 +2,12 @@ local mod = require("resurrected_modpack.mod_reference")
 mod.json = require("json")
 mod.log = require("resurrected_modpack.tools.log")
 
+local TSILFolder = "resurrected_modpack.lib.library_of_isaac"
+
 mod.Lib = {}
 require("resurrected_modpack.lib.achievement_checker")
+mod.Lib.TSIL = require(TSILFolder .. ".TSIL")
+mod.Lib.TSIL.Init(TSILFolder)
 
 require("resurrected_modpack.enums")
 
@@ -42,6 +46,7 @@ require("resurrected_modpack.graphics.missing_tears_gfx")
 
 require("resurrected_modpack.tweaks.lamb_intro_invincibility")
 require("resurrected_modpack.tweaks.chests_before_mother")
+require("resurrected_modpack.tweaks.rare_chests")
 require("resurrected_modpack.tweaks.unique_delirium_door")
 require("resurrected_modpack.tweaks.fallen_gabriel_spawns_imps")
 require("resurrected_modpack.tweaks.bombable_devil_statue")

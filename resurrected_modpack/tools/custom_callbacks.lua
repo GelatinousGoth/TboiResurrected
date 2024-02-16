@@ -18,4 +18,8 @@ if not REPENTOGON then
     mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, PostModLoad)
 end
 
+ModCallbacks.MC_POST_ADD_COLLECTIBLE = ModCallbacks.MC_POST_ADD_COLLECTIBLE or TSIL.Enums.CustomCallback.POST_PLAYER_COLLECTIBLE_ADDED
+
+ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED = ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED or TSIL.Enums.CustomCallback.POST_PLAYER_COLLECTIBLE_REMOVED
+
 mod.LockCallbackRecord = false

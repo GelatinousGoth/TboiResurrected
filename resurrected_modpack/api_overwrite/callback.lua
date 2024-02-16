@@ -13,7 +13,7 @@ function mod:AddCallback(callbackId, callbackFn, optionalArg, modName, lockCallb
             end
             mod.RemovedCallbacks[callbackId] = {}
         end
-        Isaac.AddPriorityCallback(self, callbackId, -2^52, RemoveCallbackManager)
+        Isaac.AddPriorityCallback(self, callbackId, CallbackPriority.MAX, RemoveCallbackManager)
     end
 
     Isaac.AddCallback(self, callbackId, callbackFn, optionalArg)
@@ -42,7 +42,7 @@ function mod:AddPriorityCallback(callbackId, priority, callbackFn, optionalArg, 
             end
             mod.RemovedCallbacks[callbackId] = {}
         end
-        Isaac.AddPriorityCallback(self, callbackId, -2^52, RemoveCallbackManager)
+        Isaac.AddPriorityCallback(self, callbackId, CallbackPriority.MAX, RemoveCallbackManager)
     end
 
     Isaac.AddPriorityCallback(self, callbackId, priority, callbackFn, optionalArg)
