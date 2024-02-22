@@ -56,4 +56,3 @@ else
         return TSIL.Players.DoesAnyPlayerHasItem(CollectibleId, IgnoreModifiers)
     end
 end
-

@@ -100,5 +100,6 @@ function mod:OnNewRoom()
         end
     end
 end
+
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.OnNewRoom)
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.OnNewRoom)

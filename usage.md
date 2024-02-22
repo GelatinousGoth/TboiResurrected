@@ -15,7 +15,7 @@
     local FiendFolio = RegisterMod("Fiend Folio", 1) -- Local variable
     FiendFolio = RegisterMod("FiendFolio", 1) -- Global variable
     ```
-    - ⚠️`NOTE`: Because of how LUA tables work (and with mod reference being a table) when the `=` operator is used on a table this does not create a copy of a table but rather an **alias** to that table (in simpler terms you can now modify the table using both the original table name and the new table name).
+    - ⚠️**NOTE**: Because of how LUA tables work (and with mod reference being a table) when the `=` operator is used on a table this does not create a copy of a table but rather an **alias** to that table (in simpler terms you can now modify the table using both the original table name and the new table name).
     Because of this if a mod reference is defined as a **local** variable and then an alias is defined as a **global** variable, then the mod reference has become a **global** variable, and must be handled as such.
     ```lua
     local mod = RegisterMod("Fiend Folio", 1) -- ModReference defined as a local variable
@@ -170,3 +170,34 @@ There is not really a sure fire way of handling mods with Save Data, as they are
 - The **Loading** function is most likely fine as is, with the only minor adjustment being that the data must be taken from the respective mod's decoded table (which should be DecodedTable.Mods[**\<modName\>**], with modName being the string used for mod.CurrentModName)
 
 - The **Saving** function needs to be removed from any AddCallback function, and must be renamed to **mod.Mods[\<modName\>].SaveData**. Then look for the data that is either being decoded by *json.decode()* or that's passed to the *mod.SaveData()* function and, instead of saving it using those functions, return it in the form of a table.
+
+#### Enable/Disable Mod:
+
+Each Mod can be Disabled or Enabled as long as at least one Callback is Recorded for that specific Mod
+
+⚠️**NOTE**: A callback is registered when the `mod:AddCallback` function is used whilst with **LockCallbackRecord** is set to false
+
+When a mod is toggled the program follows this procedure:
+
+- Check if the Mod was already Enabled/Disabled, if it was don't do anything and print a Warning Message, unless the **warn** parameter set to false.
+
+- Check if a `PreEnableMod` (or `PreRemoveMod`) method is specified and if so execute it.
+
+- Check if a custom `EnableMod` (or `RemoveMod`) method is specified and if so execute it, otherwise use the Default one.
+
+- Check if a `PostEnableMod` (or `PostRemoveMod`) method is specified and if so execute it.
+
+⚠️**NOTE**: For reference the **Default** enable/disable method simply Adds/Removes all callbacks registered for that mod.
+
+In general the Pre/Post Methods should be used when the default method correctly Toggles the mod, but additional steps need to be taken.
+
+The EnableMod/RemoveMod should instead be used if the Default method causes problems when Toggling mods on or off, and it must therefore be changed.
+
+In order to Define any of these Methods you must create a function with the appropriate name inside the ModTable (`mod.Mods[ModName]`).
+
+So in general any of these methods can be defined like this
+
+```lua
+local ModName = "Fiend Folio"
+mod.Mods[ModName].RemoveMod = <function>
+```

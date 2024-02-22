@@ -1,6 +1,7 @@
 local mod = require("resurrected_modpack.mod_reference")
 
-mod.CurrentModName = "Improved Backdrops"
+local ModName = "Improved Backdrops"
+mod.CurrentModName = ModName
 
 local game = Game()
 
@@ -76,20 +77,21 @@ local config = {
 
 -- Load settings
 function mod:postGameStarted()
-    if mod:HasData() then
-        local data = mod.json.decode(mod:LoadData())
-        for k, v in pairs(data) do
-            if config[k] ~= nil then config[k] = v end
-        end
+    local data = mod.Globals.LoadedData.Mods[ModName]
+	if not data then
+		return
+	end
+    for k, v in pairs(data) do
+        if config[k] ~= nil then config[k] = v end
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.postGameStarted)
+mod:AddCallback(mod.CustomCallbacks.ON_SAVE_DATA_LOAD, mod.postGameStarted)
 
 -- Save settings
-function mod:preGameExit() mod:SaveData(mod.json.encode(config)) end
-mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.preGameExit)
 
-
+local function SaveData()
+	return config
+end
 
 -- For Revelations compatibility
 function mod:CheckForRev()
@@ -883,3 +885,5 @@ if ModConfigMenu then
 	    Info = {"Enable/Disable unique Greed miniboss rooms. (default = on)"}
   	})
 end
+
+mod.Mods[ModName].SaveData = SaveData

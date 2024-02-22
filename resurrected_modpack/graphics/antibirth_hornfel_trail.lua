@@ -1,5 +1,5 @@
 local mod = require("resurrected_modpack.mod_reference")
-mod.CurrentModName = "crawlspaces_rebuilt"
+mod.CurrentModName = "Antibirth Hornfel Trail"
 
 -- some code from epiphany, except i was the one who wrote that code so it's fine lol
 
