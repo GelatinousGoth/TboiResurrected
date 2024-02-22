@@ -1,6 +1,7 @@
 local mod = require("resurrected_modpack.mod_reference")
 
 mod.LockCallbackRecord = true
+mod.CustomCallbacks = {}
 
 if not REPENTOGON then
     ModCallbacks.MC_POST_MODS_LOADED = ModCallbacks.MC_POST_MODS_LOADED or {}
@@ -17,5 +18,11 @@ if not REPENTOGON then
 
     mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, PostModLoad)
 end
+
+ModCallbacks.MC_POST_ADD_COLLECTIBLE = ModCallbacks.MC_POST_ADD_COLLECTIBLE or TSIL.Enums.CustomCallback.POST_PLAYER_COLLECTIBLE_ADDED
+
+ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED = ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED or TSIL.Enums.CustomCallback.POST_PLAYER_COLLECTIBLE_REMOVED
+
+mod.CustomCallbacks.ON_SAVE_DATA_LOAD = {}
 
 mod.LockCallbackRecord = false

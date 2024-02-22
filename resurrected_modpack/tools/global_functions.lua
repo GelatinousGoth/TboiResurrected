@@ -46,3 +46,13 @@ function mod.Functions.IsDebugModeActive(mode)
 
     return result == "Disabled debug flag."
 end
+
+if REPENTOGON then
+    function mod.Functions.AnyPlayerHasCollectible(CollectibleId, IgnoreModifiers)
+        return PlayerManager.AnyoneHasCollectible(CollectibleId)
+    end
+else
+    function mod.Functions.AnyPlayerHasCollectible(CollectibleId, IgnoreModifiers)
+        return TSIL.Players.DoesAnyPlayerHasItem(CollectibleId, IgnoreModifiers)
+    end
+end

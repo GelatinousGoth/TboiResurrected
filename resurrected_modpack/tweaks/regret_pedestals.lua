@@ -1,6 +1,7 @@
 local mod = require("resurrected_modpack.mod_reference")
 
-mod.CurrentModName = "Regret Pedestals"
+local ModName = "Regret Pedestals"
+mod.CurrentModName = ModName
 
 local stopWithHourglass = true
 
@@ -21,24 +22,12 @@ questionMarkSprite:SetFrame("Idle", 0)
 local itemSprite = Sprite()
 itemSprite:Load("gfx/005.100_collectible.anm2",true)
 
-function mod:SaveStorage()
-    if Game():GetFrameCount() <= 0 then return end
-    if stopWithHourglass then
-        mod:SaveData("true")
-    else
-        mod:SaveData("false")
-    end
+local function SaveData()
+    return not not stopWithHourglass
 end
 
 function mod:LoadStorage()
-    if mod:HasData() then
-        savedata = mod:LoadData()
-        if savedata == "true" then
-            stopWithHourglass = true
-        else
-            stopWithHourglass = false
-        end
-    end
+    stopWithHourglass = not not mod.Globals.LoadedData.Mods[ModName]
 end
 
 if ModConfigMenu then
@@ -231,6 +220,6 @@ mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, mod.postPickupUpdate, Pickup
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.postNewRoom)
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.postUpdate)
 mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.postRender)
-mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.SaveStorage)
-mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.SaveStorage)
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.LoadStorage)
+mod:AddCallback(mod.CustomCallbacks.ON_SAVE_DATA_LOAD, mod.LoadStorage)
+
+mod.Mods[ModName].SaveData = SaveData

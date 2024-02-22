@@ -6,6 +6,8 @@ CallbackPriority.EARLIER = -2^52
 CallbackPriority.LATER = 2^52
 CallbackPriority.MAX = -1/0
 CallbackPriority.MIN = 1/0
+CallbackPriority.AFTER_MAX = -2^1023 * 1.999999999999999
+CallbackPriority.BEFORE_MIN = 2^1023 * 1.999999999999999
 
 if not REPENTOGON then
     Achievement = Achievement or {}

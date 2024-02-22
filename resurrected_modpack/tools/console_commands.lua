@@ -15,9 +15,12 @@ local function ExecuteCommand(command, args)
 end
 
 local function PrintModList()
+    local numMods = 0
     for modName, _ in pairs(mod.Mods) do
+        numMods = numMods + 1
         print(modName)
     end
+    print("Number of Registered Mods: " .. numMods)
 end
 
 local stressTestCollectibles = {
@@ -296,12 +299,73 @@ local function TestBoss(args)
     end
 end
 
+local MorphTable = {
+    Original = {Variant = PickupVariant.PICKUP_LOCKEDCHEST},
+    Morphs = {
+        {Variant = PickupVariant.PICKUP_CHEST, Weight = 100},
+        {Variant = PickupVariant.PICKUP_LOCKEDCHEST, Weight = 50},
+        {Variant = PickupVariant.PICKUP_BOMBCHEST, Weight = 10},
+        {Variant = PickupVariant.PICKUP_SPIKEDCHEST, Weight = 5},
+        {Variant = PickupVariant.PICKUP_BIGCHEST, Weight = 0.6}
+    }
+}
+
+
+local previousCommand
+
+local function PickupManager(args)
+    local command = args[1]
+    if not command or (command:lower() ~= "add" and command:lower() ~= "remove" and command:lower() ~= "print") then
+        print("This command only accepts add or remove as parameters")
+        return
+    end
+    if not previousCommand and command:lower() == "remove" then
+        print("You should add stuff first")
+        return
+    end
+    if command:lower() == previousCommand then
+        print("This command has already been executed")
+        return
+    end
+    if command:lower() == "print" then
+        local outcomes = mod.Lib.PickupManager.GetOutcomes(MorphTable.Original)
+        if not outcomes then
+            print("No Outcomes")
+            return
+        end
+        local totalWeight = 0
+        for _, outcome in pairs(outcomes) do
+            totalWeight = totalWeight + (outcome.Weight or outcome.chance)
+        end
+        if totalWeight == 0 then
+            print("No Outcomes")
+        end
+        for _, outcome in pairs(outcomes) do
+            print("Value: " .. (outcome.Value or outcome.value) .. " Percentage: " .. TSIL.Utils.Math.Round(((outcome.Weight or outcome.chance)/totalWeight) * 100, 2))
+        end
+        return
+    end
+
+    previousCommand = command:lower()
+    if command:lower() == "add" then
+        for _, morph in ipairs(MorphTable.Morphs) do
+            mod.Lib.PickupManager.AddPickupMorph(MorphTable.Original, morph, morph.Weight)
+        end
+    end
+    if command:lower() == "remove" then
+        for _, morph in ipairs(MorphTable.Morphs) do
+            mod.Lib.PickupManager.RemovePickupMorph(MorphTable.Original, morph.New)
+        end
+    end
+end
+
 local commands = {
     PrintModList = PrintModList,
     VarTest = VariableStressTest,
     RemoveTest = RemoveCallbackTest,
     PrintCallbackList = PrintCallbackList,
-    TestBoss = TestBoss
+    TestBoss = TestBoss,
+    PickupManager = PickupManager
 }
 
 local function GetCommandArgs(cmdParamsString)
@@ -324,8 +388,9 @@ local function onConsoleUsage(_, cmd, parameters)
     if cmd:lower() ~= "resurrected" then
         return
     end
-    if parameters == "" then
-        return "No command was passed"
+    if not parameters or parameters == "" then
+        print("No command was passed")
+        return
     end
     local command, args = GetCommandArgs(parameters)
     for commandName, commandFunction in pairs(commands) do

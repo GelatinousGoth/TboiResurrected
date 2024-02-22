@@ -28,7 +28,21 @@ local function PrintError(String, FunctionName, ModName)
     end
 end
 
-local function Diagnostic(Diagnose, String)
+local function PrintWarning(String, FunctionName, ModName)
+    if not ModName then
+        ModName = DefaultModName
+    end
+    if FunctionName then
+        Print("[WARNING for " .. ModName .. "." .. FunctionName .. "]: " .. String)
+    else
+        Print("[WARNING for " .. ModName .. "]: " .. String)
+    end
+end
+
+local function Diagnostic(Diagnose, String, ModName)
+    if not ModName then
+        ModName = DefaultModName
+    end
     if mod.Diagnostics[Diagnose] then
         Print("[DIAGNOSTICS ".. ModName .."]: " .. String)
     end
@@ -38,6 +52,7 @@ module.print = Print
 module.console = ConsolePrint
 module.log = LogPrint
 module.error = PrintError
+module.warn = PrintWarning
 module.diagnostic = Diagnostic
 
 return module

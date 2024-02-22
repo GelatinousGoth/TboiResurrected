@@ -5,6 +5,9 @@ mod.LockCallbackRecord = true
 
 mod.Globals = {}
 
+mod.Globals.GameStarted = false
+mod.Globals.LoadedData = {}
+
 mod.Globals.IsOddRenderFrame = true
 
 local function onRender()

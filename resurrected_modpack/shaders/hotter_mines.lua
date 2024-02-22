@@ -1,6 +1,7 @@
 local mod = require("resurrected_modpack.mod_reference")
 
-mod.CurrentModName = "Hotter Mines"
+local ModName = "Hotter Mines"
+mod.CurrentModName = ModName
 
 local roomIntensity = 0
 local waveSpeed = 2
@@ -26,26 +27,21 @@ local function split(str, sep)
     return fields
 end
 
-local function saveSettings()
+local function SaveData()
     local data = {
         Intensity = intensityMultiplier,
         WaveSpeed = waveSpeed,
     }
-
-    local encoded = mod.json.encode(data)
-    mod:SaveData(encoded)
+	return data
 end
 
 local function loadSettings()
-    local data = mod:LoadData()
-    
-    if data ~= "" then
-        local decoded = mod.json.decode(data)
-        intensityMultiplier = decoded.Intensity or 2
-        waveSpeed = decoded.WaveSpeed or 2
-    else
-        saveSettings()
+    local data = mod.Globals.LoadedData.Mods[ModName]
+    if not data then
+        return
     end
+    intensityMultiplier = data.Intensity or 2
+    waveSpeed = data.WaveSpeed or 2
 end
 
 local function errorInCmd(correctUsage)
@@ -84,13 +80,7 @@ end
 
 mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, mod.ShaderUpdate)
 
-function mod:GameStart()
-    loadSettings()
-end
-
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.GameStart)
-
-loadSettings()
+mod:AddCallback(mod.CustomCallbacks.ON_SAVE_DATA_LOAD, loadSettings)
 
 function mod:UseConsole(cmd, argString)
     local args = split(argString, " ")
@@ -124,3 +114,5 @@ function mod:UseConsole(cmd, argString)
 end
 
 mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, mod.UseConsole)
+
+mod.Mods[ModName].SaveData = SaveData
