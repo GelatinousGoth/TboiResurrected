@@ -9,10 +9,10 @@ local TSILFolder = "resurrected_modpack.lib.library_of_isaac"
 require("resurrected_modpack.enums")
 
 mod.Lib = {}
-require("resurrected_modpack.lib.achievement_checker")
-require("resurrected_modpack.tools.pickup_morph_manager")
 mod.Lib.TSIL = require(TSILFolder .. ".TSIL")
 mod.Lib.TSIL.Init(TSILFolder)
+require("resurrected_modpack.lib.achievement_checker")
+require("resurrected_modpack.tools.pickup_morph_manager")
 
 Isaac.DebugString("[Tboi Resurrected] \"Tboi Resurrected\" initialized.")
 
