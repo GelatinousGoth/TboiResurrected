@@ -12,7 +12,7 @@ function mod:InitItemsRenamed()
     items = {
         {CollectibleType.COLLECTIBLE_ISAACS_HEART, "Veyeral Heart", "Void Rains Upon It"},
         {CollectibleType.COLLECTIBLE_PYRO, "Arson", "99 Bombs"},
-        {CollectibleType.COLLECTIBLE_HOT_BOMBS, "Hot Bombs", "Incendiary Blast +5 Bombs"},
+        {CollectibleType.COLLECTIBLE_HOT_BOMBS, "Flare Bombs", "Incendiary Blast +5 Bombs"},
         {CollectibleType.COLLECTIBLE_ALMOND_MILK, "Almond Water", "Backroom Beverage"},
         {CollectibleType.COLLECTIBLE_PSY_FLY, "Grey Matter", "Cerebral Discharge"},
     }
@@ -26,6 +26,8 @@ function mod:InitItemsRenamed()
             {FiendFolio.ITEM.COLLECTIBLE.AZURITE_SPINDOWN, "Spherical Dice", "-0.1"},
             {FiendFolio.ITEM.COLLECTIBLE.GOLDSHI_LUNCH, "Packed Lunch", "HP Up + Energy Up!"},
             {FiendFolio.ITEM.COLLECTIBLE.GRIDDLED_CORN, "Hellhound Kibble", "DMG Up + It's all burnt"}
+			{FiendFolio.ITEM.COLLECTIBLE.RANDY_THE_SNAIL, "Immortal Snail", "Unstoppable force"}
+			{FiendFolio.ITEM.COLLECTIBLE.GREG_THE_EGG, "Suprise Egg", "A Hutts hatching"}
         }
         for _, itemInfo in ipairs(ffItems) do
             table.insert(items, itemInfo)
@@ -50,13 +52,13 @@ function mod:InitItemsRenamed()
     if EID then
         -- Adds trinkets defined in trinkets
         for _, trinket in ipairs(trinkets) do
-            local EIDdescription = EID:getDescriptionObj(5, 350, trinket[1]).Description
+            local EIDdescription = EID:getDescriptionObj(5, 350, trinket[1], nil, false).Description
             EID:addTrinket(trinket[1], EIDdescription, trinket[2], "en_us")
         end
 
         -- Adds items defined in items
         for _, item in ipairs(items) do
-            local EIDdescription = EID:getDescriptionObj(5, 100, item[1]).Description
+            local EIDdescription = EID:getDescriptionObj(5, 100, item[1], nil, false).Description
             EID:addCollectible(item[1], EIDdescription, item[2], "en_us")
         end
     end
