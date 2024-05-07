@@ -3,7 +3,7 @@
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="characters\costumes\character_001_isaac.png" Id="0"/>
-			<Spritesheet Path="costumes\ghost.png" Id="1"/>
+			<Spritesheet Path="characters\costumes\ghost.png" Id="1"/>
 			<Spritesheet Path="characters\costumes\Falling_isaac .png" Id="2"/>
 		</Spritesheets>
 		<Layers>
