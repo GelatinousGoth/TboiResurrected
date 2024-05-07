@@ -15,6 +15,7 @@ function mod:InitItemsRenamed()
         {CollectibleType.COLLECTIBLE_HOT_BOMBS, "Flare Bombs", "Incendiary Blast +5 Bombs"},
         {CollectibleType.COLLECTIBLE_ALMOND_MILK, "Almond Water", "Backroom Beverage"},
         {CollectibleType.COLLECTIBLE_PSY_FLY, "Grey Matter", "Cerebral Discharge"},
+		{CollectibleType.COLLECTIBLE_SMALL_ROCK, "Small Rock", "Dmg Up? I can't remember"},
     }
 
     if FiendFolio then
@@ -25,9 +26,11 @@ function mod:InitItemsRenamed()
             {FiendFolio.ITEM.COLLECTIBLE.SMASH_TROPHY, "Fighter's Trophy", "It's The Winner!"},
             {FiendFolio.ITEM.COLLECTIBLE.AZURITE_SPINDOWN, "Spherical Dice", "-0.1"},
             {FiendFolio.ITEM.COLLECTIBLE.GOLDSHI_LUNCH, "Packed Lunch", "HP Up + Energy Up!"},
-            {FiendFolio.ITEM.COLLECTIBLE.GRIDDLED_CORN, "Hellhound Kibble", "DMG Up + It's all burnt"}
-			{FiendFolio.ITEM.COLLECTIBLE.RANDY_THE_SNAIL, "Immortal Snail", "Unstoppable force"}
-			{FiendFolio.ITEM.COLLECTIBLE.GREG_THE_EGG, "Suprise Egg", "A Hutts hatching"}
+            {FiendFolio.ITEM.COLLECTIBLE.GRIDDLED_CORN, "Hellhound Kibble", "DMG Up + It's all burnt"},
+			{FiendFolio.ITEM.COLLECTIBLE.RANDY_THE_SNAIL, "Immortal Snail", "Unstoppable force"},
+			{FiendFolio.ITEM.COLLECTIBLE.GREG_THE_EGG, "Suprise Egg", "A Hutts hatching"},
+			{FiendFolio.ITEM.COLLECTIBLE.SMALL_WOOD, "Wooden Plank", "Ouch, I've got a Splinter"},
+			{FiendFolio.ITEM.COLLECTIBLE.SMALL_PIPE, "Loose Pipe", "Congratulations on the Pipe!"},
         }
         for _, itemInfo in ipairs(ffItems) do
             table.insert(items, itemInfo)
@@ -35,13 +38,17 @@ function mod:InitItemsRenamed()
     end
 
     trinkets = {
-        {TrinketType.TRINKET_NOSE_GOBLIN, "Booger", "Nose Picker"}
+        {TrinketType.TRINKET_NOSE_GOBLIN, "Booger", "Nose Picker"},
+		{TrinketType.TRINKET_MOMS_PEARL, "Clam Pearl", "It Emanates Purity"},
+		{TrinketType.TRINKET_MYSTERIOUS_PAPER, "Blank Paper", "???"},
+		{TrinketType.TRINKET_BROKEN_ANKH, "Shattered Ankh", "Eternal Life?"},
+		{TrinketType.TRINKET_BROKEN_PADLOCK, "Faulty Padlock", "Bombs Are Key"},
     }
 
     if FiendFolio then
         local ffTrinkets = {
             {FiendFolio.ITEM.TRINKET.ETERNAL_CAR_BATTERY, "Overcharged Battery", "Potentially Dangerous"},
-            {FiendFolio.ITEM.TRINKET.SWALLOWED_M90, "Replica Gun", "Keep away from children"}
+            {FiendFolio.ITEM.TRINKET.SWALLOWED_M90, "Replica Gun", "Keep away from children"},
         }
         for _, trinketInfo in ipairs(ffTrinkets) do
             table.insert(trinkets, trinketInfo)
