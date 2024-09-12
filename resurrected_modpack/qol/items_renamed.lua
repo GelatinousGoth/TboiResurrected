@@ -20,6 +20,7 @@ function mod:InitItemsRenamed()
         {CollectibleType.COLLECTIBLE_ALMOND_MILK, "Almond Water", "Backroom Beverage"},
         {CollectibleType.COLLECTIBLE_PSY_FLY, "Grey Matter", "Cerebral Discharge"},
 		{CollectibleType.COLLECTIBLE_SMALL_ROCK, "Small Rock", "Dmg Up? I can't remember"},
+		{CollectibleType.COLLECTIBLE_BRITTLE_BONES, "Vitamin Deficiency", "Brittle Bones..."},
     }
 
     if FiendFolio then

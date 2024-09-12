@@ -11,4 +11,16 @@
 	<costume anm2path="character_b15_theforgotten_mushroom.anm2" type="none" priority="19" />
 	<costume anm2path="character_b15_theforgotten_bob.anm2" type="none" priority="19" />
 	<costume anm2path="character_b15_theforgotten_poop.anm2" type="none" priority="19" />
+	
+	<costume anm2path="headofthekeeper_penny.anm2" type="none"/>
+    <costume anm2path="headofthekeeper_penny_shoot.anm2" type="none"/>
+    <costume anm2path="headofthekeeper_nickel.anm2" type="none"/>
+    <costume anm2path="headofthekeeper_nickel_shoot.anm2" type="none"/>
+    <costume anm2path="headofthekeeper_dime.anm2" type="none"/>
+    <costume anm2path="headofthekeeper_dime_shoot.anm2" type="none"/>
+	
+	<costume type="none" hasSkinAlt="true" anm2path="meatVein.anm2" />
+	<costume type="none" anm2path="polySparkle.anm2" />
+	<costume type="none" hasSkinAlt="true" anm2path="4point5VoltSparks.anm2" />
+	<costume type="none" hasOverlay="true" anm2path="mysteriousDrip.anm2" />
 </costumes>
