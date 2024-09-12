@@ -4,8 +4,12 @@ local ModName = "Items Renamed"
 mod.CurrentModName = ModName
 local LockCallbackRecord = false
 
+local itemConfig = Isaac.GetItemConfig()
+
 local items
 local trinkets
+local cards
+local pills
 
 function mod:InitItemsRenamed()
     -- {itemId, 'name', 'desc'}
@@ -48,24 +52,75 @@ function mod:InitItemsRenamed()
     if FiendFolio then
         local ffTrinkets = {
             {FiendFolio.ITEM.TRINKET.ETERNAL_CAR_BATTERY, "Overcharged Battery", "Potentially Dangerous"},
-            {FiendFolio.ITEM.TRINKET.SWALLOWED_M90, "Replica Gun", "Keep away from children"},
+            {FiendFolio.ITEM.TRINKET.SWALLOWED_M90, "Replica Gun", "Keep Away From Children"},
         }
         for _, trinketInfo in ipairs(ffTrinkets) do
             table.insert(trinkets, trinketInfo)
         end
     end
 
+    -- Cards
+
+    cards = {
+        {Card.CARD_QUEEN_OF_HEARTS, "Business Card", "The Pink Vice"},
+		{Card.CARD_HUGE_GROWTH, "Giant Growth", "Become Immense!"},
+    }
+
+    if FiendFolio then
+        local ffCards = {
+		    {FiendFolio.ITEM.CARD.GLASS_AZURITE_SPINDOWN, "Glass Spherical Dice", "-0.1"},
+		    {FiendFolio.ITEM.CARD.HORSE_PUSHPOP, "Glue Stick", "Sticky Situation"},
+			{FiendFolio.ITEM.CARD.CARDJITSU_SOCCER, "Sports Card", "SOCCER"},
+			{FiendFolio.ITEM.CARD.KING_OF_CLUBS, "Argine", "Queen Regina"},
+			{FiendFolio.ITEM.CARD.KING_OF_DIAMONDS, "Gilded Card", "Mint Condition Foil"},
+			{FiendFolio.ITEM.CARD.GROTTO_BEAST, "Flooped Creature", "Card Wars!"},
+			{FiendFolio.ITEM.CARD.THIRTEEN_OF_STARS, "Jack Of All Trades", "Master Of None"},
+        }
+
+        for _, cardInfo in ipairs(ffCards) do
+            table.insert(cards, cardInfo)
+        end
+    end
+
+    for _, cardInfo in ipairs(cards) do
+        local cardConfig = itemConfig:GetCard(cardInfo[1])
+        cardConfig.Name = cardInfo[2]
+        cardConfig.Description = cardInfo[3]
+    end
+
+    -- Pills
+
+    pills = {
+        {PillEffect.PILLEFFECT_LARGER, "Eat Me!", "One Makes You Larger"},
+		{PillEffect.PILLEFFECT_SMALLER, "Drink Me!", "One Makes You Small"},
+    }
+
+    if FiendFolio then
+        local ffPills = {
+
+        }
+
+        for _, pillInfo in ipairs(ffPills) do
+            table.insert(pills, pillInfo)
+        end
+    end
+
+    for _, pillInfo in ipairs(pills) do
+        local pillConfig = itemConfig:GetPillEffect(pillInfo[1])
+        pillConfig.Name = pillInfo[2]
+    end
+
     local game = Game()
     if EID then
         -- Adds trinkets defined in trinkets
         for _, trinket in ipairs(trinkets) do
-            local EIDdescription = EID:getDescriptionObj(5, 350, trinket[1], nil, false).Description
+            local EIDdescription = EID:getDescriptionObj(5, 350, trinket[1]).Description
             EID:addTrinket(trinket[1], EIDdescription, trinket[2], "en_us")
         end
 
         -- Adds items defined in items
         for _, item in ipairs(items) do
-            local EIDdescription = EID:getDescriptionObj(5, 100, item[1], nil, false).Description
+            local EIDdescription = EID:getDescriptionObj(5, 100, item[1]).Description
             EID:addCollectible(item[1], EIDdescription, item[2], "en_us")
         end
     end

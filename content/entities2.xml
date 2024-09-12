@@ -80,5 +80,21 @@
 	
     <entity anm2path="items/pick ups/slot_chest.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="6" collisionRadius="12" friction="0.8" id="5" name="Slot Chest" numGridCollisionPoints="24" shadowSize="24" stageHP="0" variant="6030">
     </entity>
+	
+	<entity anm2path="items/cards/businesscardback.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="BusinessCardBack" numGridCollisionPoints="24" shadowSize="16" stageHP="0" variant="300" subtype="1500">
+    <preload-snd id="8" />
+    </entity>
+	
+	<entity anm2path="items/cards/sportscardback.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="SportsCardBack" numGridCollisionPoints="24" shadowSize="16" stageHP="0" variant="300" subtype="1501">
+    <preload-snd id="8" />
+    </entity>
+	
+	<entity anm2path="items/cards/goldcardback.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="GoldCardBack" numGridCollisionPoints="24" shadowSize="16" stageHP="0" variant="300" subtype="1502">
+    <preload-snd id="8" />
+    </entity>
+	
+	<entity anm2path="items/cards/floopedcreaturecardback.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="FloopedCreatureCardBack" numGridCollisionPoints="24" shadowSize="16" stageHP="0" variant="300" subtype="1503">
+    <preload-snd id="8" />
+    </entity>
 </entities>
 <!-- OLD ENTRY <entity anm2path="dream_catcher_entity.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" id="960" name="Hanging Dream Catcher" numGridCollisionPoints="0" shadowSize="13" stageHP="0" variant="245" shutdoors="false"/> -->	

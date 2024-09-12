@@ -2,4 +2,16 @@
     <sound name = "Chime">
         <sample weight = "1" path = "Chime.wav" />
     </sound>
+	
+	<sound name = "Falling">
+		<sample weight = "1" path = "player/Falling.wav"/>
+	</sound>
+	
+	<sound name = "GroundHit">
+		<sample weight = "1" path = "player/GroundHit.wav"/>
+	</sound>
+	
+	<sound name = "Reroll">
+		<sample weight = "1" path = "player/Reroll.wav"/>
+	</sound>
 </sounds>

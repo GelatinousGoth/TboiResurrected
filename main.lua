@@ -47,6 +47,9 @@ require("resurrected_modpack.graphics.missing_costumes")
 require("resurrected_modpack.graphics.item_pedestal_overhaul")
 require("resurrected_modpack.graphics.missing_tears_gfx")
 require("resurrected_modpack.graphics.better_donation_machines")
+require("resurrected_modpack.graphics.falling_isaac")
+require("resurrected_modpack.graphics.card_resprites")
+require("resurrected_modpack.graphics.gurdvd")
 
 require("resurrected_modpack.tweaks.lamb_intro_invincibility")
 require("resurrected_modpack.tweaks.chests_before_mother")
@@ -58,10 +61,12 @@ require("resurrected_modpack.tweaks.amazing_chest_ahead")
 require("resurrected_modpack.tweaks.seven_floors_of_bad_luck")
 require("resurrected_modpack.tweaks.regret_pedestals")
 require("resurrected_modpack.tweaks.fools_goldmines")
+require("resurrected_modpack.tweaks.better_fires")
 
 require("resurrected_modpack.qol.hanging_dream_catcher")
 require("resurrected_modpack.qol.hud_toggle")
 require("resurrected_modpack.qol.items_renamed")
+require("resurrected_modpack.qol.items_removed")
 
 require("resurrected_modpack.shaders.hotter_mines")
 
