@@ -69,6 +69,8 @@ require("resurrected_modpack.tweaks.better_fires")
 require("resurrected_modpack.tweaks.double_spiked_rocks")
 require("resurrected_modpack.tweaks.glitched_breakfast")
 require("resurrected_modpack.tweaks.enemy_blood_donations")
+require("resurrected_modpack.tweaks.centered_fallen_angel")
+require("resurrected_modpack.tweaks.expanded_blue_womb")
 
 require("resurrected_modpack.qol.hanging_dream_catcher")
 require("resurrected_modpack.qol.hud_toggle")
