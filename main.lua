@@ -57,6 +57,7 @@ require("resurrected_modpack.graphics.animated_costumes")
 require("resurrected_modpack.graphics.reflective_downpour_mirror")
 require("resurrected_modpack.graphics.unique_hazards")
 require("resurrected_modpack.graphics.shop_parrot")
+require("resurrected_modpack.graphics.unique_stage_variants")
 
 require("resurrected_modpack.tweaks.lamb_intro_invincibility")
 require("resurrected_modpack.tweaks.chests_before_mother")
