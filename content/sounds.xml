@@ -14,4 +14,16 @@
 	<sound name = "Reroll">
 		<sample weight = "1" path = "player/Reroll.wav"/>
 	</sound>
+	
+	<sound name="keepah_chirp">
+		<sample weight="1" path="keepah/keepah0.wav" />
+		<sample weight="1" path="keepah/keepah1.wav" />
+		<sample weight="1" path="keepah/keepah2.wav" />
+	</sound>
+	<sound name="keepah_panic">
+		<sample weight="1" path="keepah/keepahpanic0.wav" />
+		<sample weight="1" path="keepah/keepahpanic1.wav" />
+		<sample weight="1" path="keepah/keepahpanic2.wav" />
+	</sound>
+	
 </sounds>

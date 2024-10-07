@@ -135,6 +135,3 @@ function mod:PostGameStarted(isContinued)
     end
 end
 mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.PostGameStarted);
-
-
-require("compatibilities/mod_config_menu");

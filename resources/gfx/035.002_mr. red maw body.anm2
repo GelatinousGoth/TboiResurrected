@@ -1,8 +1,8 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="14/03/2019 22:00:10" Version="105" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="9/11/2023 5:59:04 PM" Version="105" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="Grimdark Stuff\Body Mr Red Maw.png" Id="0"/>
+			<Spritesheet Path="monsters\classic\mrredmaw_body.png" Id="0"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="body" Id="0" SpritesheetId="0"/>

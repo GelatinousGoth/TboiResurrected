@@ -3,6 +3,7 @@ mod.Debug = true
 
 mod.json = require("json")
 mod.log = require("resurrected_modpack.tools.log")
+mod.registry = include("resurrected_modpack.registry") 
 
 local TSILFolder = "resurrected_modpack.lib.library_of_isaac"
 
@@ -52,8 +53,10 @@ require("resurrected_modpack.graphics.card_resprites")
 require("resurrected_modpack.graphics.gurdvd")
 require("resurrected_modpack.graphics.achievement_portraits")
 require("resurrected_modpack.graphics.head_of_the_keeper_costume")
-require("resurrected_modpack.graphics.unique_progress_bar_icon")
 require("resurrected_modpack.graphics.animated_costumes")
+require("resurrected_modpack.graphics.reflective_downpour_mirror")
+require("resurrected_modpack.graphics.unique_hazards")
+require("resurrected_modpack.graphics.shop_parrot")
 
 require("resurrected_modpack.tweaks.lamb_intro_invincibility")
 require("resurrected_modpack.tweaks.chests_before_mother")
@@ -69,13 +72,16 @@ require("resurrected_modpack.tweaks.better_fires")
 require("resurrected_modpack.tweaks.double_spiked_rocks")
 require("resurrected_modpack.tweaks.glitched_breakfast")
 require("resurrected_modpack.tweaks.enemy_blood_donations")
+require("resurrected_modpack.tweaks.centered_fallen_angel")
+require("resurrected_modpack.tweaks.expanded_blue_womb")
 
 require("resurrected_modpack.qol.hanging_dream_catcher")
 require("resurrected_modpack.qol.hud_toggle")
 require("resurrected_modpack.qol.items_renamed")
 require("resurrected_modpack.qol.items_removed")
 require("resurrected_modpack.qol.coin_flip")
-require("resurrected_modpack.qol.voided_items")
+require("resurrected_modpack.qol.ff_fortunes")
+require("resurrected_modpack.qol.melee_range_fix")
 
 require("resurrected_modpack.shaders.hotter_mines")
 

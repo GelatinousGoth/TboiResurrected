@@ -34,7 +34,7 @@ local costumeChangeDelay = 50
 local frameCounter = 0
 
 
-function keeper.coinCheck()
+function mod.coinCheck()
     local playerCoins = Isaac.GetPlayer():GetNumCoins()
 
     if playerCoins <= 30 then
@@ -52,7 +52,7 @@ function keeper.coinCheck()
     end
 end
 
-function keeper.updateCostume()
+function mod.updateCostume()
     local player = Isaac.GetPlayer()
     if player:HasCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER) then
 
@@ -95,5 +95,5 @@ function keeper.updateCostume()
     end
 end
 
-keeper:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, keeper.updateCostume, 0)
-keeper:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, keeper.coinCheck, 0)
+mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, mod.updateCostume, 0)
+mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, mod.coinCheck, 0)
