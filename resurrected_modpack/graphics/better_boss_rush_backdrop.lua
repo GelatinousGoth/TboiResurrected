@@ -1,11 +1,14 @@
 local mod = require("resurrected_modpack.mod_reference")
-
-mod.CurrentModName = "Unique Rooms Backdrop"
-
+mod.CurrentModName = "Better_Boss_Rush_Backdrop"
+-- //
+-- Code taken from the Backgrounds and Doors mod.
+-- Thanks to Nioffe, code no longer causes errors in the console.
+-- //
 local game = Game()
 local backdropRNG = RNG()
 backdropRNG:SetSeed(Random(), 3)
 local api = {}
+
 function api.Random(min, max, rng)
     rng = rng or backdropRNG
     if min ~= nil and max ~= nil then
@@ -15,13 +18,14 @@ function api.Random(min, max, rng)
     end
     return rng:RandomFloat()
 end
+
 local function changeBackdrop(backdrop)
     backdropRNG:SetSeed(Game():GetRoom():GetDecorationSeed(), 0)
     local backdropVariant = backdrop
     for i = 1, 2 do
         local npc = Isaac.Spawn(EntityType.ENTITY_EFFECT, 82, 0, Vector(0, 0), Vector(0, 0), nil)
         local sprite = npc:GetSprite()
-        sprite:Load("gfx/unique_rooms/backdrop.anm2", true)
+        sprite:Load("gfx/backdrop/custom/backdrop.anm2", true)
         for num=0, 15 do
             local wall_to_use = backdropVariant.WALLS[api.Random(1, #backdropVariant.WALLS)]
             sprite:ReplaceSpritesheet(num, wall_to_use)
@@ -60,22 +64,27 @@ local function changeBackdrop(backdrop)
         end
     end
 end
-local challenge = {
-    NFLOORS = {"gfx/unique_rooms/challenge_nfloor.png"},
-    LFLOORS = {"gfx/unique_rooms/challenge_lfloor.png"},
-    CORNERS = {"gfx/unique_rooms/null.png"},
-    WALLS = {
-        "gfx/unique_rooms/challenge_1.png",
-        "gfx/unique_rooms/challenge_2.png",
-        "gfx/unique_rooms/challenge_3.png"
-    }
-}    
-function mod:MC_POST_NEW_ROOM()
-	if Game():GetRoom():GetType() == RoomType.ROOM_CHALLENGE and eternalarenacanappear ~= 1 then
-	changeBackdrop(challenge)
-	elseif Game():GetRoom():GetBackdropType() == 15 and (Game():GetRoom():GetRoomShape() == RoomShape.ROOMSHAPE_1x2 or Game():GetRoom():GetRoomShape() == RoomShape.ROOMSHAPE_2x1 or Game():GetRoom():GetRoomShape() == RoomShape.ROOMSHAPE_2x2) then
-	changeBackdrop(cathedral)
-        end
-end
 
+local arena = {
+    NFLOORS = {"gfx/backdrop/custom/arena_nfloor.png"},
+    LFLOORS = {"gfx/backdrop/custom/arena_lfloor.png"},
+    CORNERS = {"gfx/backdrop/custom/null.png"},
+    WALLS = {
+        "gfx/backdrop/custom/arena_1.png",
+        "gfx/backdrop/custom/arena_2.png",
+        "gfx/backdrop/custom/arena_3.png",
+        "gfx/backdrop/custom/arena_4.png",
+        "gfx/backdrop/custom/arena_5.png",
+        "gfx/backdrop/custom/arena_6.png"
+    }
+}
+
+function mod:MC_POST_NEW_ROOM()
+	-- boss rush backdrop change code
+	if Game():GetRoom():GetType() == RoomType.ROOM_BOSSRUSH then
+	changeBackdrop(arena)
+
+	end
+
+end
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,mod.MC_POST_NEW_ROOM)

@@ -7,7 +7,7 @@
 		pit			= "pit_basement.png"
 		bridge		= "grid_bridge.png"
 		door		= "door_01_normaldoor.png"
-		holeinwall	= "door_08_holeinwall.png"
+		holeinwall	= "door_08_holeinwall_basement.png"
 	/>
 	
 	<backdrop id="2" gfx="02_Cellar.png" walls="2" wallvariants="2" floors="1" floorvariants="6"
@@ -18,7 +18,7 @@
 		pit			= "grid_pit_cellar.png"
 		bridge		= "grid_bridge.png"
 		door		= "door_12_cellardoor.png"
-		holeinwall	= "door_08_holeinwall.png"
+		holeinwall	= "door_08_holeinwall_cellar.png"
 	/>
 	
 	<backdrop id="3" gfx="13_The Burning Basement.png" walls="2" wallvariants="4" floors="1" floorvariants="6"
@@ -31,7 +31,7 @@
 		pit			= "grid_pit_burningbasement.png"
 		bridge		= "grid_bridge.png"
 		door		= "door_01_burningbasement.png"
-		holeinwall	= "door_08_holeinwall.png"
+		holeinwall	= "door_08_holeinwall_burningbasement.png"
 	/>
 	
 	<backdrop id="4" gfx="03_Caves.png" walls="3" wallvariants="3" floors="2" floorvariants="3"
@@ -57,7 +57,7 @@
 		waterpit	= "grid_pit_water_catacombs.png"
 		bridge		= "grid_bridge_catacombs.png"
 		door		= "door_01_catacombs.png"
-		holeinwall	= "door_08_holeinwall.png"
+		holeinwall	= "door_08_holeinwall_catacombs.png"
 		waterpitsmode	= "1"
 	/>
 	
@@ -70,7 +70,7 @@
 		pit			= "grid_floodedcaves_pit.png"
 		bridge		= "grid_bridge_drownedcaves.png"
 		door		= "door_27_drownedcaves.png"
-		holeinwall	= "door_08_holeinwall_cathedral.png"
+		holeinwall	= "door_08_holeinwall_floodedcaves.png"
 	/>
 	
 	<backdrop id="7" gfx="05_Depths.png" walls="1" wallvariants="3" floors="1" floorvariants="6"
@@ -92,7 +92,7 @@
 		pit			= "grid_pit_necropolis.png"
 		bridge		= "grid_bridge_necropolis.png"
 		door		= "door_01_necropolis.png"
-		holeinwall	= "door_08_holeinwall.png"
+		holeinwall	= "door_08_holeinwall_necropolis.png"
 	/>
 	
 	<backdrop id="9" gfx="15_The Dank Depths.png" walls="2" wallvariants="4" floors="1" floorvariants="5"
@@ -105,7 +105,7 @@
 		waterpit	= "grid_pit_water_dankdepths.png"
 		bridge		= "grid_bridge_dankdepths.png"
 		door		= "door_01_dankdepths.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_dankdepths.png"
 		waterpitsmode	= "2"
 	/>
 	
@@ -146,7 +146,7 @@
 		waterpit	= "grid_scarredwomb_pit.png"
 		bridge		= "grid_bridge_scarredwomb.png"
 		door		= "door_28_scarredroomdoor.png"
-		holeinwall	= "door_08_holeinwall_womb.png"
+		holeinwall	= "door_08_holeinwall_scarredwomb.png"
 		waterpitsmode	= "2"
 	/>
 	
@@ -158,7 +158,7 @@
 		pit			= "grid_pit_bluewomb.png"
 		bridge		= "grid_bridge_bluewomb.png"
 		door		= "door_01_bluewombdoor.png"
-		holeinwall	= "door_08_holeinwall_cathedral.png"
+		holeinwall	= "door_08_holeinwall_bluewomb.png"
 	/>
 	
 	<backdrop id="14" gfx="09_Sheol.png" walls="1" wallvariants="2" floors="1" floorvariants="1"
@@ -171,7 +171,7 @@
 		waterpit	= "grid_pit_blood_sacrifice.png"
 		bridge		= "grid_bridge_depths.png"
 		door		= "door_19_sheoldoor.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_sheol.png"
 		waterpitsmode	= "1"
 	/>
 	
@@ -205,7 +205,7 @@
 		pit			= "grid_chest_pit.png"
 		bridge		= "grid_bridge_catacombs.png"
 		door		= "door_23_chestdoor.png"
-		holeinwall	= "door_08_holeinwall.png"
+		holeinwall	= "door_08_holeinwall_chest.png"
 	/>
 	
 	<backdrop id="18" gfx="Mega_Satan_Land.anm2" walls="0" wallvariants="0" floors="1" floorvariants="4"
@@ -258,7 +258,7 @@
 		pit			= "grid_pit_depths.png"
 		bridge		= "grid_bridge_depths.png"
 		door		= "door_05_arcaderoomdoor.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_arcade.png"
 	/>
 	
 	<backdrop id="26" gfx="effect_error.anm2" walls="0" /> <!-- special handling -->
@@ -272,7 +272,7 @@
 		pit			= "grid_pit_bluewomb.png"
 		bridge		= "grid_bridge_bluewomb.png"
 		door		= "door_01_bluewombdoor.png"
-		holeinwall	= "door_08_holeinwall_cathedral.png"
+		holeinwall	= "door_08_holeinwall_bluewomb.png"
 	/>
 	
 	<backdrop id="28" gfx="0B_UltraGreedShop.png" walls="1" wallvariants="4" floors="1" floorvariants="2"
@@ -292,7 +292,7 @@
 		bridge		= "grid_bridge_necropolis.png"
 		door		= "door_14_depthsdoor.png"
 		spikes		= "grid_spikes_bloody.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_sacrifice.png"
 		waterpitsmode	= "2"
 	/>
 	
@@ -306,7 +306,7 @@
 		pit			= "grid_pit_downpour_large.png"
 		bridge		= "grid_bridge_downpour.png"
 		door		= "door_01_downpourdoor.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_downpour.png"
 	/>
 	
 	<backdrop id="32"  gfx="03x_Mines.png" walls="3" wallvariants="2" floors="1" floorvariants="2"
@@ -319,7 +319,7 @@
 		waterpit	= "grid_pit_mines_water.png"
 		bridge		= "grid_bridge_mines.png"
 		door		= "door_01_minesdoor.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_mines.png"
 		waterpitsmode	= "1"
 	/>
 	
@@ -332,7 +332,7 @@
 		pit			= "grid_mausoleum_pit_large.png"
 		bridge		= "grid_bridge_mausoleum.png"
 		door		= "door_01_mausoleumdoor.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_mausoleum.png"
 	/>
 	
 	<backdrop id="34"  gfx="07x_Corpse.png" walls="1" wallvariants="3" floors="1" floorvariants="3"
@@ -351,7 +351,7 @@
 	
 	<backdrop id="35" gfx="planetarium.anm2"
 		rocks		= "rocks_d12.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_planetarium.png"
 	/>
 	
 	<backdrop id="36"  gfx="0Ax_Downpour Entrance.png" walls="1" wallvariants="4" floors="1" floorvariants="3"
@@ -401,7 +401,7 @@
 		pit			= "grid_mausoleum_pit_large.png"
 		bridge		= "grid_bridge_mausoleum.png"
 		door		= "door_01_mausoleumdoor.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_mausoleum.png"
 	/>
 	
 	<backdrop id="41"  gfx="05x_Mausoleum_boss.png" walls="1" wallvariants="1" floors="2" floorvariants="1"
@@ -413,7 +413,7 @@
 		pit			= "grid_mausoleum_pit_large.png"
 		bridge		= "grid_bridge_mausoleum.png"
 		door		= "door_01_mausoleumdoor.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_mausoleum.png"
 	/>
 	
 	<backdrop id="42"  gfx="06x_gehenna_boss.png" walls="1" wallvariants="1" floors="1" floorvariants="2"
@@ -425,7 +425,7 @@
 		pit			= "grid_pit_gehenna.png"
 		bridge		= "grid_bridge_gehenna.png"
 		door		= "door_01_gehennadoor.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_gehenna.png"
 	/>
 	
 	<backdrop id="43" gfx="07x_Corpse2.png" walls="1" wallvariants="3" floors="1" floorvariants="3"
@@ -438,7 +438,7 @@
 		waterpit	= "grid_pit_blood_corpse2.png"
 		bridge		= "grid_bridge_corpse2.png"
 		door		= "door_01_corpse2door.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_corpse.png"
 		waterpitsmode	= "1"
 	/>
 	
@@ -451,7 +451,7 @@
 		pit			= "grid_pit_corpse3.png"
 		bridge		= "grid_bridge_corpse3.png"
 		door		= "door_01_corpse3door.png"
-		holeinwall	= "door_08_holeinwall.png"
+		holeinwall	= "door_08_holeinwall_corpse.png"
 		spikes		= "grid_spikes_bloody.png"
 	/>
 	
@@ -463,7 +463,7 @@
 		pit			= "grid_dross_pit_large.png"
 		bridge		= "grid_bridge_dross.png"
 		door		= "door_01_dross.png"
-		holeinwall	= "door_08_holeinwall_corpse.png"
+		holeinwall	= "door_08_holeinwall_dross.png"
 	/>
 	
 	<backdrop id="46"  gfx="04x_Ashpit.png" walls="3" wallvariants="2" floors="3" floorvariants="2"
@@ -477,7 +477,7 @@
 		waterpit	= "grid_pit_ashpit_ash.png"
 		bridge		= "grid_bridge_ashpit.png"
 		door		= "door_01_ashpit.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_ashpit.png"
 		waterpitsmode	= "1"
 	/>
 	
@@ -490,7 +490,7 @@
 		pit			= "grid_pit_gehenna.png"
 		bridge		= "grid_bridge_gehenna.png"
 		door		= "door_01_gehennadoor.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_gehenna.png"
 	/>
 	
 	<!-- Gehenna Corpse Entrance - I did it like this so I don't have to bother with thin and L shaped rooms (seriously, fuck them)-->
@@ -502,7 +502,7 @@
 		pit			= "grid_pit_gehenna.png"
 		bridge		= "grid_bridge_gehenna.png"
 		door		= "door_01_gehennadoor.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_gehenna.png"
 	/>
 	
 	<backdrop id="49"  gfx="0Ex_Isaacs_Bedroom.png" walls="1" wallvariants="4" floors="1" floorvariants="1" props = "props_0ex_isaacs_bedroom.anm2" />
@@ -525,7 +525,7 @@
 		waterpit	= "grid_pit_mines_cursed.png"
 		bridge		= "grid_bridge_mines.png"
 		door		= "door_01_minesdoor.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_mines.png"
 		waterpitsmode	= "1"
 	/>
 	
@@ -540,7 +540,7 @@
 		waterpit	= "grid_pit_mines_cursed.png"
 		bridge		= "grid_bridge_ashpit.png"
 		door		= "door_01_ashpit.png"
-		holeinwall	= "door_08_holeinwall_depths.png"
+		holeinwall	= "door_08_holeinwall_ashpit.png"
 		waterpitsmode	= "1"
 	/>
 	

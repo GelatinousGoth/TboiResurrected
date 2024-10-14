@@ -1,9 +1,9 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="9/3/2021 12:06:47 AM" Version="117" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="10/11/2024 6:14:32 AM" Version="118" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="..\costumes\character_008_azazelhead.png" Id="0"/>
-			<Spritesheet Path="..\costumes\costume_082_lord of the pit.png" Id="1"/>
+			<Spritesheet Path="costumes\character_008_azazelhead.png" Id="0"/>
+			<Spritesheet Path="costumes\costume_082_lord of the pit.png" Id="1"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="head" Id="0" SpritesheetId="0"/>

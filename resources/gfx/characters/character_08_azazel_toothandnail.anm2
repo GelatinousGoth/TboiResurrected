@@ -1,8 +1,8 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="27.08.2014 01:23:59" Version="115" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="10/11/2024 6:13:08 AM" Version="116" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="nullcostumes/azazel/character_08_azazel_toothandnail.png" Id="0"/>
+			<Spritesheet Path="nullcostumes\azazel\costume_663_toothandnail.png" Id="0"/>
 			<Spritesheet Path="costumes\Costume_082_Lord of the Pit.png" Id="1"/>
 		</Spritesheets>
 		<Layers>
@@ -11,7 +11,7 @@
 			<Layer Name="top0" Id="2" SpritesheetId="1"/>
 		</Layers>
 		<Nulls>
-			<Null Name="Mouth" Id="0"/>
+			<Null Name="Mouth" Id="0" ShowRect="false"/>
 		</Nulls>
 		<Events>
 			<Event Name="sparkle" Id="0"/>
