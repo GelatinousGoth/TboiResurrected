@@ -1,7 +1,7 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
 local ModName = "Regret Pedestals"
-mod.CurrentModName = ModName
+local mod = TR_Manager:RegisterMod(ModName, 1)
 
 local stopWithHourglass = true
 
@@ -22,24 +22,15 @@ questionMarkSprite:SetFrame("Idle", 0)
 local itemSprite = Sprite()
 itemSprite:Load("gfx/005.100_collectible.anm2",true)
 
-local function SaveData()
-    return not not stopWithHourglass
-end
-
 function mod:LoadStorage()
-    stopWithHourglass = not not mod.Globals.LoadedData.Mods[ModName]
+    if not mod:HasData() then
+        return;
+    end
+
+    stopWithHourglass = mod:LoadData() ~= false
 end
 
 if ModConfigMenu then
-
-    local function SaveModConfig()
-        if stopWithHourglass then
-            mod:SaveData("true")
-        else
-            mod:SaveData("false")
-        end
-    end
-
     ModConfigMenu.AddSetting("Regret Pedestals", "Settings", {
         Type = ModConfigMenu.OptionType.BOOLEAN,
 		Default = true,
@@ -52,7 +43,7 @@ if ModConfigMenu then
 		end,
 		OnChange = function(newvalue)
 			stopWithHourglass = newvalue
-			SaveModConfig()
+			mod:SaveData(tostring(stopWithHourglass))
 		end,
 		Info = {"Disable the apparation when holding Glowing Hourglass"}
     })
@@ -220,6 +211,4 @@ mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, mod.postPickupUpdate, Pickup
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.postNewRoom)
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.postUpdate)
 mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.postRender)
-mod:AddCallback(mod.CustomCallbacks.ON_SAVE_DATA_LOAD, mod.LoadStorage)
-
-mod.Mods[ModName].SaveData = SaveData
+mod:AddCallback(ModCallbacks.MC_POST_SAVESLOT_LOAD, mod.LoadStorage)

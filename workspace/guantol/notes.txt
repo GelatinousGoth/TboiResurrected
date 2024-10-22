@@ -1,8 +1,0 @@
-- overall
-	Rework all functions that use the mod:SaveData() function.
-	
-- items_renamed
-	apply changes only after all the mods are loaded
-	
-- rare_chests
-	quality check

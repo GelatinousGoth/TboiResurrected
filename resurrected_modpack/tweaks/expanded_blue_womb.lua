@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Expanded Blue Womb"
+local mod = TR_Manager:RegisterMod("Expanded Blue Womb", 1)
 
 local LEVEL = Game():GetLevel()
 local LOCKED_ROOM_TYPES = {
@@ -31,5 +31,25 @@ function mod:SetRedirectBlueWomb()
     end
 end
 
--- Using MC_POST_NEW_ROOM so that Glowing Hourglass shenanigans don't remove the flag prematurely
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.SetRedirectBlueWomb)
+if REPENTOGON then
+    -- Using MC_POST_NEW_ROOM so that Glowing Hourglass shenanigans don't remove the flag prematurely
+    mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.SetRedirectBlueWomb)
+else
+    local enableOnUpdate = false
+
+    function mod:PostNewRoomWrapper()
+        if not pcall(mod.SetRedirectBlueWomb) then
+            enableOnUpdate = true
+        end
+    end
+
+    function mod:PostUpdateWrapper()
+        if enableOnUpdate then
+            enableOnUpdate = false
+            mod:SetRedirectBlueWomb()
+        end
+    end
+
+    mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.PostNewRoomWrapper)
+    mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.PostUpdateWrapper)
+end

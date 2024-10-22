@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Custom Corpse Chest"
+local mod = TR_Manager:RegisterMod("Custom Corpse Chest", 1)
 
 function mod:POST_BIGCHEST_INIT(entity)
 	local level = Game():GetLevel()

@@ -1,17 +1,15 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Coin Flip"
+CoinFlipper = TR_Manager:RegisterMod("Coin Flip", 1)
 
 local json = require("json");
 
-
-
-function mod:Save()
+function CoinFlipper:Save()
     local data = self.Data;
     local str = json.encode(data);
     self:SaveData(str);
 end
-function mod:Load()
+function CoinFlipper:Load()
     if (not self:HasData()) then
         self.Data = {};
     else
@@ -21,30 +19,30 @@ function mod:Load()
     end
     return self.Data;
 end
-function mod:SetKeyboardKey(key)
+function CoinFlipper:SetKeyboardKey(key)
     local data = self.Data or self:Load();
     data.Key = key;
     self:Save();
 end
-function mod:GetKeyboardKey()
+function CoinFlipper:GetKeyboardKey()
     local data = self.Data or self:Load();
     return data.Key or Keyboard.KEY_K;
 end
-function mod:SetControllerKey(key)
+function CoinFlipper:SetControllerKey(key)
     local data = self.Data or self:Load();
     data.ControllerKey = key;
     self:Save();
 end
-function mod:GetControllerKey()
+function CoinFlipper:GetControllerKey()
     local data = self.Data or self:Load();
     return data.ControllerKey or -1;
 end
-function mod:ClearSeed()
+function CoinFlipper:ClearSeed()
     local data = self.Data or self:Load();
     data.Seed = nil;
     self:Save();
 end
-function mod:RandomInt(min, max)
+function CoinFlipper:RandomInt(min, max)
     local data = self.Data or self:Load();
     local seed = data.Seed or Game():GetSeeds():GetStartSeed();
     local rng = RNG();
@@ -54,7 +52,7 @@ function mod:RandomInt(min, max)
     self:Save();
     return value;
 end
-function mod:CreateSprite(good)
+function CoinFlipper:CreateSprite(good)
     local anim = "FlipGood";
     if (not good) then
         anim = "FlipBad";
@@ -65,7 +63,7 @@ function mod:CreateSprite(good)
     return spr;
 end
 
-function mod:PostPlayerUpdate(player)
+function CoinFlipper:PostPlayerUpdate(player)
     if (player.Parent) then
         return;
     end
@@ -80,8 +78,8 @@ function mod:PostPlayerUpdate(player)
 
     if (not data.Flipping) then
         local pressed = false;
-        local keyboardKey = mod:GetKeyboardKey();
-        local controllerKey = mod:GetControllerKey();
+        local keyboardKey = CoinFlipper:GetKeyboardKey();
+        local controllerKey = CoinFlipper:GetControllerKey();
         if (keyboardKey >= 32) then
             pressed = pressed or Input.IsButtonTriggered(keyboardKey, player.ControllerIndex);
         end
@@ -91,13 +89,13 @@ function mod:PostPlayerUpdate(player)
         if (pressed) then
             local sfx = SFXManager();
             data.Flipping = true;
-            data.FlipResult = mod:RandomInt(0, 2) == 0;
-            data.FlipSprite = mod:CreateSprite(data.FlipResult);
+            data.FlipResult = CoinFlipper:RandomInt(0, 2) == 0;
+            data.FlipSprite = CoinFlipper:CreateSprite(data.FlipResult);
             sfx:Play(SoundEffect.SOUND_ULTRA_GREED_PULL_SLOT);
             sfx:Play(SoundEffect.SOUND_ULTRA_GREED_SLOT_SPIN_LOOP)
         end
     else
-        data.FlipSprite = data.FlipSprite or mod:CreateSprite(data.FlipResult);
+        data.FlipSprite = data.FlipSprite or CoinFlipper:CreateSprite(data.FlipResult);
         local spr = data.FlipSprite;
         spr:Update();
         if (spr:IsFinished(spr:GetAnimation())) then
@@ -114,9 +112,9 @@ function mod:PostPlayerUpdate(player)
         end
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, mod.PostPlayerUpdate);
+CoinFlipper:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, CoinFlipper.PostPlayerUpdate);
 
-function mod:PostPlayerRender(player, offset)
+function CoinFlipper:PostPlayerRender(player, offset)
     local playerData = player:GetData();
     local data = playerData._CoinFlipper;
     if (data and data.Flipping) then
@@ -127,11 +125,13 @@ function mod:PostPlayerRender(player, offset)
         spr:Render(pos, Vector.Zero, Vector.Zero);
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_PLAYER_RENDER, mod.PostPlayerRender);
+CoinFlipper:AddCallback(ModCallbacks.MC_POST_PLAYER_RENDER, CoinFlipper.PostPlayerRender);
 
-function mod:PostGameStarted(isContinued)
+function CoinFlipper:PostGameStarted(isContinued)
     if (not isContinued) then
-        mod:ClearSeed();
+        CoinFlipper:ClearSeed();
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.PostGameStarted);
+CoinFlipper:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, CoinFlipper.PostGameStarted);
+
+require("resurrected_modpack.qol.coin_flip.mod_config_menu");

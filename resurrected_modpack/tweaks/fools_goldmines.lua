@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Fool's Goldmines"
+local mod = TR_Manager:RegisterMod("Fool's Goldmines", 1)
 
 function mod:SwapRocks(entitytype, variant, subtype, gridindex, seed)
     -- rock check

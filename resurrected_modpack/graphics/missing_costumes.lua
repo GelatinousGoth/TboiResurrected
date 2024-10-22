@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Missing Costumes"
+local mod = TR_Manager:RegisterMod("Missing Costumes", 1)
 
 _G.Onseshigo = _G.Onseshigo or {}
 _G.Onseshigo.MissingCostumes = mod

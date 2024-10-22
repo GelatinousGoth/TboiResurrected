@@ -1,5 +1,5 @@
-local mod = require("resurrected_modpack.mod_reference")
-mod.CurrentModName = "bygone_over_bb"
+local TR_Manager = require("resurrected_modpack.manager")
+local mod = TR_Manager:RegisterMod("bygone_over_bb", 1)
 local spawnedBlueBabies = {}
 local corpseSpawned = false
 local bbBossId = 40

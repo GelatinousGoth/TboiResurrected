@@ -1,7 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Fiend Folio Fortunes"
-mod.LockCallbackRecord = true
+local mod = TR_Manager:RegisterMod("Fiend Folio Fortunes", 1)
 
 local Fortunes = [==============================================================================================================================================================================================================================================================================[
 look to la luna
@@ -5806,5 +5805,3 @@ function mod.InitFiendFolioFortunes()
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, mod.InitFiendFolioFortunes)
-
-mod.LockCallbackRecord = false

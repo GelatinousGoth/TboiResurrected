@@ -1,5 +1,5 @@
-local mod = require("resurrected_modpack.mod_reference")
-mod.CurrentModName = "Antibirth Hornfel Trail"
+local TR_Manager = require("resurrected_modpack.manager")
+local mod = TR_Manager:RegisterMod("Antibirth Hornfel Trail", 1)
 
 -- some code from epiphany, except i was the one who wrote that code so it's fine lol
 

@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Shepard Tone"
+local mod = TR_Manager:RegisterMod("Shepard Tone", 1)
 
 -- When these types of pickups are picked up, their pickup sound gradually increases in pitch for a short amount of time.
 -- Format: { <variant>, <subtype>, <sound> }

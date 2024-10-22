@@ -1,4 +1,4 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 mod.LockCallbackRecord = true
 
 local function ExecuteCommand(command, args)
@@ -47,7 +47,7 @@ local function RemoveCallbackTest(args)
     local previousModName = mod.CurrentModName
     local previousLockCallbackRecord = mod.LockCallbackRecord
     local modName = "RemoveCallbackTest"
-    mod.CurrentModName = modName
+local     mod = TR_Manager:RegisterMod(modName, 1)
     mod.LockCallbackRecord = lock
 
     local function onPostRoom()
@@ -107,7 +107,7 @@ local function RemoveCallbackTest(args)
 
     mod:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, CallbackPriority.LATE, RemoveTest)
 
-    mod.CurrentModName = previousModName
+local     mod = TR_Manager:RegisterMod(previousModName, 1)
     mod.LockCallbackRecord = previousLockCallbackRecord
 end
 

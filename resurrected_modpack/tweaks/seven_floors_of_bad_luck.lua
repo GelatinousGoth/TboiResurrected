@@ -1,20 +1,26 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
 local ModName = "Seven Floors of Bad Luck"
-mod.CurrentModName = ModName
+local mod = TR_Manager:RegisterMod(ModName, 1)
 
-local storage
+local json = require("json")
+
+local storage = {}
 
 function mod:onStart(IsContinued)
-	storage = mod.Globals.LoadedData.Mods[ModName]
+	if not IsContinued then
+		mod:RemoveData()
+		return
+	end
+
+	if mod:HasData() then
+		storage = json.decode(mod:LoadData())
+	end
+
 	-- To stop the luck penalty not updating on new / resumed runs
 	local player = Isaac.GetPlayer(0)
 	player:AddCacheFlags(CacheFlag.CACHE_LUCK)
 	player:EvaluateItems()
-end
-
-local function SaveData()
-    return storage
 end
 
 function mod:onUpdate()
@@ -81,6 +87,12 @@ function mod:onCache(player, flag)
 	end
 end
 
+function SaveStorage()
+	if storage ~= nil then
+		mod:SaveData(json.encode(storage))
+	end
+end
+
 function mod:newFloor()
 	if storage ~= nil and storage.MirrorMisfortune ~= nil and storage.MirrorMisfortune > 0 then
 		storage.MirrorMisfortune = storage.MirrorMisfortune - 1
@@ -88,15 +100,18 @@ function mod:newFloor()
 		player:AddCacheFlags(CacheFlag.CACHE_LUCK)
 		player:EvaluateItems()
 	end
-	-- and save, to correspond with the game's autosaving on new floors
-	if storage ~= nil then
-        mod:SaveData(mod.json.encode(storage))
-    end
+
+	SaveStorage()
 end
 
-mod:AddCallback(mod.CustomCallbacks.ON_SAVE_DATA_LOAD, mod.onStart)
+function mod:onGameExit(ShouldSave)
+	if ShouldSave then
+		SaveStorage()
+	end
+end
+
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.onStart)
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.onUpdate)
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.onCache)
 mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.newFloor)
-
-mod.Mods[ModName].SaveData = SaveData
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.newFloor)

@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Unlockable Utero"
+local mod = TR_Manager:RegisterMod("Unlockable Utero", 1)
 
 if REPENTOGON then
 

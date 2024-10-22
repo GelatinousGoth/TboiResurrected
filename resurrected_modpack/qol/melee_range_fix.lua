@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Melee Range Fix"
+local mod = TR_Manager:RegisterMod("Melee Range Fix", 1)
 
 RangeFixForBonesAndSword = mod;
 mod.WhitelistVariants = {

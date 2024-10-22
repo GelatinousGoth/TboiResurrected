@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Glitched Breakfast"
+local mod = TR_Manager:RegisterMod("Glitched Breakfast", 1)
 
 local TIMES_CAN_FAIL = 50
 

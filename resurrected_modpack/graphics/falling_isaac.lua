@@ -1,5 +1,5 @@
-local mod = require("resurrected_modpack.mod_reference")
-mod.CurrentModName = "falling_isaac"
+local TR_Manager = require("resurrected_modpack.manager")
+local mod = TR_Manager:RegisterMod("falling_isaac", 1)
 
 local sfx = SFXManager()
 

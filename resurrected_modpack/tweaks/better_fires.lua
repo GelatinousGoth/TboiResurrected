@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Better Fires"
+local mod = TR_Manager:RegisterMod("Better Fires", 1)
 
 local sfx = SFXManager()
 

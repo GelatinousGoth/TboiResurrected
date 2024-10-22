@@ -1,5 +1,5 @@
-local mod = require("resurrected_modpack.mod_reference")
-mod.CurrentModName = "Animated Costumes"
+local TR_Manager = require("resurrected_modpack.manager")
+local mod = TR_Manager:RegisterMod("Animated Costumes", 1)
 
 local HASMEATVEIN = false
 local HASPOLYSPARKLE = false

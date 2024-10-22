@@ -1,7 +1,7 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
 local ModName = "Items Removed"
-mod.CurrentModName = ModName
+local mod = TR_Manager:RegisterMod(ModName, 1)
 
 local CardsIWantToBlock = {}
 local PillsIWantToBlock = {

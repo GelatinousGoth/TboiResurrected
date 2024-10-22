@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Better Donation Machines"
+local mod = TR_Manager:RegisterMod("Better Donation Machines", 1)
 
 local game = Game()
 

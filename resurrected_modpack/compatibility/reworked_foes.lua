@@ -1,12 +1,4 @@
-local mod = require("resurrected_modpack.mod_reference")
-
-local previousLockCallbackRecord = mod.LockCallbackRecord
-
-local modName = "Reworked Compatibility"
-local lockCallbackRecord = true
-
-mod.CurrentModName = modName
-mod.LockCallbackRecord = lockCallbackRecord
+local mod = RegisterMod("TR ReworkedFoes Compat", 1)
 
 ---------------------------------------------------------------------------------------------------
 --------------------------------------REWORKED COMPATIBILITY---------------------------------------
@@ -253,5 +245,3 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, CheckForCustomVS)
 mod:AddCallback(ModCallbacks.MC_POST_RENDER, RenderCustomVS)
 
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function() isCustomVersusScreen = false end)
-
-mod.LockCallbackRecord = previousLockCallbackRecord

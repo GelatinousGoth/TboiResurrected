@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Red Portal effects for Gehenna"
+local mod = TR_Manager:RegisterMod("Red Portal effects for Gehenna", 1)
 
 local game = Game()
 local rng = RNG()

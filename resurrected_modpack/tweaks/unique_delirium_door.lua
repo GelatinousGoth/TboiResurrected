@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Unique Delirium Door"
+local mod = TR_Manager:RegisterMod("Unique Delirium Door", 1)
 
 local game = Game()
 

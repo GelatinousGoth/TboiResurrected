@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Gurdvd"
+local mod = TR_Manager:RegisterMod("Gurdvd", 1)
 
 local game = Game()
 local getAngleDiv = function(a,b)

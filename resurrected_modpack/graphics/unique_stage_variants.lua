@@ -1,6 +1,5 @@
-local mod = require("resurrected_modpack.mod_reference")
-
-mod.CurrentModName = "Unique Stage Variants"
+local TR_Manager = require("resurrected_modpack.manager")
+local mod = TR_Manager:RegisterMod("Unique Stage Variants", 1)
 
 function mod:StageVariants()
     RoomConfig.GetStage(StbType.BURNING_BASEMENT):SetDisplayName("Ardent Attic")

@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Amazing Chest Ahead"
+local mod = TR_Manager:RegisterMod("Amazing Chest Ahead", 1)
 
 local game = Game()
 
@@ -28,7 +28,7 @@ function mod:ChestReplace(pickup)
 	end
 	if room:GetType() ~= RoomType.ROOM_CHALLENGE and stage ~= LevelStage.STAGE6 and not pickup:GetData().nomorph then
 		if pickup.InitSeed % (100 * 100) < (woodenChestPercent * 100) then
-			pickup:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_WOODENCHEST, mod.Enums.InitSubType.NO_MORPH, true, true, false)
+			pickup:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_WOODENCHEST, 1, true, true, false)
 		end
 	end
 end
@@ -42,13 +42,13 @@ function mod:LockedChestReplace(pickup)
 	end
 	if room:GetType() ~= RoomType.ROOM_CHALLENGE and stage ~= LevelStage.STAGE6 and not pickup:GetData().nomorph then
 		if pickup.InitSeed % (100 * 100) < (oldChestPercent * 100) then
-			pickup:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_OLDCHEST, mod.Enums.InitSubType.NO_MORPH, true, true, false)
+			pickup:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_OLDCHEST, 1, true, true, false)
 		end
 	end
 end
 
-mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.LATER, mod.ChestReplace, PickupVariant.PICKUP_CHEST)
-mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, CallbackPriority.LATER, mod.LockedChestReplace, PickupVariant.PICKUP_LOCKEDCHEST)
+mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, math.maxinteger, mod.ChestReplace, PickupVariant.PICKUP_CHEST)
+mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, math.maxinteger, mod.LockedChestReplace, PickupVariant.PICKUP_LOCKEDCHEST)
 
 
 --Red Chest Extra Loot

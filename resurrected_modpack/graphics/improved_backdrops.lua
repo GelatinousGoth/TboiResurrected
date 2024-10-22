@@ -1,10 +1,10 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
 local ModName = "Improved Backdrops"
-mod.CurrentModName = ModName
+local mod = TR_Manager:RegisterMod(ModName, 1)
 
 local game = Game()
-
+local json = require("json")
 
 -- Backdrop enums
 BackdropType.MAUSOLEUM_BOSS = BackdropType.MAUSOLEUM3
@@ -73,25 +73,20 @@ local config = {
 	customgreedrooms = true,
 }
 
-
-
 -- Load settings
 function mod:postGameStarted()
-    local data = mod.Globals.LoadedData.Mods[ModName]
-	if not data then
-		return
-	end
-    for k, v in pairs(data) do
-        if config[k] ~= nil then config[k] = v end
+    if mod:HasData() then
+        local data = json.decode(mod:LoadData())
+        for k, v in pairs(data) do
+            if config[k] ~= nil then config[k] = v end
+        end
     end
 end
-mod:AddCallback(mod.CustomCallbacks.ON_SAVE_DATA_LOAD, mod.postGameStarted)
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.postGameStarted)
 
 -- Save settings
-
-local function SaveData()
-	return config
-end
+function mod:preGameExit() mod:SaveData(json.encode(config)) end
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.preGameExit)
 
 -- For Revelations compatibility
 function mod:CheckForRev()
@@ -885,5 +880,3 @@ if ModConfigMenu then
 	    Info = {"Enable/Disable unique Greed miniboss rooms. (default = on)"}
   	})
 end
-
-mod.Mods[ModName].SaveData = SaveData

@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Unique Gurgling Sprite"
+local mod = TR_Manager:RegisterMod("Unique Gurgling Sprite", 1)
 
 function mod:SpriteReplacer(Gurgling)
 	if Gurgling.Variant == 0 then 

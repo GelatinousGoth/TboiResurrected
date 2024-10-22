@@ -1,199 +1,77 @@
-local mod = require("resurrected_modpack.mod_reference")
-mod.Debug = true
+local TR_Manager = require("resurrected_modpack.manager")
+TR_Manager:Init()
 
-mod.json = require("json")
-mod.log = require("resurrected_modpack.tools.log")
-mod.registry = include("resurrected_modpack.registry") 
+-- require("resurrected_modpack.enums")
 
-local TSILFolder = "resurrected_modpack.lib.library_of_isaac"
+-- require("resurrected_modpack.tools.custom_callbacks")
+-- require("resurrected_modpack.tools.global_variables")
+-- require("resurrected_modpack.tools.global_functions")
+-- require("resurrected_modpack.tools.console_commands")
 
-require("resurrected_modpack.enums")
+TR_Manager:LoadMod("resurrected_modpack.graphics.swaggy_mushrooms")
+TR_Manager:LoadMod("resurrected_modpack.graphics.unique_gurgling_sprite")
+TR_Manager:LoadMod("resurrected_modpack.graphics.red_ending_chest")
+TR_Manager:LoadMod("resurrected_modpack.graphics.custom_corpse_chest")
+TR_Manager:LoadMod("resurrected_modpack.graphics.improved_backdrops_void_overlay")
+TR_Manager:LoadMod("resurrected_modpack.graphics.improved_backdrops")
+TR_Manager:LoadMod("resurrected_modpack.graphics.beast_laugh_on_damage")
+TR_Manager:LoadMod("resurrected_modpack.graphics.gehenna_visual_tweaks")
+TR_Manager:LoadMod("resurrected_modpack.graphics.crawlspaces_rebuilt")
+TR_Manager:LoadMod("resurrected_modpack.graphics.antibirth_hornfel_trail")
+TR_Manager:LoadMod("resurrected_modpack.graphics.forgotten_got_real_chain")
+TR_Manager:LoadMod("resurrected_modpack.graphics.bygone_over_bb")
+TR_Manager:LoadMod("resurrected_modpack.graphics.keeper_coin_tears")
+TR_Manager:LoadMod("resurrected_modpack.graphics.better_lasers_for_fallen_angels")
+TR_Manager:LoadMod("resurrected_modpack.graphics.missing_costumes")
+TR_Manager:LoadMod("resurrected_modpack.graphics.item_pedestal_overhaul")
+TR_Manager:LoadMod("resurrected_modpack.graphics.missing_tears_gfx")
+TR_Manager:LoadMod("resurrected_modpack.graphics.better_donation_machines")
+TR_Manager:LoadMod("resurrected_modpack.graphics.falling_isaac")
+TR_Manager:LoadMod("resurrected_modpack.graphics.card_resprites")
+TR_Manager:LoadMod("resurrected_modpack.graphics.gurdvd")
+TR_Manager:LoadMod("resurrected_modpack.graphics.achievement_portraits")
+TR_Manager:LoadMod("resurrected_modpack.graphics.head_of_the_keeper_costume")
+TR_Manager:LoadMod("resurrected_modpack.graphics.unique_progress_bar_icon")
+TR_Manager:LoadMod("resurrected_modpack.graphics.animated_costumes")
+TR_Manager:LoadMod("resurrected_modpack.graphics.reflective_downpour_mirror")
+TR_Manager:LoadMod("resurrected_modpack.graphics.unique_hazards")
+TR_Manager:LoadMod("resurrected_modpack.graphics.unique_stage_variants")
+TR_Manager:LoadMod("resurrected_modpack.graphics.better_boss_rush_backdrop")
 
-mod.Lib = {}
-mod.Lib.TSIL = require(TSILFolder .. ".TSIL")
-mod.Lib.TSIL.Init(TSILFolder)
-require("resurrected_modpack.lib.achievement_checker")
-require("resurrected_modpack.tools.pickup_morph_manager")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.chests_before_mother")
+-- TR_Manager:LoadMod("resurrected_modpack.tweaks.rare_chests")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.unique_delirium_door")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.fallen_gabriel_spawns_imps")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.bombable_devil_statue")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.amazing_chest_ahead")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.seven_floors_of_bad_luck")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.regret_pedestals")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.fools_goldmines")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.better_fires")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.double_spiked_rocks")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.glitched_breakfast")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.enemy_blood_donations")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.centered_fallen_angel")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.expanded_blue_womb")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.centered_fallen_angel")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.expanded_blue_womb")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.unlockable_utero")
 
-Isaac.DebugString("[Tboi Resurrected] \"Tboi Resurrected\" initialized.")
+TR_Manager:LoadMod("resurrected_modpack.qol.hanging_dream_catcher")
+TR_Manager:LoadMod("resurrected_modpack.qol.hud_toggle")
+TR_Manager:LoadMod("resurrected_modpack.qol.items_renamed")
+TR_Manager:LoadMod("resurrected_modpack.qol.items_removed")
+TR_Manager:LoadMod("resurrected_modpack.qol.coin_flip")
+TR_Manager:LoadMod("resurrected_modpack.qol.voided_items")
+TR_Manager:LoadMod("resurrected_modpack.qol.ff_fortunes")
+TR_Manager:LoadMod("resurrected_modpack.qol.melee_range_fix")
 
-mod.Mods = {}
-mod.RemovedCallbacks = {}
+TR_Manager:LoadMod("resurrected_modpack.shaders.hotter_mines")
 
-mod.CurrentModName = "Tboi Resurrected"
-mod.LockCallbackRecord = false
+TR_Manager:LoadMod("resurrected_modpack.sounds.shepard_tone")
+TR_Manager:LoadMod("resurrected_modpack.sounds.bell_chime_for_good_items")
 
-require("resurrected_modpack.api_overwrite.callback")
-require("resurrected_modpack.tools.custom_callbacks")
-require("resurrected_modpack.tools.global_variables")
-require("resurrected_modpack.tools.global_functions")
-require("resurrected_modpack.tools.console_commands")
+TR_Manager:LoadMod("resurrected_modpack.music.unique_mega_satan_music")
 
-require("resurrected_modpack.graphics.swaggy_mushrooms")
-require("resurrected_modpack.graphics.unique_gurgling_sprite")
-require("resurrected_modpack.graphics.red_ending_chest")
-require("resurrected_modpack.graphics.custom_corpse_chest")
-require("resurrected_modpack.graphics.improved_backdrops_void_overlay")
-require("resurrected_modpack.graphics.improved_backdrops")
-require("resurrected_modpack.graphics.beast_laugh_on_damage")
-require("resurrected_modpack.graphics.gehenna_visual_tweaks")
-require("resurrected_modpack.graphics.crawlspaces_rebuilt")
-require("resurrected_modpack.graphics.antibirth_hornfel_trail")
-require("resurrected_modpack.graphics.forgotten_got_real_chain")
-require("resurrected_modpack.graphics.bygone_over_bb")
-require("resurrected_modpack.graphics.keeper_coin_tears")
-require("resurrected_modpack.graphics.better_lasers_for_fallen_angels")
-require("resurrected_modpack.graphics.missing_costumes")
-require("resurrected_modpack.graphics.item_pedestal_overhaul")
-require("resurrected_modpack.graphics.missing_tears_gfx")
-require("resurrected_modpack.graphics.better_donation_machines")
-require("resurrected_modpack.graphics.falling_isaac")
-require("resurrected_modpack.graphics.card_resprites")
-require("resurrected_modpack.graphics.gurdvd")
-require("resurrected_modpack.graphics.achievement_portraits")
-require("resurrected_modpack.graphics.head_of_the_keeper_costume")
-require("resurrected_modpack.graphics.animated_costumes")
-require("resurrected_modpack.graphics.reflective_downpour_mirror")
-require("resurrected_modpack.graphics.unique_hazards")
-require("resurrected_modpack.graphics.shop_parrot")
-require("resurrected_modpack.graphics.unique_stage_variants")
-require("resurrected_modpack.graphics.better_boss_rush_backdrop")
-
-require("resurrected_modpack.tweaks.lamb_intro_invincibility")
-require("resurrected_modpack.tweaks.chests_before_mother")
--- require("resurrected_modpack.tweaks.rare_chests")
-require("resurrected_modpack.tweaks.unique_delirium_door")
-require("resurrected_modpack.tweaks.fallen_gabriel_spawns_imps")
-require("resurrected_modpack.tweaks.bombable_devil_statue")
-require("resurrected_modpack.tweaks.amazing_chest_ahead")
-require("resurrected_modpack.tweaks.seven_floors_of_bad_luck")
-require("resurrected_modpack.tweaks.regret_pedestals")
-require("resurrected_modpack.tweaks.fools_goldmines")
-require("resurrected_modpack.tweaks.better_fires")
-require("resurrected_modpack.tweaks.double_spiked_rocks")
-require("resurrected_modpack.tweaks.glitched_breakfast")
-require("resurrected_modpack.tweaks.enemy_blood_donations")
-require("resurrected_modpack.tweaks.centered_fallen_angel")
-require("resurrected_modpack.tweaks.expanded_blue_womb")
-require("resurrected_modpack.tweaks.unlockable_utero")
-
-require("resurrected_modpack.qol.hanging_dream_catcher")
-require("resurrected_modpack.qol.hud_toggle")
-require("resurrected_modpack.qol.items_renamed")
-require("resurrected_modpack.qol.items_removed")
-require("resurrected_modpack.qol.coin_flip")
-require("resurrected_modpack.qol.ff_fortunes")
-require("resurrected_modpack.qol.melee_range_fix")
-
-require("resurrected_modpack.shaders.hotter_mines")
-
-require("resurrected_modpack.sounds.shepard_tone")
-require("resurrected_modpack.sounds.bell_chime_for_good_items")
-
-require("resurrected_modpack.music.unique_mega_satan_music")
-
-require("resurrected_modpack.compatibility.reworked_foes")
-
-local DefaultDisabledMods = {}
-for modName, _ in pairs(mod.Mods) do
-    DefaultDisabledMods[modName] = false
-end
-
-local DisabledMods = TSIL.Utils.DeepCopy.DeepCopy(DefaultDisabledMods)
-
-function mod:SavingProcedure(onExit)
-    if not onExit and not mod.Globals.GameStarted then -- Prevent Saving if Loading never occurred
-        return
-    end
-    local saveData = {}
-    saveData.DisabledMods = DisabledMods
-    saveData.Mods = {}
-    for modName, modTable in pairs(mod.Mods) do
-        if modTable.SaveData then
-            saveData.Mods[modName] = modTable.SaveData()
-        end
-    end
-    mod:SaveData(mod.json.encode(saveData))
-end
-
-function mod:SaveOnExit()
-    if not mod.Globals.GameStarted then -- Prevent Saving if Loading never occurred
-        return
-    end
-    mod.Globals.GameStarted = false -- the previous check could be avoided by just putting this after the call for SavingProcedure
-    -- but given that, if a single error occurs during SavingProcedure the GameStarted variable would not be properly reset I choose to keep the check
-    mod:SavingProcedure(true)
-end
-
-local function ResetDisabledSettingsToDefault()
-    DisabledMods = TSIL.Utils.DeepCopy.DeepCopy(DefaultDisabledMods)
-    for modName, _ in pairs(mod.Mods) do
-        DisabledMods[modName] = false
-        mod:EnableMod(modName, false)
-    end
-end
-
-function mod:LoadingProcedure(IsContinued)
-    if mod.Globals.GameStarted then
-        return
-    end
-    mod.Globals.GameStarted = true
-    if mod:HasData() then
-        mod.Globals.LoadedData = mod.json.decode(mod:LoadData())
-        local removedMods = mod.Globals.LoadedData.DisabledMods
-        if removedMods then
-            for modName, isRemoved in pairs(removedMods) do
-                if mod.Mods[modName] then
-                    DisabledMods[modName] = isRemoved
-                    if isRemoved then
-                        mod:RemoveMod(modName, false)
-                    else
-                        mod:EnableMod(modName, false)
-                    end
-                end
-            end
-        else
-            DisabledMods = TSIL.Utils.DeepCopy.DeepCopy(DefaultDisabledMods)
-            ResetDisabledSettingsToDefault()
-        end
-        Isaac.RunCallback(mod.CustomCallbacks.ON_SAVE_DATA_LOAD, IsContinued)
-    else
-        DisabledMods = TSIL.Utils.DeepCopy.DeepCopy(DefaultDisabledMods)
-        ResetDisabledSettingsToDefault()
-    end
-end
-
-Isaac.AddCallback(mod, ModCallbacks.MC_PRE_GAME_EXIT, mod.SaveOnExit)
-
-Isaac.AddPriorityCallback(mod, ModCallbacks.MC_POST_NEW_LEVEL, CallbackPriority.MIN, mod.SavingProcedure)
-
-Isaac.AddCallback(mod, ModCallbacks.MC_POST_GAME_STARTED, mod.LoadingProcedure)
-
-Isaac.AddCallback(mod, TSIL.Enums.CustomCallback.POST_GAME_STARTED_REORDERED, mod.LoadingProcedure) -- In case the RemoveCallback functions cause the regular MC_POST_GAME_STARTED callback to not fire
-
-if ModConfigMenu then
-    local CategoryName = "Tboi Resurrected"
-    for modName, modTable in pairs(mod.Mods) do
-        ModConfigMenu.AddSetting(CategoryName, "Enabled", {
-            Type = ModConfigMenu.OptionType.BOOLEAN,
-            CurrentSetting = function ()
-                return DisabledMods[modName]
-            end,
-            Display = function()
-                local choice = tostring(not DisabledMods[modName])
-                return (modTable.ConfigName or modName) .. ': ' .. choice
-            end,
-            OnChange = function(currentSetting)
-                DisabledMods[modName] = currentSetting
-                if currentSetting then
-                    mod:RemoveMod(modName)
-                else
-                    mod:EnableMod(modName)
-                end
-            end,
-            Info = function () return (modTable.ConfigInfo or "") end
-        })
-    end
-end
-
-mod.CurrentModName = "Post Init"
+TR_Manager:LoadMod("resurrected_modpack.compatibility.reworked_foes")

@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Head Of The Keeper Costume"
+local keeper = TR_Manager:RegisterMod("Head Of The Keeper Costume", 1)
 
 NullItemID.ID_PENNY = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_penny_shoot.anm2")
 NullItemID.ID_PENNY_IDLE = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_penny.anm2")

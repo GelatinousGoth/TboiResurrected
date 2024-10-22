@@ -1,5 +1,5 @@
-local mod = require("resurrected_modpack.mod_reference")
-mod.CurrentModName = "rare_chests"
+local TR_Manager = require("resurrected_modpack.manager")
+local mod = TR_Manager:RegisterMod("rare_chests", 1)
 local json = require("json")
 local data
 

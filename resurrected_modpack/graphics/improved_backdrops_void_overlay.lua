@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Void Overlay"
+local mod = TR_Manager:RegisterMod("Void Overlay", 1)
 
 function mod:VOID_OVERLAY()
     if Game():GetLevel():GetStage() == LevelStage.STAGE7 then

@@ -1,9 +1,7 @@
-local mod = require("resurrected_modpack.mod_reference")
-mod.CurrentModName = "Better_Boss_Rush_Backdrop"
--- //
--- Code taken from the Backgrounds and Doors mod.
--- Thanks to Nioffe, code no longer causes errors in the console.
--- //
+local TR_Manager = require("resurrected_modpack.manager")
+
+local mod = TR_Manager:RegisterMod("Better Boss Rush Backdrop", 1)
+
 local game = Game()
 local backdropRNG = RNG()
 backdropRNG:SetSeed(Random(), 3)

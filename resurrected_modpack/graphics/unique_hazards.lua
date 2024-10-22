@@ -1,6 +1,5 @@
-local mod = require("resurrected_modpack.mod_reference")
-
-mod.CurrentModName = "Unique Hazards"
+local TR_Manager = require("resurrected_modpack.manager")
+local mod = TR_Manager:RegisterMod("Unique Hazards", 1)
 
 local game = Game()
 

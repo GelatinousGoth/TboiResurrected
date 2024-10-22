@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Red Ending Chest"
+local mod = TR_Manager:RegisterMod("Red Ending Chest", 1)
 
 --big chest init function, runs when a big chest is spawned
 function mod:POST_BIGCHEST_INIT(entity)

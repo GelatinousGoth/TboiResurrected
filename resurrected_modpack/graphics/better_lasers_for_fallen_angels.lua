@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Better Lasers For Fallen Angels"
+local mod = TR_Manager:RegisterMod("Better Lasers For Fallen Angels", 1)
 
 function mod:ae()
     local entities = Isaac.GetRoomEntities()

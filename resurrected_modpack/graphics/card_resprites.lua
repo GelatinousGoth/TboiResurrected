@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Card Resprite"
+local mod = TR_Manager:RegisterMod("Card Resprite", 1)
 mod.LockCallbackRecord = true
 
 local itemConfig = Isaac.GetItemConfig()

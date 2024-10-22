@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Hanging Dream Catcher"
+local mod = TR_Manager:RegisterMod("Hanging Dream Catcher", 1)
 
 local trapdoors = {}
 
@@ -11,7 +11,7 @@ end
 
 local function isValidTrapdoor(Trapdoor)
 	local variant = Trapdoor:GetVariant()
-	if variant == TSIL.Enums.TrapdoorVariant.VOID_PORTAL then
+	if variant == 1 then
 		return false
 	end
 	local level = Game():GetLevel()
@@ -22,44 +22,48 @@ local function isValidTrapdoor(Trapdoor)
 	return true
 end
 
-local function AddHangingDreamCatcher(Trapdoor)
+local function TryRemoveDreamCatcher(trapdoorTable)
+	if not trapdoorTable.DreamCatcher then
+		return
+	end
+
+	trapdoorTable.DreamCatcher:Remove()
+	trapdoorTable.DreamCatcher = nil;
+end
+
+local function TryAddDreamCatcher(trapdoorTable)
+	if not mod.Functions.AnyoneHasCollectible(CollectibleType.COLLECTIBLE_DREAM_CATCHER) then
+		return
+	end
+
+	TryRemoveDreamCatcher()
+	trapdoorTable.DreamCatcher = Isaac.Spawn(1000, 245, 0, trapdoorTable.GridEntity.Position, Vector(0,0), nil)
+end
+
+local function AddTrapdoor(Trapdoor)
 	if not isValidTrapdoor(Trapdoor) then
 		return
 	end
-	local previousHangingCatcher = trapdoors[Trapdoor:GetGridIndex()]
-	if previousHangingCatcher then
-		previousHangingCatcher:Remove()
-	end
-	trapdoors[Trapdoor:GetGridIndex()] = Isaac.Spawn(1000, 245, 0, Trapdoor.Position, Vector(0,0), nil)
+
+	trapdoors[Trapdoor:GetGridIndex()] = {GridEntity = Trapdoor}
+	TryAddDreamCatcher(trapdoors[Trapdoor:GetGridIndex()])
 end
 
-function mod:onTrapdoorInit(Trapdoor)
-	if not mod.Functions.AnyPlayerHasCollectible(CollectibleType.COLLECTIBLE_DREAM_CATCHER) then
-		return
-	end
-	AddHangingDreamCatcher(Trapdoor)
+function mod:onTrapdoorSpawn(Trapdoor)
+	AddTrapdoor(Trapdoor)
 end
 
 function mod:RemoveTrapdoors()
 	trapdoors = {}
 end
 
-local function ActualAddedDreamCatcher(CollectibleId)
+function mod:onCollectibleAdd(CollectibleId)
 	if CollectibleId ~= CollectibleType.COLLECTIBLE_DREAM_CATCHER then
 		return
 	end
-	for _, trapdoor in ipairs(TSIL.GridSpecific.GetTrapdoors()) do
-		AddHangingDreamCatcher(trapdoor)
-	end
-end
 
-if REPENTOGON then
-	function mod:onAddedDreamCatcher(CollectibleId)
-		ActualAddedDreamCatcher(CollectibleId)
-	end
-else
-	function mod:onAddedDreamCatcher(_, CollectibleId)
-		ActualAddedDreamCatcher(CollectibleId)
+	for _, trapdoorTable in ipairs(trapdoors) do
+		TryAddDreamCatcher(trapdoorTable)
 	end
 end
 
@@ -67,18 +71,18 @@ function mod:onRemovedDreamCatcher(_, CollectibleId)
 	if CollectibleId ~= CollectibleType.COLLECTIBLE_DREAM_CATCHER then
 		return
 	end
-	if mod.Functions.AnyPlayerHasCollectible(CollectibleType.COLLECTIBLE_DREAM_CATCHER) then
+	if PlayerManager.AnyoneHasCollectible(CollectibleType.COLLECTIBLE_DREAM_CATCHER) then
 		return
 	end
-	for _, hangingDreamCatcher in ipairs(trapdoors) do
-		hangingDreamCatcher:Remove()
+	for _, trapdoorTable in ipairs(trapdoors) do
+		TryRemoveDreamCatcher(trapdoorTable)
 	end
 end
 
-mod:AddCallback(TSIL.Enums.CustomCallback.POST_GRID_ENTITY_INIT, mod.onTrapdoorInit, GridEntityType.GRID_TRAPDOOR)
+mod:AddCallback(ModCallbacks.MC_POST_GRID_ENTITY_SPAWN, mod.onTrapdoorSpawn, GridEntityType.GRID_TRAPDOOR)
 
-mod:AddCallback(TSIL.Enums.CustomCallback.POST_NEW_ROOM_EARLY, mod.RemoveTrapdoors)
+mod:AddCallback(ModCallbacks.MC_PRE_NEW_ROOM, mod.RemoveTrapdoors)
 
-mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, mod.onAddedDreamCatcher)
+mod:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, mod.onCollectibleAdd)
 
 mod:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, mod.onRemovedDreamCatcher)

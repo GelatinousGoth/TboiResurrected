@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Missing Tears GFX"
+local mod = TR_Manager:RegisterMod("Missing Tears GFX", 1)
 
 local TEAR_STATIC = Isaac.GetEntityVariantByName("Static Tear")
 local TEAR_FACING = Isaac.GetEntityVariantByName("Facing Tear")

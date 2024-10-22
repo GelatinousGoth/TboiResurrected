@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "HUD Toggle"
+local mod = TR_Manager:RegisterMod("HUD Toggle", 1)
 
 --Set key binding
  local hudToggleButton = Keyboard.KEY_H

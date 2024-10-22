@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Centered Fallen Angels"
+local mod = TR_Manager:RegisterMod("Centered Fallen Angels", 1)
 
 local PENTAGRAM_CENTER = Vector(320, 520)
 local FALLEN_ANGELS = {

@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Double Spiked Rocks"
+local mod = TR_Manager:RegisterMod("Double Spiked Rocks", 1)
 
 -------------------------------------------------------------------------------------------------------------------------------------------
 -- Update Enums

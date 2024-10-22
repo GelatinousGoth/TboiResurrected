@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "The Beast Laughs On Damage"
+local mod = TR_Manager:RegisterMod("The Beast Laughs On Damage", 1)
 
 local isaacisdamagedinbeastfight = 0
 

@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Chests Before Mother"
+local mod = TR_Manager:RegisterMod("Chests Before Mother", 1)
 
 local spawnedChestsFrame = false
 
@@ -14,8 +14,8 @@ function mod:spawnChests()
 	local level = Game():GetLevel()
 	if isHoleRoom(level:GetCurrentRoomDesc()) then
 		spawnedChestsFrame = true
-		Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LOCKEDCHEST, mod.Enums.InitSubType.NO_MORPH, room:GetGridPosition(64), Vector.Zero, nil)
-		Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LOCKEDCHEST, mod.Enums.InitSubType.NO_MORPH, room:GetGridPosition(70), Vector.Zero, nil)
+		Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LOCKEDCHEST, 1, room:GetGridPosition(64), Vector.Zero, nil)
+		Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LOCKEDCHEST, 1, room:GetGridPosition(70), Vector.Zero, nil)
 	end
 end
 

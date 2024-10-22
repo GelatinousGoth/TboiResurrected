@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Keeper Coin Tears"
+local mod = TR_Manager:RegisterMod("Keeper Coin Tears", 1)
 
 function mod:onTear(tear)
 	local player = Isaac.GetPlayer(0)

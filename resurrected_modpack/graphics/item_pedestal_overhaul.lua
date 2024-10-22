@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Item Pedestal Overhaul"
+local mod = TR_Manager:RegisterMod("Item Pedestal Overhaul", 1)
 
 local game = Game()
 

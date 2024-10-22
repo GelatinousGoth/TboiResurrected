@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Unique Mega Satan Music"
+local mod = TR_Manager:RegisterMod("Unique Mega Satan Music", 1)
 
 local music = MusicManager()
 

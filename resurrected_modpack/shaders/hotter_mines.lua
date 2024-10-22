@@ -1,7 +1,8 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
 local ModName = "Hotter Mines"
-mod.CurrentModName = ModName
+local mod = TR_Manager:RegisterMod(ModName, 1)
+local json = require("json")
 
 local roomIntensity = 0
 local waveSpeed = 2
@@ -27,21 +28,29 @@ local function split(str, sep)
     return fields
 end
 
-local function SaveData()
+local function saveSettings()
     local data = {
         Intensity = intensityMultiplier,
         WaveSpeed = waveSpeed,
     }
-	return data
+    local encoded = json.encode(data)
+    mod:SaveData(encoded)
 end
 
 local function loadSettings()
-    local data = mod.Globals.LoadedData.Mods[ModName]
-    if not data then
+    if not mod:HasData() then
         return
     end
-    intensityMultiplier = data.Intensity or 2
-    waveSpeed = data.WaveSpeed or 2
+
+    local data = mod:LoadData()
+
+    if data ~= "" then
+        local decoded = json.decode(data)
+        intensityMultiplier = decoded.Intensity or 2
+        waveSpeed = decoded.WaveSpeed or 2
+    else
+        saveSettings()
+    end
 end
 
 local function errorInCmd(correctUsage)
@@ -69,18 +78,22 @@ end
 mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.RenderUpdate)
 
 function mod:ShaderUpdate(name)
-    if name == "Hot_HeatWave" then
-        return {
-            Time = Game():GetFrameCount(),
-            Intensity = roomIntensity,
-            WaveSpeed = waveSpeed,
-        }
-    end
+    return {
+        Time = Game():GetFrameCount(),
+        Intensity = roomIntensity,
+        WaveSpeed = waveSpeed,
+    }
 end
 
-mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, mod.ShaderUpdate)
+local DefaultParameters = {
+    Time = 0,
+    Intensity = 0,
+    WaveSpeed = 0
+}
 
-mod:AddCallback(mod.CustomCallbacks.ON_SAVE_DATA_LOAD, loadSettings)
+TR_Manager:RegisterShader(mod, "Hot_HeatWave", mod.ShaderUpdate, DefaultParameters)
+
+mod:AddCallback(ModCallbacks.MC_POST_SAVESLOT_LOAD, loadSettings)
 
 function mod:UseConsole(cmd, argString)
     local args = split(argString, " ")
@@ -114,5 +127,3 @@ function mod:UseConsole(cmd, argString)
 end
 
 mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, mod.UseConsole)
-
-mod.Mods[ModName].SaveData = SaveData

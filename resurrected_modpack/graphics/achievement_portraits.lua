@@ -1,5 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
-mod.CurrentModName = "Achievement Portraits"
+-- Register the mod in the API
+local TR_Manager = require("resurrected_modpack.manager")
+ACLadmin = TR_Manager:RegisterMod("Achievement Portraits", 1)
 --RANDOM BULLSHIT
 
 IS_ACL_REAL = true --GLOBAL VARIABLE

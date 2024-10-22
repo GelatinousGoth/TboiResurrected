@@ -1,6 +1,6 @@
-local mod = require("resurrected_modpack.mod_reference")
+local TR_Manager = require("resurrected_modpack.manager")
 
-mod.CurrentModName = "Downpour Mushrooms"
+local mod = TR_Manager:RegisterMod("Downpour Mushrooms", 1)
 
 function mod:OnMushroomInit(npc)
     local level = Game():GetLevel()

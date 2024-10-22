@@ -1,6 +1,6 @@
 
-local mod = require("resurrected_modpack.mod_reference")
-mod.CurrentModName = "forgotten_got_real_chain"
+local TR_Manager = require("resurrected_modpack.manager")
+local mod = TR_Manager:RegisterMod("forgotten_got_real_chain", 1)
 
 local game = Game()
 local room = game:GetRoom()
