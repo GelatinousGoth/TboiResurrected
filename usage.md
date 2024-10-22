@@ -4,200 +4,63 @@
 - Place all the **.lua** files inside of the ***resurrected_modpack*** folder, or any of it's sub-folders.
 
     - Optionally you can choose to merge all the .lua files into the main.lua file or keep the original project structure, however extra steps need to be taken to ensure that mod comprised of multiple files work properly.
+    - If you choose not to keep the original structure, it is still suggested to place all the .lua files inside a new folder with the same name that's going to be given to the main.lua file
 
 - Rename the **main.lua** file (usually the name of the source mod or a name that describes what the purpose of the mod).
 
-- Open the renamed **main.lua** file and replace the `mod = RegisterMod()` line with `mod = require("resurrected_modpack.mod_reference")`
+- Add `local TR_Manager = require("resurrected_modpack.manager")` at the beginning of the main.lua file.
+- Find the `RegisterMod()` function and replace it with `TR_Manager:RegisterMod()`
 
-    - if the original mod variable was a **global** variable, or if the mod reference is ever copied to a global variable (like `FiendFolio = mod`) then [additional steps](#global_mod_reference) need to be taken.
-    - for reference a **global** variable can be distinguished from a **local** variable by looking at it's first definition:
-    ```lua
-    local FiendFolio = RegisterMod("Fiend Folio", 1) -- Local variable
-    FiendFolio = RegisterMod("FiendFolio", 1) -- Global variable
-    ```
-    - ⚠️**NOTE**: Because of how LUA tables work (and with mod reference being a table) when the `=` operator is used on a table this does not create a copy of a table but rather an **alias** to that table (in simpler terms you can now modify the table using both the original table name and the new table name).
-    Because of this if a mod reference is defined as a **local** variable and then an alias is defined as a **global** variable, then the mod reference has become a **global** variable, and must be handled as such.
-    ```lua
-    local mod = RegisterMod("Fiend Folio", 1) -- ModReference defined as a local variable
-    -- Code in between
-    FiendFolio = mod -- Global Alias created, now the mod reference has essentially become a global variable
-    ```
-    - In order to easily find any occurrence of a global alias search for any instance of the `= mod` text and see if the variable that it is assigned to is either **global** or **local**.
+### Adding a Shader:
 
-- Add a line `mod.CurrentModName = "modName"` with modName being a string that uniquely identifies a mod from another.
-    - the line can be placed anywhere, as long as it's before any **AddCallback** function.
-    - modName does not have to be a specific string, the only important thing is that it is not the same as that of another mod within the pack.
+Normally shaders are added using the `MC_GET_SHADER_PARAMS` callback, however they are prone to cause issues especially if not dealt with properly. As such if a shader is added using this callback a Warning will now be printed on boot.
 
-- Check for any instances of the **AddCallback**, **AddPriorityCallback** or **RemoveCallback** function that happens to be executed at run-time, rather than on mod load.
-    - If any of them are found then follow the transformation guidelines within this [section](#runtime_callbacks)
+To avoid problems with shaders the `TR_Manager:RegisterShader()` function should be used instead.
 
-- Check if the **json** library is used, this can be done by searching for any instance of `require("json")`
-    - If there are any, replace all instances of the **json** variable with **mod.json**
-    - Then follow the guidelines proposed by the [Save Data](#save_data) section.
+To properly Register a shader you must follow these steps:
 
-### Handle Unique situations:
+- Find the original implementation of the shader, It will look something like this:
 
-#### Global ModReferences <a id="global_mod_reference"></a>
-
-The first thing that needs to be done is finding out **Why** the mod reference is global:
-
-- The mod reference is global because it needs to be **passed to other lua files** (this most likely found in situations in which multiple .lua files have been used).
-    - First look trough the other .lua files and see how each of them adds a Callback (`AddCallback`, `AddPriorityCallback`, `RemoveCallback`), you should find the function being preceded by `<modReference>:` with \<modReference\> being the variable containing the mod reference.
-    - Find the definition of the \<modReference\> within the file.
-    - If you *find it* and it looks something like this: `<modReference> = FiendFolio`, then replace it with: `local <modReference> = require("resurrected_modpack.mod_reference")`.
-    - If you *don't find it*, then create a new line (preferably at the beginning of the lua file) like this: `local <modReference> = require("resurrected_modpack.mod_reference")`.
-- The mod reference is global because it **allows other mods to access it's features** (this can usually be inferred by the mod's workshop noting the presence of some sort of API features, or if the mod is listed as a requirement in another mod's workshop page).
-    - In this case the name of the original modReference variable should not be altered, as it would break other mods, instead,  you need to separate the API exposed features from the callbacks that need to be executed.
-    - First create a new mod reference variable like this: `local mod = require("resurrected_modpack.mod_reference")`
-    - Then find all the functions that add a Callback (`AddCallback`, `AddPriorityCallback`, `RemoveCallback`) and replace the original modReference with the newly created modReference:
-    ```lua
-    FiendFolio:AddCallback() -- Original
-    mod:AddCallback() -- New
-    ```
-    - After that, transform the original mod reference into a regular table like this: `FiendFolio = {}`
-
-#### Run-Time Callback Update <a id="runtime_callbacks"></a>
-
-First let's understand how to distinguish Callbacks added/removed on **Mod Load** or at **Run-Time**:
-
-First of all a Callback is Added/Removed when this line of code is executed: `mod:AddCallback()`/`mod.AddPriorityCallback()` (`mod:RemoveCallback()` for when it is removed)
-
-When the game boots up it executes all of the code contained within the **main.lua** of all the enabled mods. Every line of code that is executed during this moment will be considered as *being executed on* ***Mod Load***.
-
-After every mod has been loaded, code that belongs to a mod will only be executed when the specific callback it was tied to is fired by the game. Every line of code that is executed during this moment will be considered as *being executed at* ***Run-Time***.
-
-Now to identify wether the Callback command that adds or removes a callback is executed at Run-Time or not, you should follow this train of logic:
-
-- If the command is found like this then the command is executed on **Mod Load**:
-  
-  ```lua
-  local function Function1()
-      -- code
-  end
-
-  local function Function2()
-      -- code
-  end
-
-  local function Function3()
-      -- code
-  end
-
-  mod:AddCallback(ModCallbacks.MC_POST_UPDATE, Function1) -- AddCallback is outside of any function
-  ```
-
-  - The only time this would not be the case is when a .lua file you are analyzing is *included* or *required* whilst **inside** of a *function*
-  
-    ```lua
-    local function InitMod()
-        require("path.to.lua_file")
+```lua
+function mod:ShaderFunction(name)
+    if name == "ShaderName" then
+        --- Shader Logic here
     end
-    ```
-- Now if the command is contained within a *function* **It Depends** entirely on when the function that contains it is called:
-    ```lua
-        local function MyExampleFunction()
-             mod:AddCallback(ModCallbacks.MC_POST_UPDATE, Function1) -- We wanna find out when this line of code is executed
-             -- This all depends on when MyExampleFunction() is called
-        end
+end
 
-        MyExampleFunction() -- MyExampleFunction is Called on Mod Load
-
-        mod:AddCallback(ModCallbacks.MC_POST_UPDATE, MyExampleFunction) -- MyExampleFunction is Called at Run-Time
-
-        local function MyFunction()
-            MyExampleFunction() -- It all depends on when MyFunction() is called
-        end
-    ```
-If the function that contains `mod:AddCallback()` is called at both during Mod Load and during Run-Time, then know that the **AddCallback**, **AddPriorityCallback** or **RemoveCallback** should be transformed if the containing function is executed at least one during **Run-Time**.
-
-Now the main question: **Why do all this?**
-
-The original **AddCallback**, **AddPriorityCallback** and **Remove Callback** functions have all been overwritten to support the collection of mod callbacks inside of a table in order to ease certain procedures.
-
-In order to implement this collection two additional parameters have been added to each of these functions: **modName** and **lockCallbackRecord** with:
-
-**modName**: that defines the Table in which the callback has to be recorded/deleted.  
-**lockCallbackRecord**: that defines wether or not the callback has to be recorded/deleted (**false**) or not (**true**)
-
-However in order to pass these parameters we would need to edit every one of these function calls within the source code of the mod we would like to add like this:
-
-```lua
-    local modName = "Fiend Folio"
-    local lockRecord = false
-
-    mod:AddCallback(ModCallbacks.MC_POST_UPDATE, MyFunction) -- Original
-    mod:AddCallback(ModCallbacks.MC_POST_UPDATE, MyFunction, nil, modName, lockRecord) -- New
-
-    mod:AddPriorityCallback(ModCallbacks.MC_POST_UPDATE, CallbackPriority.EARLY, MyFunction) -- Original
-    mod:AddPriorityCallback(ModCallbacks.MC_POST_UPDATE, CallbackPriority.EARLY, MyFunction, nil, modName, lockRecord) -- New
-
-    mod:RemoveCallback(ModCallbacks.MC_POST_UPDATE, MyFunction) -- Original
-    mod:RemoveCallback(ModCallbacks.MC_POST_UPDATE, MyFunction, modName, lockRecord) -- New
+mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, mod.ShaderFunction)
 ```
 
-Because this process would be tedious for each function call, another method to "add" this parameters was implemented:  
-`mod.CurrentModName` and `mod.LockCallbackRecord`
+- Remove the `name == "Shader"` if condition leaving only the logic.
+- Remove the `AddCallback` function that adds the function to MC_GET_SHADER_PARAMS.
+- Understand the what shader parameters can be used as Default and create a `DefaultShaderParams` table.
+- call `TR_Manager:RegisterShader()` with parameters `mod, "ShaderName", DefaultShaderParams, mod.ShaderFunction`.
 
-The values present within these two variables will be used if the functions realizes that **modName** and **lockCallbackRecord** have not been passed to them, so that it becomes unnecessary to edit each function call.
+This will guarantee that, in case of an error in the original function, the shader will at least get the default parameters and be able to properly be executed.
 
-However `mod.CurrentModName` and `mod.LockCallbackRecord` don't work on **Run-Time** function calls and as such these are the only ones that need to be manually edited.
-
-So what needs to be done is:
-
-- Look trough the various **AddCallback**, **AddPriorityCallback** and **Remove Callback** functions, and check if
-any of them are executed at least once at **Run-Time**.
-
-- Replace all those that were found, like this:
-
-```lua
-    mod:AddCallback(ModCallbacks.MC_POST_UPDATE, MyFunction) -- Original
-    mod:AddCallback(ModCallbacks.MC_POST_UPDATE, MyFunction, nil, modName, lockRecord) -- New
-
-    mod:AddPriorityCallback(ModCallbacks.MC_POST_UPDATE, CallbackPriority.EARLY, MyFunction) -- Original
-    mod:AddPriorityCallback(ModCallbacks.MC_POST_UPDATE, CallbackPriority.EARLY, MyFunction, nil, modName, lockRecord) -- New
-
-    mod:RemoveCallback(ModCallbacks.MC_POST_UPDATE, MyFunction) -- Original
-    mod:RemoveCallback(ModCallbacks.MC_POST_UPDATE, MyFunction, modName, lockRecord) -- New
-```
-
-#### Save Data <a id="save_data"></a>
-
-There is not really a sure fire way of handling mods with Save Data, as they are a case by case scenario, but this is the general procedure you should follow:
-
-- The first thing to do is finding the functions that handle **Loading** and **Saving** Data.
-     - They can both be easily found by searching for the **mod:LoadData()** (or **Isaac.LoadModData()**) and **mod:SaveData()** (or **Isaac.SaveModData()**) functions, respectively.
-
-- The **Loading** function is most likely fine as is, with the only minor adjustment being that the data must be taken from the respective mod's decoded table (which should be DecodedTable.Mods[**\<modName\>**], with modName being the string used for mod.CurrentModName)
-
-- The **Saving** function needs to be removed from any AddCallback function, and must be renamed to **mod.Mods[\<modName\>].SaveData**. Then look for the data that is either being decoded by *json.decode()* or that's passed to the *mod.SaveData()* function and, instead of saving it using those functions, return it in the form of a table.
-
-#### Enable/Disable Mod:
+### Enable/Disable Mod:
 
 Each Mod can be Disabled or Enabled as long as at least one Callback is Recorded for that specific Mod
 
-⚠️**NOTE**: A callback is registered when the `mod:AddCallback` function is used whilst with **LockCallbackRecord** is set to false
+⚠️**NOTE**: A callback is registered when the `mod:AddCallback` function is used
 
 When a mod is toggled the program follows this procedure:
 
-- Check if the Mod was already Enabled/Disabled, if it was don't do anything and print a Warning Message, unless the **warn** parameter set to false.
+- Execute `pre_enable/disable_mod`, if it exists.
 
-- Check if a `PreEnableMod` (or `PreRemoveMod`) method is specified and if so execute it.
+- If the function exists and returns **true** then the following steps will not be considered.
 
-- Check if a custom `EnableMod` (or `RemoveMod`) method is specified and if so execute it, otherwise use the Default one.
+- **Add**/**Remove** all callbacks registered by the mod.
 
-- Check if a `PostEnableMod` (or `PostRemoveMod`) method is specified and if so execute it.
+- Execute `post_enable/disable_mod`, if it exists.
 
-⚠️**NOTE**: For reference the **Default** enable/disable method simply Adds/Removes all callbacks registered for that mod.
+In general the **Post** Methods should be used when the default method correctly Toggles the mod, but additional steps need to be taken; whilst the **Pre** Methods should be used if the Toggling needs more in depth customization.
 
-In general the Pre/Post Methods should be used when the default method correctly Toggles the mod, but additional steps need to be taken.
-
-The EnableMod/RemoveMod should instead be used if the Default method causes problems when Toggling mods on or off, and it must therefore be changed.
-
-In order to Define any of these Methods you must create a function with the appropriate name inside the ModTable (`mod.Mods[ModName]`).
-
-So in general any of these methods can be defined like this
+both the methods can be added anywhere by creating an appropriately named function in the **mod** table.
 
 ```lua
-local ModName = "Fiend Folio"
-mod.Mods[ModName].RemoveMod = <function>
+local mod = TR_Manager:RegisterMod("MyMod", 1)
+function mod.post_disable_mod()
+    -- Your Code Here
+end
 ```

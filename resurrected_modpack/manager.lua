@@ -346,7 +346,7 @@ function TR_Manager:EnableMod(modId)
         self.Shaders[shaderName].Enabled = true
     end
 
-    if (modData.Mod.pre_enable_mod) then
+    if type(modData.Mod.pre_enable_mod) == "function" then
         local success, result = xpcall(modData.Mod.pre_enable_mod, ErrorHandler, modData.Mod)
         if success and result then
             return
@@ -357,7 +357,7 @@ function TR_Manager:EnableMod(modId)
         TboiRekindled:AddPriorityCallback(callback.Callback, callback.Priority, callback.Function, callback.Param)
     end
 
-    if (modData.Mod.post_enable_mod) then
+    if type(modData.Mod.post_enable_mod) == "function" then
         xpcall(modData.Mod.pre_enable_mod, ErrorHandler, modData.Mod)
     end
 
@@ -375,7 +375,7 @@ function TR_Manager:DisableMod(modId)
         self.Shaders[shaderName].Enabled = false
     end
 
-    if (modData.Mod.pre_disable_mod) then
+    if type(modData.Mod.pre_disable_mod) == "function" then
         local success, result = xpcall(modData.Mod.pre_disable_mod, ErrorHandler, modData.Mod)
         if success and result then
             return
@@ -386,7 +386,7 @@ function TR_Manager:DisableMod(modId)
         TboiRekindled:RemoveCallback(callback.Callback, callback.Function)
     end
 
-    if (modData.Mod.post_disable_mod) then
+    if type(modData.Mod.post_disable_mod) == "function" then
         xpcall(modData.Mod.pre_disable_mod, ErrorHandler, modData.Mod)
     end
 
