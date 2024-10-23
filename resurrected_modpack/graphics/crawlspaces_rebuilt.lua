@@ -1,7 +1,9 @@
 local TR_Manager = require("resurrected_modpack.manager")
 local mod = TR_Manager:RegisterMod("crawlspaces_rebuilt", 1)
 
-local this = {}
+include("decorations.lua")
+local json = require("json")
+local decorations = mod.decorations
 
 --VARIABLES
 --locations, grid related values
@@ -16,16 +18,21 @@ local ROTGUT_TRAPDOOR_POS = 7
 local ROTGUT_ABOVE_DOOR_POS = 74
 local BLACKMARKET_DOOR_POS = 74
 --roots
-local DUNGEON_SPRITESHEET_ROOT = "gfx/content/dungeon_details.anm2"
-local GIDEON_SPRITESHEET_ROOT = "gfx/content/gideon_details.anm2"
-local ROTGUT_SPRITESHEET_ROOT = "gfx/content/rotgut_details.anm2"
-local VIGNETTE_ROOT = "gfx/content/vignette.anm2"
+local DUNGEON_SPRITESHEET_ROOT = "gfx/content/dungeon/"
+local GIDEON_SPRITESHEET_ROOT = "gfx/content/gideon/"
+local ROTGUT_SPRITESHEET_ROOT = "gfx/content/rotgut/"
+local VIGNETTE_SPRITESHEET_PATH = "gfx/content/vignettes/vignette.anm2"
+local POOPROOT = "gfx/content/poopsprites/"
 --rng shenanigans
 local RECOMMENDED_SHIFT_IDX = 35
 local IDLE_ANIMATION_TRIGGER_CHANCE = 0.01 --may want to be lowered or raised as more animations are added.
---random big numbers used to assign certain sprites to a gravity tile.
---hopefully nothing else changes the vardata value of random gravity tiles
-local POOP_VARDATA_FLAG = 5801
+
+local DEFAULT_FLOOR_DECOR_CHANCE = 0.2
+local DEFAULT_CEILING_DECOR_CHANCE = 0.5
+local DEFAULT_BGDECOR_CHANCE = 0.07
+--signals an error when returning something expecting a table
+local ERROR_TBL = {false}
+local _ = nil
 
 local game = Game()
 local isaac = Isaac --i hate capital letters!!! i love camelCase!!!!!!
@@ -35,53 +42,256 @@ local sfx = SFXManager()
 
 local animations = {}
 local toRender = {}
-local spritesheet = ""
 local players
 
---decoration animation type tables
---entries are weighed and assigned an additional chance value on program start
-local bgTable = { --shared between rotgut and normal crawlspaces
-    {name = "1", weight = 1},
-    {name = "2", weight = 1},
-    {name = "3", weight = 1},
-    {name = "4", weight = 1}
+local trapdoorOpenAmount = 1
+local TRAPDOOR_BRIGHTENING_PER_SECOND = 4.2
+local TRAPDOOR_DIMMING_PER_SECOND = 1.3
+
+
+--mod config menu support
+local shaderTypeChoices = {
+    "Shader",
+    "Legacy Vignette",
+    "Disabled"
 }
-local bgDecorTable = {
-    {name = "goob", weight = 1},
-    {name = "guys", weight = 1},
-    {name = "penta", weight = 1},
-    {name = "troll", weight = 0.01} --nothing to see here
+local modConfigSettings = {
+    shaderType = shaderTypeChoices[1],
+    shaderStrength = 8, --default 0.8
+
+    doGravityOnWalkableTiles = true,
+
+    trapdoorsEnabled = true,
+    blackMarketDoorsEnabled = true,
+    simpleModeEnabled = false --skips the detail placement steps, lets you play with just the spritesheet changes
 }
-local cornerTable = { --shared between rotgut and normal crawlspaces
-    {name = "1", weight = 4},
-    {name = "2", weight = 1}
-}
-local edgeTable = {
-    {name = "1", weight = 1}
-}
-local ceilingTable = {
-    {name = "lip1", weight = 4},
-    {name = "lip2", weight = 4},
-    {name = "web1", weight = 1},
-    {name = "web2", weight = 1},
-    {name = "web3", weight = 1},
-    {name = "web4", weight = 1}
-}
-local rotCeilingTable = {
-    {name = "web1", weight = 1},
-    {name = "web2", weight = 1},
-    {name = "web3", weight = 1},
-    {name = "web4", weight = 1}
-}
-local floorTable = {
-    {name = "pebble1", weight = 1},
-    {name = "pebble2", weight = 1},
-    {name = "pebble3", weight = 1}
-}
+--shader type will automatically set the values of these when changed
+local doShaders = modConfigSettings.shaderType == "Shader"
+local doLegacyVignettes = modConfigSettings.shaderType == "Legacy Vignette"
+local shaderStrength = 0.8
+
+
+
+
+local function getTableIdx(tbl, val)
+    for i,v in ipairs(tbl) do
+        if v == val then return i end
+    end
+end
+
+
+--if there are config settings saved, load them
+function mod:loadConfigSettings()
+    if not (mod:HasData() and ModConfigMenu) then return end
+
+    local string = mod:LoadData()
+    local cfg = json.decode(string)
+
+    -- don't just set the config settings to the saved data to prevent incomplete save data from setting attributes to nil.
+    -- this way, anything not stored in the save data will revert to the default value instead of nil
+    for i,v in pairs(cfg) do
+        modConfigSettings.i = v
+    end
+
+    -- update these
+    doShaders = modConfigSettings.shaderType == "Shader"
+    doLegacyVignettes = modConfigSettings.shaderType == "Legacy Vignette"
+    shaderStrength = modConfigSettings.shaderStrength/10
+end
+
+
+function mod.saveConfigSettings()
+    local string = json.encode(modConfigSettings)
+    mod:SaveData(string)
+end
+
+
+local function constructModConfigSettings()
+    if ModConfigMenu == nil then return end
+    --get rid of the old menu (if it exists) and build it from scratch (for luamoda)
+    ModConfigMenu.RemoveCategory("Crawlspaces Rebuilt")
+    --load saved settings, so luamodding doesn't keep resetting you to default
+    mod:loadConfigSettings()
+
+    ModConfigMenu.AddTitle("Crawlspaces Rebuilt", _, "Lighting")
+
+    --shader type selection
+    ModConfigMenu.AddSetting(
+        "Crawlspaces Rebuilt",
+        _,
+        {
+            Type = ModConfigMenu.OptionType.NUMBER,
+            CurrentSetting = function()
+                return getTableIdx(shaderTypeChoices, modConfigSettings.shaderType)
+            end,
+            Minimum = 1,
+            Maximum = #shaderTypeChoices,
+            Display = function()
+                if modConfigSettings.shaderType == nil then return "Lighting Effects :: nil?? uh. this isnt supposed to happen." end
+                return "Lighting Effects :: "..modConfigSettings.shaderType
+            end,
+            OnChange = function(n)
+                modConfigSettings.shaderType = shaderTypeChoices[n]
+                doShaders = n == 1 --first option enables normal shaders
+                doLegacyVignettes = n == 2 --second option enables legacy vignettes
+                --third option will just disable both
+                mod.saveConfigSettings()
+                mod:identifyRoom()
+            end,
+            Info = {"Note: the legacy vignette is suceptable to jank when playing with wonky resolutions."}
+        }
+    )
+
+    --shader strength
+    ModConfigMenu.AddSetting(
+        "Crawlspaces Rebuilt",
+        _,
+        {
+            Type = ModConfigMenu.OptionType.SCROLL,
+            CurrentSetting = function()
+                return modConfigSettings.shaderStrength
+            end,
+            Display = function()
+                return "Shader Intensity :: $scroll"..modConfigSettings.shaderStrength
+            end,
+            OnChange = function(n)
+                modConfigSettings.shaderStrength = n
+                shaderStrength = n/10
+
+                mod.saveConfigSettings()
+            end,
+            Info = {"Adjusts the intensity of shaders.", "(only works when shaders are enabled)"}
+        }
+    )
+
+    ModConfigMenu.AddSpace("Crawlspaces Rebuilt", _)
+    ModConfigMenu.AddTitle("Crawlspaces Rebuilt", _, "Compatability")
+
+    ModConfigMenu.AddSetting(
+        "Crawlspaces Rebuilt",
+        _,
+        {
+            Type = ModConfigMenu.OptionType.BOOLEAN,
+            CurrentSetting = function()
+                return modConfigSettings.doGravityOnWalkableTiles
+            end,
+            Display = function()
+                return "Better Gravity :: "..(modConfigSettings.doGravityOnWalkableTiles and "Enabled" or "Disabled")
+            end,
+            OnChange = function(b)
+                modConfigSettings.doGravityOnWalkableTiles = b
+
+                mod.saveConfigSettings()
+                mod:identifyRoom()
+            end,
+            Info = {"Makes gravity ALWAYS apply to the player when not touching a ladder.", "Disable to escape softlocks in modded rooms."}
+        }
+    )
+
+    ModConfigMenu.AddSpace("Crawlspaces Rebuilt", _)
+    ModConfigMenu.AddTitle("Crawlspaces Rebuilt", _, "Other")
+
+    --trapdoors
+    ModConfigMenu.AddSetting(
+        "Crawlspaces Rebuilt",
+        _,
+        {
+            Type = ModConfigMenu.OptionType.BOOLEAN,
+            CurrentSetting = function()
+                return modConfigSettings.trapdoorsEnabled
+            end,
+            Display = function()
+                return "Trapdoors :: "..(modConfigSettings.trapdoorsEnabled and "Enabled" or "Disabled")
+            end,
+            OnChange = function(b)
+                modConfigSettings.trapdoorsEnabled = b
+
+                mod.saveConfigSettings()
+                mod:identifyRoom()
+            end,
+            Info = {"Toggle the trapdoor visible from below."}
+        }
+    )
+
+    --black market doors
+    ModConfigMenu.AddSetting(
+        "Crawlspaces Rebuilt",
+        _,
+        {
+            Type = ModConfigMenu.OptionType.BOOLEAN,
+            CurrentSetting = function()
+                return modConfigSettings.blackMarketDoorsEnabled
+            end,
+            Display = function()
+                return "Black Market Doors :: "..(modConfigSettings.blackMarketDoorsEnabled and "Enabled" or "Disabled")
+            end,
+            OnChange = function(b)
+                modConfigSettings.blackMarketDoorsEnabled = b
+
+                mod.saveConfigSettings()
+                mod:identifyRoom()
+            end,
+            Info = {"Toggle the doors leading into black markets."}
+        }
+    )
+
+    ModConfigMenu.AddSpace("Crawlspaces Rebuilt", _)
+
+    --simple mode
+    ModConfigMenu.AddSetting(
+        "Crawlspaces Rebuilt",
+        _,
+        {
+            Type = ModConfigMenu.OptionType.BOOLEAN,
+            CurrentSetting = function()
+                return modConfigSettings.simpleModeEnabled
+            end,
+            Display = function()
+                return "Simple Mode :: "..(modConfigSettings.simpleModeEnabled and "Enabled" or "Disabled")
+            end,
+            OnChange = function(b)
+                modConfigSettings.simpleModeEnabled = b
+
+                mod.saveConfigSettings()
+            end,
+            Info = {"Disables most decorations for a mostly vanilla-like look.", "(enter a new room for this to take effect)"}
+        }
+    )
+end
+if REPENTOGON then constructModConfigSettings() end
+
+
+
+local function mergeTables(tableA, tableB)
+    --cast both inputs to a table
+    if type(tableA) ~= "table" then tableA = {tableA} end
+    if type(tableB) ~= "table" then tableB = {tableB} end
+
+    local out = {}
+
+    for _,v in pairs(tableA) do
+        table.insert(out, v)
+    end
+    for _,v in pairs(tableB) do
+        table.insert(out, v)
+    end
+
+    return out
+end
+
+
+--runs whenever butter bean is used, for debug & testing purposes
+--callback should be commented out when not in use
+function mod:debugTrigger(item, rng, player)
+    local room = game:GetRoom()
+    local playerGridPos = room:GetClampedGridIndex(player.Position)
+
+    room:SpawnGridEntity(playerGridPos, GridEntityType.GRID_POOP, GridPoopVariant.HOLY)
+end
 
 
 --supply a main table with a list of decoration tables, calculates a chance value for each entry based on their weight values
-function this.weighTable(table)
+function mod.weighTable(table)
     local totalWeight = 0
 
     --calculate the total weight
@@ -96,18 +306,20 @@ function this.weighTable(table)
 
     return table
 end
---weigh out all the tables
-bgTable = this.weighTable(bgTable)
-bgDecorTable = this.weighTable(bgDecorTable)
-cornerTable = this.weighTable(cornerTable)
-edgeTable = this.weighTable(edgeTable)
-ceilingTable = this.weighTable(ceilingTable)
-rotCeilingTable = this.weighTable(rotCeilingTable)
-floorTable = this.weighTable(floorTable)
+
+--weigh out all the animation tables
+--first iterate through each table
+for i,v in pairs(decorations) do
+    --then each entry within the table
+    for i2,v2 in pairs(v) do
+        --weigh the table
+        v2 = mod.weighTable(v2)
+    end
+end
 
 
 --returns a table containing all players
-function this.getPlayers()
+function mod.getPlayers()
     local playerCount = game:GetNumPlayers()
     local players = {}
     local player
@@ -121,46 +333,22 @@ function this.getPlayers()
 end
 
 
---renders whatever "debugTxt" is set to every frame on screen
---TODO: comment out callback before release and/or forget about this and nobody will ever know
-local debugTxt = ""
-function mod:renderDebugTxt()
-    isaac.RenderText(debugTxt, 50, 50, 1, 1, 1, 1)
-end
-
-
---runs whenever butter bean is used, for debug & testing purposes
---callback should be commented out when not in use
-function mod:debugTrigger()
-    local room = game:GetRoom()
-    local player = isaac.GetPlayer()
-    local playerGridPos = room:GetGridIndex(player.Position)
-    local ent = room:GetGridEntity(playerGridPos)
-
-    debugTxt = tostring(ent:GetVariant())
-
-    ent:Destroy(true)
-end
-
-
 
 --DECORAITON PROCESSING
 
 
---adds a new object to the animations table with .sprite, .name, .animCount and .gridPos values.
---note that name isn't always equal to the name of the animation playing, but rather represents a more general term to reference the table entry by.
---setting animCount to 0 will exempt it from random idle animations, and will require a custom function in updateAnimations to trigger them
-function this.saveAnimationData(sprite, name, animCount, gridPos)
-    local animData = {}
+--supply a decoration object
+--if that object has an animCount that is not -1, adds it to the animations table.
+function mod.saveAnimationData(decoration)
+    if decoration.animCount == -1 then return false end
 
-    animData = {sprite = sprite, name = name, animCount = animCount, position = gridPos}
-    table.insert(animations, animData)
+    table.insert(animations, decoration)
 end
 
 
 --takes a name and removes anything in the animations table assigned the same name.
 --iterates backwards so table.remove can be used without skipping over entries
-function this.removeAnimationData(name)
+function mod.removeAnimationData(name)
     for i=#animations, 1, -1  do
         local v = animations[i]
         if v.name == name then
@@ -172,7 +360,7 @@ end
 
 --checks the top 2 rows of a room for player position which indicates where to display the hatch.
 --if no player is found that high, defaults to the usual ladder location in a 1x1 room (happens when exiting a black market or re-entering a run from the menu)
-function this.findHatch(room, player, roomWidth)
+function mod.findHatch(room, player, roomWidth)
     local playerGridPos = room:GetGridIndex(player.Position)
 
     if playerGridPos < (roomWidth*2)-1 then
@@ -183,9 +371,37 @@ function this.findHatch(room, player, roomWidth)
 end
 
 
+--returns true if the player is in a 2d crawlspace room
+function mod.isAnyCrawlspace()
+    local room = game:GetRoom()
+    local backdrop = room:GetBackdropType()
+    if backdrop == BackdropType.DUNGEON or backdrop == BackdropType.DUNGEON_GIDEON or backdrop == BackdropType.DUNGEON_ROTGUT then return true end
+
+    return false
+end
+
+
+function mod.isItemdungeonCrawlspace()
+    local room = game:GetRoom()
+    local backdrop = room:GetBackdropType()
+    if backdrop == BackdropType.DUNGEON then return true end
+
+    return false
+end
+
+
+function mod.isNonRotgutCrawlspace()
+    local room = game:GetRoom()
+    local backdrop = room:GetBackdropType()
+    if backdrop == BackdropType.DUNGEON or backdrop == BackdropType.DUNGEON_GIDEON then return true end
+
+    return false
+end
+
+
 --is this tile the decorative tile in gideon's crawlspace (funny little isaac with wings below the key at the top).
-function this.isGideonDecor(tile)
-    if this.isGideon() and (tile == GIDEON_DECOR_A or tile == GIDEON_DECOR_B) then
+function mod.isGideonDecor(tile)
+    if mod.isGideon() and (tile == GIDEON_DECOR_A or tile == GIDEON_DECOR_B) then
         return true
     end
 
@@ -194,10 +410,11 @@ end
 
 
 --is the current room gideon's crawlspace?
-function this.isGideon()
-    if spritesheet == nil then
-        return false
-    elseif spritesheet == GIDEON_SPRITESHEET_ROOT then
+function mod.isGideon()
+    local room = game:GetRoom()
+    local backdrop = room:GetBackdropType()
+
+    if backdrop == BackdropType.DUNGEON_GIDEON then
         return true
     end
 
@@ -205,9 +422,26 @@ function this.isGideon()
 end
 
 
---is the current room the rotgut arena where you fight the nutsa- the heart?
-function this.isHeartRoom(gridRoom)
+--is the current room the rotgut arena where you fight the heart?
+--sketchy cause it uses room indexes instead of backdrop types but swageva
+function mod.isHeartRoom()
+    local level = game:GetLevel()
+    local roomDesc = level:GetCurrentRoomDesc()
+    local gridRoom = roomDesc.SafeGridIndex
+
     if gridRoom == GridRooms.ROOM_ROTGUT_DUNGEON2_IDX then
+        return true
+    end
+
+    return false
+end
+
+
+function mod.isRotgutCrawlspace()
+    local room = game:GetRoom()
+    local backdrop = room:GetBackdropType()
+
+    if backdrop == BackdropType.DUNGEON_ROTGUT then
         return true
     end
 
@@ -217,7 +451,7 @@ end
 
 --checks if a gridentity is a "shallow" ceiling (only 1 block thick) by taking in the entitytype of the tile above it.
 --this does NOT need to be its own function but it keeps replaceDungeonSprites looking tidy so idc
-function this.isCeilingShallow(aboveType)
+function mod.isCeilingShallow(aboveType)
     if aboveType == GridEntityType.GRID_WALL then
         return false
     end
@@ -227,7 +461,7 @@ end
 
 
 --checks if this tile is in the top row of the room
-function this.isTopRow(tile, roomWidth)
+function mod.isTopRow(tile, roomWidth)
     if tile > roomWidth-1 then
         return false
     end
@@ -237,7 +471,7 @@ end
 
 
 --return the tileentity below's type, or null grid entity if invalid
-function this.getGridEntTypeBelow(room, tile, roomWidth)
+function mod.getGridEntTypeBelow(room, tile, roomWidth)
     local ent = room:GetGridEntity(tile+roomWidth)
 
     --if invalid, set ent to the last tile on the grid
@@ -249,8 +483,20 @@ function this.getGridEntTypeBelow(room, tile, roomWidth)
 end
 
 
+--return the tileentity variant to the left of a given tile, or -1 if invalid
+function mod.getGridEntVariantBelow(room, tile, roomWidth)
+    local ent = room:GetGridEntity(tile+roomWidth)
+
+    if ent == nil then
+        return -1
+    end
+
+    return ent:GetVariant()
+end
+
+
 --return the tileentity type to the bottom left of a given tile, or null grid entity if invalid
-function this.getGridEntTypeBottomLeft(room, tile, roomWidth)
+function mod.getGridEntTypeBottomLeft(room, tile, roomWidth)
     local ent = room:GetGridEntity(tile+roomWidth-1)
 
     if ent == nil then
@@ -264,7 +510,7 @@ end
 
 
 --return the tileentity type to the bottom right of a given tile, or null grid entity if invalid
-function this.getGridEntTypeBottomRight(room, tile, roomWidth)
+function mod.getGridEntTypeBottomRight(room, tile, roomWidth)
     local ent = room:GetGridEntity(tile+roomWidth+1)
 
     if ent == nil then
@@ -278,7 +524,7 @@ end
 
 
 --return the tileentity type directly above a given tile, or null grid entity if invalid
-function this.getGridEntTypeAbove(room, tile, roomWidth)
+function mod.getGridEntTypeAbove(room, tile, roomWidth)
     local ent = room:GetGridEntity(tile-roomWidth)
 
     if ent == nil then
@@ -290,7 +536,7 @@ end
 
 
 --return the tileentity type to the left of a given tile, or null grid entity if invalid
-function this.getGridEntTypeLeft(room, tile, roomWidth)
+function mod.getGridEntTypeLeft(room, tile, roomWidth)
     local ent = room:GetGridEntity(tile-1)
 
     if ent == nil then
@@ -302,8 +548,9 @@ function this.getGridEntTypeLeft(room, tile, roomWidth)
     return ent:GetType()
 end
 
+
 --return the tileentity variant to the left of a given tile, or -1 if invalid
-function this.getGridEntVariantLeft(room, tile, roomWidth)
+function mod.getGridEntVariantLeft(room, tile, roomWidth)
     local ent = room:GetGridEntity(tile-1)
 
     if ent == nil then
@@ -317,7 +564,7 @@ end
 
 
 --returns the tileentity type to the left of a given tile, or null grid entity if invalid
-function this.getGridEntTypeRight(room, tile, roomWidth)
+function mod.getGridEntTypeRight(room, tile, roomWidth)
     local ent = room:GetGridEntity(tile+1)
 
     if ent == nil then
@@ -331,7 +578,7 @@ end
 
 
 --return the tileentity variant to the right of a given tile, or -1 if invalid
-function this.getGridEntVariantRight(room, tile, roomWidth)
+function mod.getGridEntVariantRight(room, tile, roomWidth)
     local ent = room:GetGridEntity(tile+1)
 
     if ent == nil then
@@ -344,141 +591,378 @@ function this.getGridEntVariantRight(room, tile, roomWidth)
 end
 
 
+function mod.isTileAtRoomEdge(tile, roomWidth)
+    return ((tile+1)%roomWidth == 0 or tile%roomWidth == 0)
+end
+
+
+--assumes you're in a regular crawlspace or a gideon one
+function mod.getSpriteRoot()
+    local spriteRoot = DUNGEON_SPRITESHEET_ROOT
+
+    if not FiendFolio then
+        spriteRoot = mod.isGideon() and GIDEON_SPRITESHEET_ROOT or DUNGEON_SPRITESHEET_ROOT
+    else
+        local suffix = FiendFolio.getCrawlspaceBackdropSuffix()
+        if suffix ~= "default" then spriteRoot = "gfx/content/fiendfolio_compat/" .. suffix .. "/" end
+    end
+
+    return spriteRoot
+end
+
+
+--constructs and returns a new decoration object.
+--name is the name of the animation played, although it can be anything so long as the object isn't passed into playDecoration.
+--type is a string coresponding to the anm2 file this decoration comes from.
+--variantLayers are any layers that should be immediately toggled on loading this or any new animations.
+--sprite is the sprite object.
+--position is the position.
+--animCount is the number of random animations this decoration has. 0 indicates the decoration has animations that don't play randomly, and -1 indicates the decoration has no animations.
+function mod.newDecoration(name, type, variantLayers, layersOffByDefault, sprite, position, animCount)
+    return {
+        name = name,
+        type = type or "typeless",
+        variantLayers = variantLayers or {},
+        layersOffByDefault = layersOffByDefault or {},
+        sprite = sprite,
+        position = position,
+        animCount = animCount or -1}
+end
+
+
 --get a random background column.
---note the gideon anm2 only has tallbg sprites, so make sure you aren't returning short backgrounds in a gideon room
-function this.randomBG(noCeiling, roomHeight)
+--returns an object with name, animCount, sprite and position values
+function mod.randomBG(roomDecor, sprite, position, noCeiling, roomHeight, isDecorated)
     --iterate the rng and get a number between 0 and 1 from it
+    local bgTable
+    if roomDecor ~= nil and roomDecor.bg ~= nil then bgTable = roomDecor.bg else return ERROR_TBL end
     local float = decorRNG:RandomFloat()
     local sum = 0
-    local root = "bg_"
+    local variants = {}
+    local layersOff = {}
 
-    if roomHeight > SMALLROOM_HEIGHT then
-        root = "tallbg_"
+    --set the modifier(s)
+    if roomHeight > SMALLROOM_HEIGHT and bgTable.variantLayers.tallBG ~= nil then
+        variants = bgTable.variantLayers.tallBG
     end
 
-    if noCeiling then
-        return root .. "noceiling"
+    if noCeiling and bgTable.variantLayers.ceiling ~= nil then
+        variants = mergeTables(variants, bgTable.variantLayers.ceiling)
     end
+
+    --when trapdoors are disabled, the bg with no ceiling also has its "roof" disabled (assuming there is a roof)
+    if noCeiling and (not modConfigSettings.trapdoorsEnabled) and bgTable.variantLayers.hatchToggle then
+        variants = mergeTables(variants, bgTable.variantLayers.hatchToggle)
+    end
+
+    if isDecorated and bgTable.variantLayers.ceilingDecor ~= nil then
+        variants = mergeTables(variants, bgTable.variantLayers.ceilingDecor)
+    end
+
+    --get the layers off by default
+    if bgTable.layersOffByDefault ~= nil then layersOff = bgTable.layersOffByDefault end
 
     --iterate through the table until the total chance value is higher than float (should never finish without returning something)
     for i,v in ipairs(bgTable) do
         sum = sum + v.chance
         if float < sum then
-            return root .. v.name
+            return mod.newDecoration(v.name, "bg", variants, layersOff, sprite, position, v.animCount)
         end
     end
 
-    --there's no way this ever happens but just in case some wierd rounding makes the loop end without returning, return a default value
-    return root .. "1"
+    --there's no way this ever happens but just in case some wierd rounding makes the loop end without returning, return an error
+    return ERROR_TBL
 end
 
 
 --get a random background decoration
-function this.randomBGDecor()
+function mod.randomBGDecor(roomDecor, sprite, position)
+    local bgDecorTable
+    if roomDecor ~= nil and roomDecor.bgDecor ~= nil then bgDecorTable = roomDecor.bgDecor else return ERROR_TBL end
     local float = decorRNG:RandomFloat()
     local sum = 0
-    local root = "bgdecor_"
 
     for i,v in ipairs(bgDecorTable) do
         sum = sum + v.chance
         if float < sum then
-            return root .. v.name
+            return mod.newDecoration(v.name, "bgDecor", {}, {}, sprite, position, v.animCount)
         end
     end
 
-    return root .. "goob"
+    return ERROR_TBL
 end
 
 
 --get a random corner animation, concave edges between 2 wall tiles.
---side should be a string, "left" or "right"
-function this.randomCorner(side, isShallow, isBG)
+function mod.randomCorner(roomDecor, sprite, position, isLeft, isShallow, isBG)
+    local cornerTable
+    --ensure nothing is wrong with the decoration table provided
+    if roomDecor ~= nil and roomDecor.corner ~= nil then cornerTable = roomDecor.corner else return ERROR_TBL end
     local float = decorRNG:RandomFloat()
     local sum = 0
-    local root = "corner_"
+    local side = "right_"
+    local variants = {}
+    local layersOff = {}
 
-    if isBG then
-        root = "bgcorner_"
-    elseif isShallow then
-        root = "shallowcorner_"
+    if isLeft then side = "left_" end
+
+    if isShallow and cornerTable.variantLayers.shallowCeiling ~= nil then
+        variants = cornerTable.variantLayers.shallowCeiling
     end
+    if isBG and cornerTable.variantLayers.bg ~= nil then
+        variants = mergeTables(variants, cornerTable.variantLayers.bg)
+    end
+
+    if cornerTable.layersOffByDefault ~= nil then layersOff = cornerTable.layersOffByDefault end
 
     for i,v in ipairs(cornerTable) do
         sum = sum + v.chance
         if float < sum then
-            return root .. side ..  v.name
+            return mod.newDecoration(side..v.name, "corner", variants, layersOff, sprite, position, v.animCount)
         end
     end
 
-    return root .. side .. "1"
+    return ERROR_TBL
 end
 
 
 --get a random edge animation, sharp convex corners of a single wall tile that stick out and need to be smoothed a lil.
---side should be the string "right" or "left".
-function this.randomEdge(side)
+function mod.randomEdge(roomDecor, sprite, position, isLeft)
+    local edgeTable
+    if roomDecor ~= nil and roomDecor.edge ~= nil then edgeTable = roomDecor.edge else return ERROR_TBL end --return false if the decoration table has no edges subtable
     local float = decorRNG:RandomFloat()
     local sum = 0
-    local root = "edge_"
+    local side = "right_"
+
+    if isLeft then side = "left_" end
 
     --only 1 edge sprite for now, still calculate in full for backwards compatability
     for i,v in ipairs(edgeTable) do
         sum = sum + v.chance
         if float < sum then
-            return root .. side .. v.name
+            return mod.newDecoration(side..v.name, "edge", {}, {}, sprite, position, v.animCount)
         end
     end
 
-    return root .. side .. "1"
+    return ERROR_TBL
 end
 
 
 --get a random ceiling decoration, cobwebs and the sort
-function this.randomCeiling(isShallow, isRot)
+function mod.randomCeiling(roomDecor, sprite, position, isShallow)
+    local ceilingTable
+    if roomDecor ~= nil and roomDecor.ceiling ~= nil then ceilingTable = roomDecor.ceiling else return ERROR_TBL end
     local float = decorRNG:RandomFloat()
     local sum = 0
-    local root = "ceiling_"
-    local table = ceilingTable
+    local variants = {}
+    local layersOff = {}
 
-    if isShallow then
-        root = "shallowceiling_"
+    if isShallow and ceilingTable.variantLayers and ceilingTable.variantLayers.shallowCeiling ~= nil then
+        --have the shallowceiling layers toggled on
+        variants = ceilingTable.variantLayers.shallowCeiling
     end
 
-    --workaround since rotgut uses its own table for ceiling decorations
-    if isRot then
-        table = rotCeilingTable
-    end
+    if ceilingTable.layersOffByDefault ~= nil then layersOff = ceilingTable.layersOffByDefault end
 
-    for i,v in ipairs(table) do
+    for i,v in ipairs(ceilingTable) do
         sum = sum + v.chance
         if float < sum then
-            return root .. v.name
+            return mod.newDecoration(v.name, "ceiling", variants, layersOff, sprite, position, v.animCount)
         end
     end
 
-    return root .. "lip1"
+    return ERROR_TBL
 end
 
 
 --get a random floor decoration, pebbles and the sort
-function this.randomFloor()
+function mod.randomFloor(roomDecor, sprite, position)
+    local floorTable
+    if roomDecor ~= nil and roomDecor.floor ~= nil then floorTable = roomDecor.floor else return ERROR_TBL end
     local float = decorRNG:RandomFloat()
     local sum = 0
-    local root = "floor_"
 
     for i,v in ipairs(floorTable) do
         sum = sum + v.chance
         if float < sum then
-            return root .. v.name
+            return mod.newDecoration(v.name, "floor", {}, {}, sprite, position, v.animCount)
         end
     end
 
-    return root .. "pebble1"
+    return ERROR_TBL
+end
+
+
+--supply a sprite object and a layerID or array of layerIDs/names
+--toggles each layer's visibility to the opposite state
+--thanks repentogon :D
+function mod.toggleSpriteLayers(sprite, layers)
+    --if an empty table is provided don't bother
+    --also returns if repentogon is disabled as a failsafe, since this is the only place repentogon methods are used
+    if REPENTOGON == nil then return end
+    if type(layers) ~= "table" then layers = {layers} end
+
+    for _,layerName in pairs(layers) do
+        local layerState = sprite:GetLayer(layerName)
+        local visibility = layerState:IsVisible()
+
+        layerState:SetVisible(not visibility)
+    end
+end
+
+
+--prepares a sprite after it has been played, toggling off layers that shouldn't be present
+--accepts the variantLayers for this specific decoration, and the decorations that should start out off by default.
+function mod.prepareDecorationLayers(sprite, variants, offByDefault)
+    --if no layers are given to change, return
+    if ((variants == nil or variants == {}) and (offByDefault == nil or offByDefault == {})) then return end
+
+    --first, turn off the sprites that should be off by default
+    mod.toggleSpriteLayers(sprite, offByDefault)
+
+    --then apply variantLayers
+    mod.toggleSpriteLayers(sprite, variants)
+end
+
+
+--supply a decoration object and spritesheet root
+--attempts to play the decoration's sprite and save its animation data.
+--returns true/false based on whether the decoration failed to be found or not
+function mod.playDecoration(decoration, spriteRoot)
+    --error table means this decoration type doesn't exist in this room
+    if decoration ~= ERROR_TBL then
+        local sprite = decoration.sprite
+        local type = decoration.type
+        local variants = decoration.variantLayers
+        local layersOff = decoration.layersOffByDefault
+
+        sprite:Load(spriteRoot..type..".anm2", true)
+        sprite:Play(decoration.name, true)
+
+        --disable appropriate layers
+        mod.prepareDecorationLayers(sprite, variants, layersOff)
+
+        --attempt to save animation data
+        mod.saveAnimationData(decoration)
+        return true
+    end
+
+    return false
+end
+
+
+--handles the playing of the hatch at the start of the room
+function mod.playHatch(spriteRoot, room, roomDecor, playerGridPos, hatchGridID, roomWidth)
+    local ent = room:GetGridEntity(hatchGridID)
+    local belowType = mod.getGridEntTypeBelow(room, hatchGridID, roomWidth)
+    local belowVariant = mod.getGridEntVariantBelow(room, hatchGridID, roomWidth)
+    local variants = {}
+    local layersOff = {}
+
+    if not roomDecor.hatch then return end
+    if roomDecor.hatch.layersOffByDefault ~= nil then layersOff = roomDecor.hatch.layersOffByDefault end
+
+    --really sketchy fix, since an error is thrown right here if a crawlspace boots you to an error room
+    if ent == nil then return end
+
+    local sprite = ent:GetSprite()
+    sprite:Load(spriteRoot.."hatch.anm2", true)
+
+    --starts opened if isaac is in the top 2 rows (likely came from above), otherwise starts closed (when entering from black market)
+    if playerGridPos < (room:GetGridWidth()*2)-1 then
+        sprite:Play("opened")
+    else
+        sprite:Play("closed")
+    end
+
+    --if there's a floor below, add the floorBelow variant layer tag and disable the associated layers
+    --"floor below" also includes a ladder that continues through a floor, which technically has nothing to do with a floor and is purely visual. this has a variant of 30 which is currently my favorite magic number coincidentally
+    if belowType == GridEntityType.GRID_WALL or (belowType == GridEntityType.GRID_DECORATION and belowVariant == 30) and roomDecor.hatch.variantLayers ~= nil and roomDecor.hatch.variantLayers.floorBelow ~= nil then
+        variants = roomDecor.hatch.variantLayers.floorBelow
+    end
+
+    --if trapdoors are toggled off
+    if not modConfigSettings.trapdoorsEnabled then
+        variants = mergeTables(variants, roomDecor.hatch.variantLayers.toggleHatch)
+    end
+
+    --then toggle the layers
+    mod.prepareDecorationLayers(sprite, variants, layersOff)
+
+    --animations each have a distinct purpose and should not be handled with the usual random animation choice.
+    mod.saveAnimationData(mod.newDecoration("hatch", "hatch", variants, layersOff, sprite, hatchGridID, 0))
+end
+
+
+local function roundPoopState(state)
+    -- if the state is a multiple of 250 then it should be valid
+    local dif = state%250
+    if dif == 0 then
+        return state
+    else
+        return state - dif
+    end
+end
+
+
+function mod.playPoop(ent, position, sprite, spriteRoot, ffOverride)
+    if ffOverride == nil then ffOverride = false end
+    local variant = ent:GetVariant()
+    local state = ent.State
+    --apparently golden poops use this state as actual health, so ig round it down to the nearest valid one
+    state = roundPoopState(state)
+    --this name has the poop's state value appended onto it, so when the state changes the name of the animation playing should update accordingly
+    local name = "poop_"..state
+    local POOP_LAYER = 2
+
+    --fiendfolio seems to have their own (albeit slightly jank) method of replacing poops
+    --problem: it completely breaks if the poop isn't completely intact. oops
+    --ig i'll fill in the blanks
+    if state == 0 and FiendFolio and not ffOverride then return end
+
+    sprite:Load(spriteRoot.."floor.anm2")
+
+    --using the variant of the poop, dynamically replace the spritesheet on the poop layer (2)
+    if variant == GridPoopVariant.RED then
+        sprite:ReplaceSpritesheet(POOP_LAYER, POOPROOT.."red.png")
+        sprite:LoadGraphics()
+    elseif variant == GridPoopVariant.CORN then
+        sprite:ReplaceSpritesheet(POOP_LAYER, POOPROOT.."corn.png")
+        sprite:LoadGraphics()
+    elseif variant == GridPoopVariant.GOLDEN then
+        sprite:ReplaceSpritesheet(POOP_LAYER, POOPROOT.."gold.png")
+        sprite:LoadGraphics()
+    elseif variant == GridPoopVariant.RAINBOW then
+        sprite:ReplaceSpritesheet(POOP_LAYER, POOPROOT.."rainbow.png")
+        sprite:LoadGraphics()
+    elseif variant == GridPoopVariant.BLACK then
+        sprite:ReplaceSpritesheet(POOP_LAYER, POOPROOT.."black.png")
+        sprite:LoadGraphics()
+    elseif variant == GridPoopVariant.HOLY then
+        sprite:ReplaceSpritesheet(POOP_LAYER, POOPROOT.."holy.png")
+        sprite:LoadGraphics()
+    --for poop variants unsupported by the mod, obviously don't mess with them or replace anything
+    elseif variant ~= GridPoopVariant.NORMAL then
+        return
+    end
+
+    sprite:Play(name)
+    --because this is playing upon entering a room, skip the animation that would normally play when a poop gets destroyed to this state
+    sprite:SetFrame(4)
+
+    --save the decoration as just "poop"
+    local decoration = mod.newDecoration("poop", "floor", {}, {}, sprite, position, 0)
+    mod.saveAnimationData(decoration)
 end
 
 
 --jumps around the grid and replaces sprites as needed, the main function of the mod
-function this.replaceDungeonSprites(gridRoom)
+local replaced = false
+function mod.replaceDungeonSprites(spriteRoot, roomDecor)
+
+    --only run once per room, unsure if this check is necessary or not but it doesn't break anything so it stays
+    if replaced then return end
+
     local room = game:GetRoom()
     local decorSeed = room:GetDecorationSeed()
     local startSeed = game:GetSeeds():GetStartSeed()
@@ -489,196 +973,198 @@ function this.replaceDungeonSprites(gridRoom)
     local roomHeight = room:GetGridHeight()
     local roomSize = room:GetGridSize()
     local rightGridID = roomWidth - 1
-    local hatchGridID =  this.findHatch(room, player, roomWidth)--show trapdoor sprite at player starting position
+    local hatchGridID =  mod.findHatch(room, player, roomWidth)--show trapdoor sprite at player starting position
     local bgNoCeilingGridID = hatchGridID - roomWidth --render a background wall for the ladder on the tile directly above it
     local playerGridPos = room:GetGridIndex(player.Position)
 
-    local isGideon = this.isGideon()
+    local isGideon = mod.isGideon()
 
-    local ent
-    local sprite
-    local name
+    local ent = {}
+    local sprite = {}
 
     --set rng
     decorRNG:SetSeed(decorSeed, RECOMMENDED_SHIFT_IDX)
     animRNG:SetSeed(startSeed, RECOMMENDED_SHIFT_IDX)
+
+    --get chances for various decorations to appear
+    local floorDecorChance = DEFAULT_FLOOR_DECOR_CHANCE
+    local ceilingDecorChance = DEFAULT_CEILING_DECOR_CHANCE
+    local bgDecorChance = DEFAULT_BGDECOR_CHANCE
+    if roomDecor.decorChances ~= nil then
+        floorDecorChance = roomDecor.decorChances.floorDecorChance or DEFAULT_FLOOR_DECOR_CHANCE
+        ceilingDecorChance = roomDecor.decorChances.ceilingDecorChance or DEFAULT_CEILING_DECOR_CHANCE
+        bgDecorChance = roomDecor.decorChances.bgDecorChance or DEFAULT_BGDECOR_CHANCE
+    end
 
     --start of replacing sprites. most important sprites should be done further down to prevent overriding.
     --this loop handles decorations placed randomly around the grid.
     for i=0,roomSize-1 do
         local float = decorRNG:RandomFloat()
         ent = room:GetGridEntity(i)
+        if ent == nil then goto continueRoomLoop end
         sprite = ent:GetSprite()
         local aboveEnt = room:GetGridEntity(i-roomWidth) --hate declaring this just to barely use it but swagever
         if aboveEnt == nil then aboveEnt = room:GetGridEntity(0) end --wierd default to fall back on, hopefully doesnt cause issues
+        local isTopRow = mod.isTopRow(i, roomWidth)
 
         --getting the gridEntType of the surrounding area
         local type = ent:GetType()
-        local belowType = this.getGridEntTypeBelow(room, i, roomWidth)
-        local belowLeftType = this.getGridEntTypeBottomLeft(room, i, roomWidth)
-        local belowRightType = this.getGridEntTypeBottomRight(room, i, roomWidth)
-        local aboveType = this.getGridEntTypeAbove(room, i, roomWidth)
-        local leftType = this.getGridEntTypeLeft(room, i, roomWidth)
-        local rightType = this.getGridEntTypeRight(room, i, roomWidth)
+        local variant = ent:GetVariant()
+        local belowType = mod.getGridEntTypeBelow(room, i, roomWidth)
+        local belowLeftType = mod.getGridEntTypeBottomLeft(room, i, roomWidth)
+        local belowRightType = mod.getGridEntTypeBottomRight(room, i, roomWidth)
+        local aboveType = mod.getGridEntTypeAbove(room, i, roomWidth)
+        local leftType = mod.getGridEntTypeLeft(room, i, roomWidth)
+        local rightType = mod.getGridEntTypeRight(room, i, roomWidth)
 
-        local leftVariant = this.getGridEntVariantLeft(room, i, roomWidth)
-        local rightVariant = this.getGridEntVariantRight(room, i, roomWidth)
+        local leftVariant = mod.getGridEntVariantLeft(room, i, roomWidth)
+        local rightVariant = mod.getGridEntVariantRight(room, i, roomWidth)
+
+        local isLeftCorner = type == GridEntityType.GRID_WALL and belowLeftType == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY
+        local isRightCorner = type == GridEntityType.GRID_WALL and belowRightType == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY
 
         --poops (mostly to account for that one stupid rare crawlspace)
+        --TODO: add more of these for different grid objects? perchance
         if type == GridEntityType.GRID_POOP then
-            ent:SetVariant(0) --copout solution so i dont have to add sprites for every poop variant
-            --TODO: only really matters if a custom room layout uses special poops which isnt too unlikely, may change in the future
-            name = "floor_poop" --this name should have the poop's .State value appended onto it to determine which state of decay its animation should show.
+            mod.playPoop(ent, i, sprite, spriteRoot)
 
-            sprite:Load(spritesheet, true)
-            sprite:Play(name .. "_0", true)
-            this.saveAnimationData(sprite, name, 0, i)
+        --the tile below poops, spikes, other grid entities on the floor requires this workaround to look like a shallow ceiling
+        elseif (aboveType == GridEntityType.GRID_POOP or aboveType == GridEntityType.GRID_SPIKES_ONOFF or aboveType == GridEntityType.GRID_SPIKES) and type == GridEntityType.GRID_WALL then
+            mod.playDecoration(mod.randomCeiling(roomDecor, sprite, i, true), spriteRoot)
 
-        --the tile below a poop requires a wierd workaround to ensure it looks like a floor
-        --doesn't need this workaround for gravity flagged as broken poops, but this keeps the decoration consistent between different re-entries
-        elseif (aboveType == GridEntityType.GRID_POOP or aboveEnt.VarData == POOP_VARDATA_FLAG) and belowType ~= GridEntityType.GRID_WALL and type == GridEntityType.GRID_WALL then
-            name = this.randomCeiling(true, false)
+        --spikes, done in a similar manner to poops
+        elseif (type == GridEntityType.GRID_SPIKES or type == GridEntityType.GRID_SPIKES_ONOFF) and belowType == GridEntityType.GRID_WALL then
+            mod.playDecoration(mod.newDecoration("spikes", "floor", {}, {}, sprite, i, 0), spriteRoot)
 
-            sprite:Load(spritesheet, true)
-            sprite:Play(name, true)
-
-        --ensure that poops which were turned into gravity still show up as poop when you leave and re-enter the room
-        elseif ent.VarData == POOP_VARDATA_FLAG and type == GridEntityType.GRID_GRAVITY then
-            sprite:Load(spritesheet, true)
-            sprite:Play("floor_poop")
+        elseif type == GridEntityType.GRID_SPIKES or type == GridEntityType.GRID_SPIKES_ONOFF then
+            sprite:ReplaceSpritesheet(0, "gfx/content/wall_spikes.png")
+            sprite:LoadGraphics()
 
         --background decorations
-        elseif type == GridEntityType.GRID_GRAVITY and float < 0.07 and belowType == GridEntityType.GRID_GRAVITY then
-            name = this.randomBGDecor()
-
-            sprite:Load(spritesheet, true)
-            sprite:Play(name, true)
-
-            --don't add non-animated sprites to the table
-            if name ~= "bgdecor_troll" and name ~= "bgdecor_penta" then
-                this.saveAnimationData(sprite, name, 2, i)
-            end
+        elseif type == GridEntityType.GRID_GRAVITY and float < bgDecorChance and belowType == GridEntityType.GRID_GRAVITY then
+            mod.playDecoration(mod.randomBGDecor(roomDecor, sprite, i), spriteRoot)
 
         --hardcoded special case in gideon's crawlspace to prevent overlapping textures sometimes
         elseif i == GIDEON_DECOR_ADJACENT and isGideon then
-            sprite:Load(spritesheet, true)
-            sprite:Play("corner_right2", true)
+            mod.playDecoration(mod.newDecoration("right_web", "corner", {}, {"shallowCeiling"}, sprite, i, -1), spriteRoot)
 
-        --check for corners, starting with left and then right
-        elseif type == GridEntityType.GRID_WALL and belowLeftType == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY then
-            local isShallow = this.isCeilingShallow(aboveType)
-            name = this.randomCorner("left", isShallow, false)
+        --check for corners, if a spot is viable for both then choose one at random. otherwise, do the relevant one
+        elseif isLeftCorner and isRightCorner then
+            if float < 0.5 then
+                local isShallow = mod.isCeilingShallow(aboveType)
+                mod.playDecoration(mod.randomCorner(roomDecor, sprite, i, true, isShallow, false), spriteRoot)
+            else
+                local isShallow = mod.isCeilingShallow(aboveType)
+                mod.playDecoration(mod.randomCorner(roomDecor, sprite, i, false, isShallow, false), spriteRoot)
+            end
 
-            sprite:Load(spritesheet, true)
-            sprite:Play(name, true)
-        elseif type == GridEntityType.GRID_WALL and belowRightType == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY then
-            local isShallow = this.isCeilingShallow(aboveType)
-            name = this.randomCorner("right", isShallow, false)
-
-            sprite:Load(spritesheet, true)
-            sprite:Play(name, true)
+        elseif isLeftCorner then
+            local isShallow = mod.isCeilingShallow(aboveType)
+            mod.playDecoration(mod.randomCorner(roomDecor, sprite, i, true, isShallow, false), spriteRoot)
+        elseif isRightCorner then
+            local isShallow = mod.isCeilingShallow(aboveType)
+            mod.playDecoration(mod.randomCorner(roomDecor, sprite, i, false, isShallow, false), spriteRoot)
 
         --then edges (like corners but convex rather than concave), first left then right. i hate the way these are determined
         elseif type == GridEntityType.GRID_WALL and leftType ~= GridEntityType.GRID_WALL and leftVariant ~= 30 and belowType ~= GridEntityType.GRID_WALL and aboveType == GridEntityType.GRID_WALL and i < (roomWidth*(roomHeight-1)-1) then
-            name = this.randomEdge("left")
-
-            sprite:Load(spritesheet, true)
-            sprite:Play(name, true)
+            mod.playDecoration(mod.randomEdge(roomDecor, sprite, i, true), spriteRoot)
         elseif type == GridEntityType.GRID_WALL and rightType ~= GridEntityType.GRID_WALL and rightVariant ~= 30 and belowType ~= GridEntityType.GRID_WALL and aboveType == GridEntityType.GRID_WALL and i < (roomWidth*(roomHeight-1)-1) then
-            name = this.randomEdge("right")
-
-            sprite:Load(spritesheet, true)
-            sprite:Play(name, true)
+            mod.playDecoration(mod.randomEdge(roomDecor, sprite, i, false), spriteRoot)
 
         --then ceiling decor
-        elseif type == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY and this.isGideonDecor(i) == false and float < 0.5 then
-            local isShallow = this.isCeilingShallow(aboveType)
-            name = this.randomCeiling(isShallow, false)
-
-            sprite:Load(spritesheet, true)
-            sprite:Play(name, true)
+        elseif type == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY and mod.isGideonDecor(i) == false and not isTopRow and float < ceilingDecorChance then
+            local isShallow = mod.isCeilingShallow(aboveType)
+            mod.playDecoration(mod.randomCeiling(roomDecor, sprite, i, isShallow), spriteRoot)
 
         --then floor decorations
-        elseif type == GridEntityType.GRID_GRAVITY and belowType == GridEntityType.GRID_WALL and float < 0.2 then
-            name = this.randomFloor()
-
-            sprite:Load(spritesheet, true)
-            sprite:Play(name, true)
+        elseif type == GridEntityType.GRID_GRAVITY and belowType == GridEntityType.GRID_WALL and float < floorDecorChance then
+            mod.playDecoration(mod.randomFloor(roomDecor, sprite, i), spriteRoot)
 
         end
+
+        ::continueRoomLoop::
     end
 
     --black market door
     ent = room:GetGridEntity(BLACKMARKET_DOOR_POS)
     local type = ent:GetType()
-    --only replace if the tile is gravity, signaling a black market door
-    if type == GridEntityType.GRID_GRAVITY and isGideon == false then
+    local belowDoorType = mod.getGridEntTypeBelow(room, BLACKMARKET_DOOR_POS, roomWidth)
+    local atRoomEdge = mod.isTileAtRoomEdge(BLACKMARKET_DOOR_POS, roomWidth)
+    --only replace if the tile is gravity, the tile below is floor, and the tile is at the very edge of the room, pretty much guranteed signaling a black market door
+    if type == GridEntityType.GRID_GRAVITY and belowDoorType == GridEntityType.GRID_WALL and isGideon == false and atRoomEdge then
         sprite = ent:GetSprite()
 
-        sprite:Load(spritesheet, true)
-        sprite:Play("door", true);
+        sprite:Load(spriteRoot.."hatch.anm2", true)
+        sprite:Play("marketdoor", true);
+    end
+    --if black markets are disabled, immediately 180 and replace that tile with a floor
+    if not modConfigSettings.blackMarketDoorsEnabled then
+        sprite = ent:GetSprite()
+
+        --load the anm2
+        sprite:Load("gfx/grid/tiles_itemdungeon.anm2", true)
+        --for ff crawlspaces, replace the gfx
+        if FiendFolio and FiendFolio:getCrawlspaceBackdropSuffix() ~= "default" then
+            local suffix = FiendFolio:getCrawlspaceBackdropSuffix()
+            sprite:ReplaceSpritesheet(0, "gfx/content/fiendfolio_compat/" .. suffix .. "/tiles_itemdungeon_" .. suffix .. ".png")
+            sprite:LoadGraphics()
+        end
+        sprite:Play("Floor1", true)
     end
 
     --handle trapdoor sprite
-    ent = room:GetGridEntity(hatchGridID)
-    --really sketchy fix, since an error is thrown right here if a crawlspace boots you to an error room
-    if ent == nil then
-        return
-    end
-    sprite = ent:GetSprite()
-    sprite:Load(spritesheet, true)
-
-    --starts opened if isaac is in the top 2 rows (likely came from above), otherwise starts closed (when entering from black market)
-    if playerGridPos < (roomWidth*2)-1 then
-        sprite:Play("hatch")
-    else
-        sprite:Play("hatch_closed")
-    end
-    --animations each have a distinct purpose and should not be handled with the usual random animation choice.
-    this.saveAnimationData(sprite, "hatch", 0, hatchGridID)
+    mod.playHatch(spriteRoot, room, roomDecor, playerGridPos, hatchGridID, roomWidth)
 
     --this loop handles background walls, running along the top of the grid
     for i=0,rightGridID-1 do
         ent = room:GetGridEntity(i)
-        local belowType = this.getGridEntTypeBelow(room, i, roomWidth)
+        local belowType = mod.getGridEntTypeBelow(room, i, roomWidth)
         local float = decorRNG:RandomFloat()
         sprite = ent:GetSprite()
-        sprite:Load(spritesheet, true)
 
+        --get a wall without a ceiling on the tile above where the trapdoor spawns
         if i == bgNoCeilingGridID then
-            sprite:Play(this.randomBG(true, roomHeight), true)
+            mod.playDecoration(mod.randomBG(roomDecor, sprite, i, true, roomHeight, false), spriteRoot)
+
+        --special case in the gideon crawlspace, hardcoded cause im lazy.
         elseif isGideon and i == GIDEON_TOP_EDGE_POS then
-            sprite:Play("tallbgedge_left1") --special case in the gideon crawlspace, hardcoded cause im lazy
-        elseif isGideon and belowType == GridEntityType.GRID_GRAVITY and float < 0.6 then
-            if float < 0.3 then --another special case for gideon spaces, again hardcoded cause im lazy
-                sprite:Play("tallbg_lip1", true)
-            else
-                sprite:Play("tallbg_lip2", true)
-            end
+            mod.playDecoration(mod.newDecoration("left_ceilingedge", "bg", {}, {}, sprite, i, -1), spriteRoot)
+
+        --special case for decorated ceilings with air beneath them
+        elseif belowType == GridEntityType.GRID_GRAVITY and float < ceilingDecorChance then
+            mod.playDecoration(mod.randomBG(roomDecor, sprite, i, false, roomHeight, true), spriteRoot)
+
+        --everywhere else just play random regular backgrounds
         else
-            sprite:Play(this.randomBG(false, roomHeight), true)
+            mod.playDecoration(mod.randomBG(roomDecor, sprite, i, false, roomHeight, false), spriteRoot)
+
         end
     end
 
     --wall on the far right edge sticks out a little, so render a special squished wall that doesnt stick out over the edge
-    --im lazy so this doesnt have a tallbg variant, hopefully that's never needed
     ent = room:GetGridEntity(rightGridID)
     sprite = ent:GetSprite()
-    sprite:Load(spritesheet, true)
-    sprite:Play("bg_rightwall", true)
+    local variant = {}
+    if roomHeight > SMALLROOM_HEIGHT then variant = roomDecor.bg.variantLayers.tallBG end
+    mod.playDecoration(mod.newDecoration("rightwall", "bg", variant, roomDecor.bg.layersOffByDefault, sprite, rightGridID, -1), spriteRoot)
 
     --sets up the vignette effect
-    local vignette = Sprite()
-    vignette:Load(VIGNETTE_ROOT, true)
-    vignette:Play("dungeon", true)
-    this.saveAnimationData(vignette, "vignette", 0, 0)
-    table.insert(toRender, vignette)
+    if doLegacyVignettes then
+        local vignette = Sprite()
+        vignette:Load(VIGNETTE_SPRITESHEET_PATH, true)
+        vignette:Play("dungeon", true)
+        mod.saveAnimationData(mod.newDecoration("vignette", "vignette", {}, vignette, 0, 0))
+        table.insert(toRender, vignette)
+    end
+
+    replaced = true
 end
 
 
 --replaces sprites around the grid as needed, makes some assumptions based on the rotgut arena always remaining the same
-function this.replaceRotgutSprites(gridRoom)
+function mod.replaceRotgutSprites(spriteRoot)
     local room = game:GetRoom()
+    local roomDecor = decorations.rotgut
     local decorSeed = room:GetDecorationSeed()
     local startSeed = game:GetSeeds():GetStartSeed()
     local player = isaac.GetPlayer()
@@ -689,14 +1175,16 @@ function this.replaceRotgutSprites(gridRoom)
     local roomSize = room:GetGridSize()
     local rightGridID = roomWidth - 1
 
-    local isHeartRoom = this.isHeartRoom(gridRoom)
+    local isHeartRoom = mod.isHeartRoom()
 
-    local ent
-    local sprite
-    local name
+    local ent = {}
+    local sprite = {}
 
     decorRNG:SetSeed(decorSeed, RECOMMENDED_SHIFT_IDX)
     animRNG:SetSeed(startSeed, RECOMMENDED_SHIFT_IDX)
+
+    --get chances for various decorations to appear
+    local ceilingDecorChance = roomDecor.ceilingDecorChance or DEFAULT_CEILING_DECOR_CHANCE
 
     --main loop for replacing tiles
     for i=0, roomSize-1 do
@@ -705,41 +1193,31 @@ function this.replaceRotgutSprites(gridRoom)
         sprite = ent:GetSprite()
 
         local type = ent:GetType()
-        local aboveType = this.getGridEntTypeAbove(room, i, roomWidth)
-        local belowType = this.getGridEntTypeBelow(room, i, roomWidth)
-        local belowLeftType = this.getGridEntTypeBottomLeft(room, i, roomWidth)
-        local belowRightType = this.getGridEntTypeBottomRight(room, i, roomWidth)
-        local isShallow = this.isCeilingShallow(aboveType) --call out here since this is used for most checks in the loop
-        local isTopRow = this.isTopRow(i, roomWidth)
+        local aboveType = mod.getGridEntTypeAbove(room, i, roomWidth)
+        local belowType = mod.getGridEntTypeBelow(room, i, roomWidth)
+        local belowLeftType = mod.getGridEntTypeBottomLeft(room, i, roomWidth)
+        local belowRightType = mod.getGridEntTypeBottomRight(room, i, roomWidth)
+        local isShallow = mod.isCeilingShallow(aboveType) --call out here since this is used for most checks in the loop
+        local isTopRow = mod.isTopRow(i, roomWidth)
 
         --make the tiles along the side of the screen actually random, since in vanilla they're normally always the same for some damn reason
         if not isTopRow and ((i+1)%roomWidth == 0 or i%roomWidth == 0) and type == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_WALL and i ~= ROTGUT_ABOVE_DOOR_POS then
             local int = decorRNG:RandomInt(3)
 
-            sprite:Load(spritesheet, true)
+            sprite:Load(spriteRoot.."tile.anm2", true)
             sprite:Play("tile", true)
             sprite:SetFrame(int)--did things a bit different here, with 3 different frames for each tile in the same animation
 
         --check for corners, starting with left and then right
         elseif type == GridEntityType.GRID_WALL and belowLeftType == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY and isShallow == false then
-            name = this.randomCorner("left", false, false)
-
-            sprite:Load(spritesheet, true)
-            sprite:Play(name, true)
+            mod.playDecoration(mod.randomCorner(roomDecor, sprite, i, true, false, false), spriteRoot)
         elseif type == GridEntityType.GRID_WALL and belowRightType == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY and isShallow == false then
-            name = this.randomCorner("right", false, false)
-
-            sprite:Load(spritesheet, true)
-            sprite:Play(name, true)
+            mod.playDecoration(mod.randomCorner(roomDecor, sprite, i, false, false, false), spriteRoot)
 
         --then ceiling decor
-        elseif type == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY and not isTopRow and  float < 0.4 then
-            name = this.randomCeiling(isShallow, true)
+        elseif type == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY and not isTopRow and  float < ceilingDecorChance then
+            mod.playDecoration(mod.randomCeiling(roomDecor, sprite, i, isShallow), spriteRoot)
 
-            sprite:Load(spritesheet, true)
-            sprite:Play(name, true)
-
-            this.saveAnimationData(sprite, name, 1, i) --TODO: if more than 1 animations get made per ceiling decor change this to reflect that
         end
     end
 
@@ -747,83 +1225,112 @@ function this.replaceRotgutSprites(gridRoom)
     for i=0,rightGridID-1 do
         ent = room:GetGridEntity(i)
         sprite = ent:GetSprite()
-        sprite:Load(spritesheet, true)
 
         local type = ent:GetType()
-        local belowType = this.getGridEntTypeBelow(room, i, roomWidth)
-        local belowLeftType = this.getGridEntTypeBottomLeft(room, i, roomWidth)
-        local belowRightType = this.getGridEntTypeBottomRight(room, i, roomWidth)
+        local belowType = mod.getGridEntTypeBelow(room, i, roomWidth)
+        local belowLeftType = mod.getGridEntTypeBottomLeft(room, i, roomWidth)
+        local belowRightType = mod.getGridEntTypeBottomRight(room, i, roomWidth)
 
         --handle the hatch first
         if i == ROTGUT_TRAPDOOR_POS and isHeartRoom == false then
-            sprite:Play("hatch", true)
-            this.saveAnimationData(sprite, "hatch", 2, i)
+            mod.playDecoration(mod.newDecoration("hatch", "hatch", _, _, sprite, i, 2), spriteRoot)
 
         elseif (i == ROTGUT_TRAPDOOR_POS+1 or i == ROTGUT_TRAPDOOR_POS-1) and isHeartRoom == false then
-            --dont render anything here, not sure if i like this way of going about it though
+            --play an empty animation since the trapdoor already covers this part of the ceiling
+            mod.playDecoration(mod.newDecoration("void", "hatch", _, _, sprite), spriteRoot)
 
         --now corners
         elseif type == GridEntityType.GRID_WALL and belowLeftType == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY then
-            name = this.randomCorner("left", false, true)
-            sprite:Play(name, true)
-        elseif type == GridEntityType.GRID_WALL and belowRightType == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY and i ~= TILE_ABOVE_BLACKMARKET then
-            name = this.randomCorner("right", false, true)
-            sprite:Play(name, true)
+            mod.playDecoration(mod.randomCorner(decorations.rotgut, sprite, i, true, false, true), spriteRoot)
 
+        elseif type == GridEntityType.GRID_WALL and belowRightType == GridEntityType.GRID_WALL and belowType == GridEntityType.GRID_GRAVITY and i ~= TILE_ABOVE_BLACKMARKET then
+            mod.playDecoration(mod.randomCorner(decorations.rotgut, sprite, i, false, false, true), spriteRoot)
+
+        --finally, plain backgrounds
         else
-            name = this.randomBG(false, roomHeight)
-            sprite:Play(name, true)
-            --if the bg has animations add it to the table.
-            if name ~= "bg_1" and name ~= "bg_3" then
-                this.saveAnimationData(sprite, name, 2, i)
-            end
+            mod.playDecoration(mod.randomBG(decorations.rotgut, sprite, i, false, roomHeight), spriteRoot)
+
         end
     end
 
     --14 is the edge wall, so render a squished wall that doesnt stick out over the edge
     ent = room:GetGridEntity(rightGridID)
     sprite = ent:GetSprite()
-    sprite:Load(spritesheet, true)
-    sprite:Play("bg_rightwall", true)
+    sprite:Load(spriteRoot.."bg.anm2", true)
+    sprite:Play("rightwall", true)
 
-    local vignette = Sprite()
-    vignette:Load(VIGNETTE_ROOT, true)
-    vignette:Play("rotgut", true)
-    this.saveAnimationData(vignette, "vignette", 0, 0)
-    table.insert(toRender, vignette)
+    if doLegacyVignettes then
+        local vignette = Sprite()
+        vignette:Load(VIGNETTE_SPRITESHEET_PATH, true)
+        vignette:Play("rotgut", true)
+        mod.saveAnimationData(mod.newDecoration("vignette", "vignette", {}, {}, vignette, 0, 0))
+        table.insert(toRender, vignette)
+    end
 end
 
 
 --responsible for kickstarting the process of replacing sprites, figuring out what room it is.
 function mod:identifyRoom()
-    local level = game:GetLevel()
     local room = game:GetRoom()
-    local roomDesc = level:GetCurrentRoomDesc()
-    local gridRoom = roomDesc.SafeGridIndex
+    local backdrop = room:GetBackdropType()
 
     --clear any lingering variables at the start of each room
     animations = nil
     animations = {}
     toRender = nil
     toRender = {}
-    spritesheet = ""
+    replaced = false
+    trapdoorOpenAmount = 1
 
     --update this value every new room just to keep it up to date, since player counts dont tend to change much within the same room
-    players = this.getPlayers()
+    players = mod.getPlayers()
 
-    if gridRoom == GridRooms.ROOM_ROTGUT_DUNGEON1_IDX or gridRoom == GridRooms.ROOM_ROTGUT_DUNGEON2_IDX then
-        spritesheet = ROTGUT_SPRITESHEET_ROOT
-        this.replaceRotgutSprites(gridRoom)
-        return
-    elseif gridRoom == GridRooms.ROOM_DUNGEON_IDX then
-        spritesheet = DUNGEON_SPRITESHEET_ROOT
-    elseif gridRoom == GridRooms.ROOM_GIDEON_DUNGEON_IDX then
-        spritesheet = GIDEON_SPRITESHEET_ROOT
-    else
+    --still check for and replace fiendfolio spritesheets, just don't decorate them
+    if modConfigSettings.simpleModeEnabled then
+        if FiendFolio and backdrop == BackdropType.DUNGEON then
+            local suffix = FiendFolio:getCrawlspaceBackdropSuffix()
+            FiendFolio.scheduleForUpdate(function()
+                FiendFolio.ReplaceCrawlspaceTileGfx('gfx/content/fiendfolio_compat/' .. suffix .. '/tiles_itemdungeon_' .. suffix .. '.png')
+            end,
+            2, ModCallbacks.MC_INPUT_ACTION, false)
+        end
+
         return
     end
 
-    this.replaceDungeonSprites(gridRoom)
+    if backdrop == BackdropType.DUNGEON_ROTGUT then
+        mod.replaceRotgutSprites(ROTGUT_SPRITESHEET_ROOT)
+        return
+    elseif backdrop == BackdropType.DUNGEON_GIDEON then
+        mod.replaceDungeonSprites(GIDEON_SPRITESHEET_ROOT, decorations.dungeon)
+        return
+    elseif backdrop ~= BackdropType.DUNGEON then return end
+    --handle regular crawlspaces below
+    local decorTable = decorations.dungeon
+    local spriteRoot = DUNGEON_SPRITESHEET_ROOT
+
+    --fiend folio uses a different system for timing its sprite replacement
+    if FiendFolio then
+        --get the type of backdrop this crawlspace has
+        local suffix = FiendFolio:getCrawlspaceBackdropSuffix()
+        decorTable = decorations[suffix]
+
+        --if the suffix is not default then change the spritesheet root to that variant's details spritesheet
+        if suffix ~= "default" then spriteRoot = "gfx/content/fiendfolio_compat/" .. suffix .. "/" end
+
+        --this is nabbed straight from the FF code, i don't completely understand how it works internally but it's how they trigger their sprite replacement so it's how i'm gonna do it
+        FiendFolio.scheduleForUpdate(function()
+            --first call the FF crawlspace tile replace fuction with spritesheets that are compatable with this mod's crawlspace anm2. hopefully i'm not messing with anything by stealing their methods like this :D
+            FiendFolio.ReplaceCrawlspaceTileGfx('gfx/content/fiendfolio_compat/' .. suffix .. '/tiles_itemdungeon_' .. suffix .. '.png')
+            --then call my function to replace sprites
+            CrawlspacesRebuilt.replaceDungeonSprites(spriteRoot, decorTable)
+        end,
+        2, ModCallbacks.MC_INPUT_ACTION, false)
+        return
+    end
+
+    --call the function to start replacing crawlspaces
+    mod.replaceDungeonSprites(spriteRoot, decorTable)
 end
 
 
@@ -832,15 +1339,16 @@ end
 function mod:updateAnimations()
 
     --don't waste time with any of this if the room isn't a crawlspace
-    if spritesheet == "" then
+    if not mod.isAnyCrawlspace() then
         return
     end
 
-    for i,v in ipairs(animations) do
-        local sprite = v.sprite
-        local name = v.name
-        local animCount = v.animCount
-        local position = v.position
+    for i,decoration in ipairs(animations) do
+        local sprite = decoration.sprite
+        local name = decoration.name
+        local animCount = decoration.animCount
+        local position = decoration.position
+        local isRotgut = mod.isRotgutCrawlspace()
 
         local float = animRNG:RandomFloat()
 
@@ -856,25 +1364,50 @@ function mod:updateAnimations()
             sprite:Play(name .. "_anim" .. int, true)
 
         --special case for the hatch
-        elseif name == "hatch" and spritesheet ~= ROTGUT_SPRITESHEET_ROOT then
-            this.animateHatch(sprite, position)
+        elseif name == "hatch" and not isRotgut then
+            mod.animateHatch(sprite, position)
 
         --special case for poops
-        elseif name == "floor_poop" and spritesheet ~= ROTGUT_SPRITESHEET_ROOT then
-            this.animatePoop(sprite, position)
+        elseif name == "poop" and not isRotgut then
+            mod.animatePoop(sprite, position)
+
+        --special case for spikes
+        elseif name == "spikes" and not isRotgut then
+            mod.animateSpikes(sprite, position)
         end
 
         --make sure appropriate sfx are played when the rotgut trapdoor spits you out
-        if name == "hatch" and spritesheet == ROTGUT_SPRITESHEET_ROOT then
-            this.playRotgutTrapdoorSFX(sprite)
+        if name == "hatch" and isRotgut then
+            mod.playRotgutTrapdoorSFX(sprite)
+        end
+    end
+end
+
+
+function mod.animateSpikes(sprite, position)
+    local room = game:GetRoom()
+    local ent = room:GetGridEntity(position):ToSpikes()
+    if ent == nil then return end --if the entity wasn't a spike. for some reason.
+    local timeout = ent.Timeout
+    local state = ent.State
+
+    --indicates the spikes are about to go in/out
+    --idk why the spike animation doesn't start at 1 but like. thats cool ig
+    if timeout == 5 then
+        --this may break on spikes with an incredibly short timeout, but i don't think that ever occurs naturally so idc
+        --state 1 means the spike is currently retracted
+        if state == 1 then
+            sprite:Play("spikes_summon")
+        else
+            sprite:Play("spikes_unsummon")
         end
     end
 end
 
 
 --for triggering the animations of the hatch,
-function this.animateHatch(sprite, position)
-    if players == nil then players = this.getPlayers() end
+function mod.animateHatch(sprite, position)
+    if players == nil then players = mod.getPlayers() end
     local room = game:GetRoom()
     local roomWidth = room:GetGridWidth()
 
@@ -889,28 +1422,47 @@ function this.animateHatch(sprite, position)
     end
 
     --only attempt to start an animation if it has finished an animation of the opposite state already
-    if shouldOpen and (sprite:IsFinished("hatch_close") or sprite:IsFinished("hatch_closed")) then
-        sprite:Play("hatch_open", false)
-    elseif shouldOpen == false and (sprite:IsFinished("hatch_open") or sprite:IsFinished("hatch")) then --"hatch" is the default animation, basically just "hatch_opened"
-        sprite:Play("hatch_close", false)
+    if shouldOpen and (sprite:IsFinished("closing") or sprite:IsFinished("closed")) then
+        sprite:Play("opening", false)
+    elseif shouldOpen == false and (sprite:IsFinished("opening") or sprite:IsFinished("opened")) then
+        sprite:Play("closing", false)
     end
 
     --trigger sound effects
-    if sprite:IsEventTriggered("close") then
+    if sprite:IsEventTriggered("close") and modConfigSettings.trapdoorsEnabled then
         sfx:Play(SoundEffect.SOUND_CHEST_OPEN, 0.55, 2, false, 0.85, -0.3)
-    elseif sprite:IsEventTriggered("open") then
+    elseif sprite:IsEventTriggered("open") and modConfigSettings.trapdoorsEnabled then
         sfx:Play(SoundEffect.SOUND_FETUS_JUMP, 0.7, 2, false, 0.7, -0.5)
     end
+
+    --dim/brighten that value that gets passed into shaders
+    if sprite:IsPlaying("closing") or sprite:IsFinished("closing") or sprite:IsFinished("closed") then
+        mod.dimTrapdoorLighting()
+    elseif sprite:IsPlaying("opening") or sprite:IsFinished("opening") or sprite:IsFinished("opened") then
+        mod.brightenTrapdoorLighting()
+    end
+    --isaac.ConsoleOutput("trapdoor brightness is "..trapdoorOpenAmount.."\n")
 end
 
 
---replace poop sprites to fit in with its environment, and applies gravity to broken poop spaces.
+-- for shaders
+function mod.dimTrapdoorLighting()
+    trapdoorOpenAmount = math.max(0, trapdoorOpenAmount - (TRAPDOOR_DIMMING_PER_SECOND/60))
+end
+
+
+function mod.brightenTrapdoorLighting()
+    trapdoorOpenAmount = math.min(1, trapdoorOpenAmount + (TRAPDOOR_BRIGHTENING_PER_SECOND/60))
+end
+
+
+--replace poop sprites to fit in with its environment
 --poop uses the state values 0, 250, 500, 750 and 1000 to determine how broken it is. 1000 is completely broken
-function this.animatePoop(sprite, position)
+function mod.animatePoop(sprite, position)
     local room = game:GetRoom()
     local ent = room:GetGridEntity(position)
     local state = ent.State
-    local name = "floor_poop_" .. state
+    local name = "poop_" .. state
 
     --if the sprite is playing or has already played the animation for this state, don't keep playing that animation over and over again
     if sprite:IsPlaying(name) or sprite:IsFinished(name) then
@@ -918,31 +1470,11 @@ function this.animatePoop(sprite, position)
     end
 
     sprite:Play(name, true)
-
-    --vanilla improvement- if the poop is destroyed apply gravity to the tile where it used to be
-    --overwrites the poop gridentity with gravity, so any characteristics of the poop are lost
-    --uses vardata flags to signal that the broken poop visual should still be loaded in its previous position after room re-entry
-    if state == 1000 then
-        local pos = room:GetGridPosition(position)
-        --remove any reference to the poop's sprite data before it causes problems
-        this.removeAnimationData("floor_poop")
-        isaac.GridSpawn(GridEntityType.GRID_GRAVITY, 0, pos, true)
-        --i couldn't even hope to understand why but despite the poop seemingly being destroyed already doing this seems to prevent random crashes
-        ent:Destroy()
-        local grav = room:GetGridEntity(position)
-        grav.VarData = POOP_VARDATA_FLAG --flag that this tile used to be poop
-
-        local sprite = grav:GetSprite()
-        sprite:Load(spritesheet, true)
-        --hardcoded to play the broken poop animation
-        sprite:Play("floor_poop_1000", true)
-        this.saveAnimationData(sprite, "poop_gravity", 0, position)
-    end
 end
 
 
 --plays sound effects for the rotgut trapdoor as it spits you out
-function this.playRotgutTrapdoorSFX(sprite)
+function mod.playRotgutTrapdoorSFX(sprite)
 
     --skip over if no animation is playing to trigger sfx
     if sprite:IsFinished() then
@@ -962,17 +1494,87 @@ end
 function mod:render()
 
     --don't waste time with any of this if the room isn't a crawlspace
-    if spritesheet == "" then return end
+    if not mod.isAnyCrawlspace() then return end
 
-    --also update screen center position
-    local room = game:GetRoom()
-    local roomCenter = isaac.WorldToScreen(room:GetCenterPos())
+    --get the screen center position
+    --this messes up bigtime in big rooms when playing at a wierd resolution but i cant be arsed to fix that
+    local roomCenter = Vector(isaac.GetScreenWidth()/2, isaac.GetScreenHeight()/2)
 
     for i,v in ipairs(toRender) do
         --if rendering a vignette render at the center of the screen
-        if v:GetFilename() == VIGNETTE_ROOT then
+        if v:GetFilename() == VIGNETTE_SPRITESHEET_PATH then
             v:Render(roomCenter)
         end
+    end
+end
+
+
+function mod:applyGravity()
+
+    --don't run this outside of crawlspaces
+    if not mod.isAnyCrawlspace() then return end
+
+    local room = game:GetRoom()
+    if players == nil then players = mod.getPlayers() end
+
+    --check if the player has the apply gravity flag. and that the current room is a crawlspace.
+    for _,player in pairs(players) do
+        local flags = player:GetEntityFlags()
+        local entUnderFeet = room:GetGridEntityFromPos(player.Position)
+        if entUnderFeet == nil then return end
+        local type = entUnderFeet:GetType()
+
+        --if the player doesn't have gravity already, and they are NOT standing on a ladder (and gravity settings are enabled)
+        if flags & EntityFlag.FLAG_APPLY_GRAVITY ~= EntityFlag.FLAG_APPLY_GRAVITY and type ~= GridEntityType.GRID_DECORATION and modConfigSettings.doGravityOnWalkableTiles then
+            --will this get sketchy if players leave the room? i don't think so.
+            player:AddEntityFlags(EntityFlag.FLAG_APPLY_GRAVITY)
+        end
+    end
+end
+
+
+function mod:getShaderParams(shaderName)
+    local room = game:GetRoom()
+    local screenCenter = room:GetCenterPos()
+    local time = isaac.GetFrameCount()
+    local pos = isaac.WorldToRenderPosition(isaac.GetPlayer().Position) + room:GetRenderScrollOffset()
+
+    if shaderName == "itemDungeonVignette" then
+        --display the crawlspace shader if the current room is a crawlspace and shaders are enabled
+        local configStrength = shaderStrength
+        --if shaders are disabled, override this to 0
+        if (not doShaders) or (not mod.isNonRotgutCrawlspace()) then configStrength = 0 end
+
+        return {
+            ModConfigStrength = configStrength,
+            ScreenCenter = {screenCenter.X, screenCenter.Y},
+            Time = time,
+            TrapdoorOpenAmount = trapdoorOpenAmount,
+            PlayerPosition = {pos.X, pos.Y},
+        }
+
+    elseif shaderName == "rotgutDungeonVignette" then
+        local configStrength = shaderStrength
+
+        if (not doShaders) or (not mod.isRotgutCrawlspace()) then configStrength = 0 end
+
+        return {
+            ModConfigStrength = configStrength,
+            Time = time,
+            PlayerPosition = {pos.X, pos.Y}
+        }
+
+    end
+end
+
+
+--nitpicky, but since there are a few ways to spawn poops during a room this feels necessary
+function mod:postPoopEntitySpawned(ent)
+    --i was so damn close to forgetting this check before release oh my god
+    if not mod.isAnyCrawlspace() then return end
+
+    if ent:GetType() == GridEntityType.GRID_POOP then
+        mod.playPoop(ent, ent:GetGridIndex(), ent:GetSprite(), mod.getSpriteRoot(), true)
     end
 end
 
@@ -980,9 +1582,15 @@ end
 
 --CALLBACKS
 
-
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.identifyRoom)
-mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.updateAnimations)
-mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.render)
---mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.renderDebugTxt)
---mod:AddCallback(ModCallbacks.MC_USE_ITEM, mod.debugTrigger, CollectibleType.COLLECTIBLE_BUTTER_BEAN)
+if REPENTOGON then
+    mod:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, CallbackPriority.LATE, mod.identifyRoom)
+    mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.updateAnimations)
+    mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.applyGravity) --post render because gravity needs to be applied 60 times per second ig?
+    mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.render)
+    --mod:AddCallback(ModCallbacks.MC_USE_ITEM, mod.debugTrigger, CollectibleType.COLLECTIBLE_BUTTER_BEAN)
+    mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, mod.getShaderParams)
+    mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.loadConfigSettings)
+    mod:AddCallback(ModCallbacks.MC_POST_GRID_ENTITY_SPAWN, mod.postPoopEntitySpawned)
+else
+    isaac.ConsoleOutput("WARNING: Crawlspaces Rebuilt requires REPENTOGON!!! The mod won't do anything without it so go install it!!! (pretty please)\n")
+end

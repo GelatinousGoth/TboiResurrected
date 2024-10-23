@@ -98,7 +98,7 @@ local ACLspoiler = require("resources.scripts.ACLspoiler")
 local text = require("resources.scripts.TextRenderer")
 local collections = require("resources.scripts.ACL_collection")
 
-function mod:KeyorPad()
+function ACLadmin:KeyorPad()
 
 	if Input.IsActionTriggered(ButtonAction.ACTION_LEFT, Nindex) or 
 	Input.IsActionTriggered(ButtonAction.ACTION_UP, Nindex) or
@@ -129,9 +129,9 @@ function mod:KeyorPad()
 	end
 
 end
-mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.KeyorPad)
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.KeyorPad)
 
-function mod:CopyTables(box, link, menu, counter, fakecounter)
+function ACLadmin:CopyTables(box, link, menu, counter, fakecounter)
 
    for k,v in pairs(box) do
       ACLboxCopy[k] = v
@@ -152,7 +152,7 @@ function mod:CopyTables(box, link, menu, counter, fakecounter)
 
 end
 
-function mod:CheckAgain()
+function ACLadmin:CheckAgain()
 	if MenuManager.GetActiveMenu() == MainMenuType.SAVES and (f4 == true or f == true) then
 		f = false
 		f2 = false
@@ -193,7 +193,7 @@ function mod:CheckAgain()
 		end
 		
 --- SAME FUCNTION OF CHECKING SIZE OF SELECT GRID
-		mod:MakeSelectGrid()
+		ACLadmin:MakeSelectGrid()
 		
 		ACLspoiler:clearData()
 		for i = 1, #ACLmenu do
@@ -210,10 +210,10 @@ function mod:CheckAgain()
 	end
 end
 
-mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.CheckAgain)
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.CheckAgain)
 
 
-function mod:Check()
+function ACLadmin:Check()
 		if ACLtotal == 0 then 
 		ACLtotal = #ACLbox
 		end
@@ -312,7 +312,7 @@ function mod:Check()
 		--LIST OF THINGS
 		
 		
-		mod:CopyTables(ACLbox,requireLink,ACLmenu,AchievementTotalDelay,FakeAchDelay)
+		ACLadmin:CopyTables(ACLbox,requireLink,ACLmenu,AchievementTotalDelay,FakeAchDelay)
 		local delay = 0
 				for i = 1, ACLtotal do
 				
@@ -334,7 +334,7 @@ function mod:Check()
 				
 				end
 		--- CHANGE SO IT COULD BE 5 OR 3 DEPENDING ON SCREEN SIZE
-		mod:MakeSelectGrid()
+		ACLadmin:MakeSelectGrid()
 
 		f3 = true
 	end
@@ -771,9 +771,9 @@ function mod:Check()
 	end
 end
 
-mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.Check)
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.Check)
 
-	function mod:selectCursor()  -- DECIDES WHERE CURSOR IS PLACED
+	function ACLadmin:selectCursor()  -- DECIDES WHERE CURSOR IS PLACED
 	
 		if StatsMenu.IsSecretsMenuVisible() and selectMenu == true and hideMenu == false then
 		
@@ -922,75 +922,75 @@ mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.Check)
 		end	
 	
 	end
-	mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.selectCursor)
+	ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.selectCursor)
 
-	function mod:MoveRight()
+	function ACLadmin:MoveRight()
 				if cursor % requireLink[boxID].dimX == 0 then
 				cursor = cursor - (requireLink[boxID].dimX - 1)
 				else
 				cursor = cursor + 1
 				end
 				if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
-				mod:MoveRight()
+				ACLadmin:MoveRight()
 				end
 	end
-	function mod:MoveLeft()
+	function ACLadmin:MoveLeft()
 				if cursor % requireLink[boxID].dimX == 1 then
 				cursor = cursor + (requireLink[boxID].dimX - 1)
 				else
 				cursor = cursor - 1
 				end
 				if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
-				mod:MoveLeft()
+				ACLadmin:MoveLeft()
 				end
 	end
-	function mod:MoveUp()
+	function ACLadmin:MoveUp()
 				if cursor <= requireLink[boxID].dimX then
 				cursor = cursor + (requireLink[boxID].dimX * (requireLink[boxID].dimY - 1))
 				else
 				cursor = cursor - requireLink[boxID].dimX
 				end
 				if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
-				mod:MoveUp()
+				ACLadmin:MoveUp()
 				end
 	end
-	function mod:MoveDown()
+	function ACLadmin:MoveDown()
 				if cursor > (requireLink[boxID].dimX * (requireLink[boxID].dimY - 1)) then
 				cursor = cursor - (requireLink[boxID].dimX * (requireLink[boxID].dimY - 1))
 				else
 				cursor = cursor + requireLink[boxID].dimX
 				end
 				if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
-				mod:MoveDown()
+				ACLadmin:MoveDown()
 				end
 	end
 
-	function mod:controlCursor()  -- DECIDES WHERE CURSOR IS PLACED
+	function ACLadmin:controlCursor()  -- DECIDES WHERE CURSOR IS PLACED
 	
 		if StatsMenu.IsSecretsMenuVisible() and selectMenu == false and hideMenu == false then
 	
 		
 		
 			if Input.IsActionTriggered(ButtonAction.ACTION_RIGHT, Kindex) then
-				mod:MoveRight()
+				ACLadmin:MoveRight()
 				ACLspoiler:spoilerCheck(cursor, boxID)
 				CursorSprite:Play("Idle", true)
 			end
 			
 			if Input.IsActionTriggered(ButtonAction.ACTION_LEFT, Kindex) then
-				mod:MoveLeft()
+				ACLadmin:MoveLeft()
 				ACLspoiler:spoilerCheck(cursor, boxID)
 				CursorSprite:Play("Idle", true)
 			end
 			
 			if Input.IsActionTriggered(ButtonAction.ACTION_DOWN, Kindex) then
-				mod:MoveDown()
+				ACLadmin:MoveDown()
 				ACLspoiler:spoilerCheck(cursor, boxID)
 				CursorSprite:Play("Idle", true)
 			end
 			
 			if Input.IsActionTriggered(ButtonAction.ACTION_UP, Kindex) then
-				mod:MoveUp()
+				ACLadmin:MoveUp()
 				ACLspoiler:spoilerCheck(cursor, boxID)
 				CursorSprite:Play("Idle", true)
 			end
@@ -1011,12 +1011,12 @@ mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.Check)
 			Input.IsActionTriggered(ButtonAction.ACTION_RIGHT, Kindex) then
 			--[[Portrait:ReplaceSpritesheet(3, "gfx/ui/achievement/"..requireLink[boxID].grid[cursor].gfx)
 			Portrait:LoadGraphics()]]--
-			mod:ChangePortraitImg()
+			ACLadmin:ChangePortraitImg()
 			end
 		end	
 	
 	end
-	mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.controlCursor)
+	ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.controlCursor)
 
 	
 	
@@ -1024,7 +1024,7 @@ mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.Check)
 	
 --[[00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000]]--	
 	
-function mod:Slider() -- USE Q AND E TO SWITCH PORTRAITS, AS IN, SWITCH THE REQUIRED WITH BOXID
+function ACLadmin:Slider() -- USE Q AND E TO SWITCH PORTRAITS, AS IN, SWITCH THE REQUIRED WITH BOXID
 	if StatsMenu.IsSecretsMenuVisible() and selectMenu == false and hideMenu == false then
 
 	
@@ -1045,7 +1045,7 @@ function mod:Slider() -- USE Q AND E TO SWITCH PORTRAITS, AS IN, SWITCH THE REQU
 							CursorSprite:LoadGraphics()
 							CursorSprite:Play("Idle2", true)
 			Left = true
-			mod:ChangePortraitImg()
+			ACLadmin:ChangePortraitImg()
 		elseif (Input.IsActionTriggered(ButtonAction.ACTION_BOMB, 0) or Input.IsActionTriggered(ButtonAction.ACTION_MENURT, Kindex)) and Portrait:IsPlaying() == false then
 			if boxID + 1 > #requireLink then
 				boxID = 1
@@ -1064,18 +1064,18 @@ function mod:Slider() -- USE Q AND E TO SWITCH PORTRAITS, AS IN, SWITCH THE REQU
 							CursorSprite:Play("Idle2", true)
 			Left = false
 
-			mod:ChangePortraitImg()
+			ACLadmin:ChangePortraitImg()
 		end
 	end
 	
 end
-mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.Slider)
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.Slider)
 
 --[[00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000]]--
 
 
 
-function mod:RenderFunction()
+function ACLadmin:RenderFunction()
 
 		ScreenY = Isaac.GetScreenHeight()
 		ScreenYAdjustment = math.floor((ScreenY - 290) / 2)
@@ -1089,7 +1089,7 @@ function mod:RenderFunction()
 			ScreenXAdjustment = 0
 		end
 
-		mod:MakeSelectGrid()
+		ACLadmin:MakeSelectGrid()
 
 		if (Input.IsActionTriggered(ButtonAction.ACTION_MENUTAB, Kindex)) and hideMenu == false then 
 			hideMenu = true
@@ -1112,7 +1112,7 @@ function mod:RenderFunction()
 		if (Input.IsActionTriggered(ButtonAction.ACTION_ITEM, 0) or Input.IsActionTriggered(ButtonAction.ACTION_MENUCONFIRM, Kindex)) and StatsMenu.IsSecretsMenuVisible() and secretFrameCount >= 1 and hideMenu == false then
 			if selectMenu == true then
 			selectMenu = false
-			mod:ChangePortraitImg()
+			ACLadmin:ChangePortraitImg()
 			else
 			boxID = keptPortrait
 			CursorSprite:ReplaceSpritesheet(3, "gfx/ui/portrait/tile/arrow_"..requireLink[boxID].size..".png")
@@ -1157,7 +1157,7 @@ function mod:RenderFunction()
 			Portrait:LoadGraphics()
 		end
 		
-		mod:KeyorPad()
+		ACLadmin:KeyorPad()
 		
 		if StatsMenu.IsSecretsMenuVisible() and selectMenu == true and hideMenu == false then
 		
@@ -1242,11 +1242,11 @@ function mod:RenderFunction()
 			 #ACLbox)
 		end
 end
-mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.RenderFunction)
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.RenderFunction)
 
 	local hasPlayed = false
 
-function mod:enterSecrets()
+function ACLadmin:enterSecrets()
 
 	if StatsMenu.IsSecretsMenuVisible() and hasPlayed == false and hideMenu == false then
 		for i = 1, 1 do
@@ -1255,7 +1255,7 @@ function mod:enterSecrets()
 					for u=1, #requireLink[boxID].grid do
 							requireLink[boxID].grid[u].Tile:Play("EnterRight")
 					end
-			mod:ChangePortraitImg()
+			ACLadmin:ChangePortraitImg()
 			CursorSprite:Play("Idle", true)
 		end
 		
@@ -1280,9 +1280,9 @@ function mod:enterSecrets()
 		end
 	end
 end	
-mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.enterSecrets)
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.enterSecrets)
 
-	function mod:showPortrait() -- USE Q AND E TO SWITCH PORTRAITS, AS IN, SWITCH THE REQUIRED WITH BOXID
+	function ACLadmin:showPortrait() -- USE Q AND E TO SWITCH PORTRAITS, AS IN, SWITCH THE REQUIRED WITH BOXID
 	-- USE CHECK FUNCTION HERE TO CHECK WHICH SECRETS ARE UNLOCKED IN THE BRAND NEW PORTRAIT
 		if StatsMenu.IsSecretsMenuVisible() and hideMenu == false then
 		
@@ -1320,7 +1320,7 @@ mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.enterSecrets)
 			if Portrait:IsPlaying("EnterLeft") or Portrait:IsPlaying("EnterRight") and hideMenu == false then
 				Portrait:ReplaceSpritesheet(0, "gfx/ui/portrait/"..requireLink[boxID].portrait..".png")
 				Portrait:LoadGraphics()
-				mod:ChangePortraitImg()
+				ACLadmin:ChangePortraitImg()
 				if selectMenu == true then
 					for i = 1, #ACLmenu do
 						ACLmenu[i]:LoadGraphics()
@@ -1337,10 +1337,10 @@ mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.enterSecrets)
 		end
 	--USES RENDER CALLBACK, WHEN Q AND E SWITCH THE PORTRAIT NEED, THE IMAGE CHANGE
 	end
-	mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, mod.showPortrait)
+	ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.showPortrait)
 
 
-function mod:ChangePortraitImg()
+function ACLadmin:ChangePortraitImg()
 
 	if selectMenu == true and hideMenu == false then
 	
@@ -1362,7 +1362,7 @@ function mod:ChangePortraitImg()
 end
 
 
-function mod:MakeSelectGrid()
+function ACLadmin:MakeSelectGrid()
 
 		if ScreenX <= 473.0 and SelectMenuWidth == 5 and f5 == false and hideMenu == false then 
 		Portrait:Load("gfx/ui/portrait/portrait_small.anm2", true)
@@ -1425,7 +1425,7 @@ function mod:MakeSelectGrid()
 	end
 end
 
-function mod:AddNewPortrait(title, linkName)
+function ACLadmin:AddNewPortrait(title, linkName)
 
 requireLink[#requireLink + 1] = linkName
 table.insert(ACLbox, title)
@@ -1436,7 +1436,7 @@ ACLspoiler.RecheckLinks()
 
 end
 
-function mod:AddNewCollection(titlearr)
+function ACLadmin:AddNewCollection(titlearr)
 local arr = {}	
 
 for k2,v2 in pairs(titlearr) do
@@ -1460,7 +1460,7 @@ Complete = false
 end
 
 
-function mod:printSelectWidth()
+function ACLadmin:printSelectWidth()
 print(SelectMenuWidth)
 print(SelectMenuThree)
 end

@@ -64,7 +64,7 @@ function mod:InitItemsRenamed()
 
     cards = {
         {Card.CARD_QUEEN_OF_HEARTS, "Business Card", "The Pink Vice"},
-		{Card.CARD_HUGE_GROWTH, "Giant Growth", "Become Immense!"},
+		{Card.CARD_HUGE_GROWTH, "Vast Growth", "Become Immense!"},
     }
 
     if FiendFolio then

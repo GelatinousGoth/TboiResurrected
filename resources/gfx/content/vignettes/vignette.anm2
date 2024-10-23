@@ -1,5 +1,5 @@
 <AnimatedActor>
-	<Info CreatedBy="possombull" CreatedOn="2023-10-21 9:35:27 PM" Version="13" Fps="30"/>
+	<Info CreatedBy="possombull" CreatedOn="2024-01-06 4:23:55 PM" Version="13" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="dungeon_vignette.png" Id="0"/>

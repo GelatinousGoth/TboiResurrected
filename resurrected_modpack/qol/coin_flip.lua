@@ -133,5 +133,3 @@ function CoinFlipper:PostGameStarted(isContinued)
     end
 end
 CoinFlipper:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, CoinFlipper.PostGameStarted);
-
-require("resurrected_modpack.qol.coin_flip.mod_config_menu");
