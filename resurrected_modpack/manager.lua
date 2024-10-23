@@ -450,7 +450,7 @@ local shaderRegisterWarnings = {
     If you are seeing this message please notify the developers of Tboi Rekindled through the Steam Workshop page.]],
 }
 
----@param mod TR_Mod
+---@param mod TR_Mod | ModReference
 ---@param shaderName string
 ---@param shaderFun function
 ---@param defaultParams table

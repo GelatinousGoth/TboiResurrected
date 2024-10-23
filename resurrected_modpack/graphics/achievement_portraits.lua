@@ -1,5 +1,5 @@
 -- Register the mod in the API
-local TR_Manager = require("resurrected_modpack.manager")
+TR_Manager = require("resurrected_modpack.manager")
 ACLadmin = TR_Manager:RegisterMod("Achievement Portraits", 1)
 --RANDOM BULLSHIT
 
@@ -80,11 +80,11 @@ local spacing
 local left
 local down
 --REQUIRED FILES
-local dont = require("resources.scripts.ACL_check")
-local dont2 = require("resources.scripts.ACL_select")
+local dont = require("resurrected_modpack.graphics.achievement_portraits.ACL_check")
+local dont2 = require("resurrected_modpack.graphics.achievement_portraits.ACL_select")
 
 	for i = 1, #ACLbox do -- GRABS ALL REQUIRED GRID DOCS
-			requireLink[i] = require("resources.scripts.acl.ACL_"..ACLbox[i])
+			requireLink[i] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_"..ACLbox[i])
 	end
 
 	CursorSprite:ReplaceSpritesheet(3, "gfx/ui/portrait/tile/arrow_"..requireLink[boxID].size..".png")
@@ -94,9 +94,9 @@ local dont2 = require("resources.scripts.ACL_select")
 	Portrait:LoadGraphics()
 
 
-local ACLspoiler = require("resources.scripts.ACLspoiler")
-local text = require("resources.scripts.TextRenderer")
-local collections = require("resources.scripts.ACL_collection")
+local ACLspoiler = require("resurrected_modpack.graphics.achievement_portraits.ACLspoiler")
+local text = require("resurrected_modpack.graphics.achievement_portraits.TextRenderer")
+local collections = require("resurrected_modpack.graphics.achievement_portraits.ACL_collection")
 
 function ACLadmin:KeyorPad()
 

@@ -2,23 +2,25 @@ local TR_Manager = require("resurrected_modpack.manager")
 
 local mod = TR_Manager:RegisterMod("Head Of The Keeper Costume", 1)
 
-NullItemID.ID_PENNY = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_penny_shoot.anm2")
-NullItemID.ID_PENNY_IDLE = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_penny.anm2")
-NullItemID.ID_NICKEL = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_nickel_shoot.anm2")
-NullItemID.ID_NICKEL_IDLE = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_nickel.anm2")
-NullItemID.ID_DIME = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_dime_shoot.anm2")
-NullItemID.ID_DIME_IDLE = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_dime.anm2")
+local NullItems = {
+    ID_PENNY = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_penny_shoot.anm2"),
+    ID_PENNY_IDLE = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_penny.anm2"),
+    ID_NICKEL = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_nickel_shoot.anm2"),
+    ID_NICKEL_IDLE = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_nickel.anm2"),
+    ID_DIME = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_dime_shoot.anm2"),
+    ID_DIME_IDLE = Isaac.GetCostumeIdByPath("gfx/characters/headofthekeeper_dime.anm2")
+}
 
 local shootCostumes = {
-    PENNY = NullItemID.ID_PENNY,
-    NICKEL = NullItemID.ID_NICKEL,
-    DIME = NullItemID.ID_DIME
+    PENNY = NullItems.ID_PENNY,
+    NICKEL = NullItems.ID_NICKEL,
+    DIME = NullItems.ID_DIME
 }
 
 local idleCostumes = {
-    PENNY = NullItemID.ID_PENNY_IDLE,
-    NICKEL = NullItemID.ID_NICKEL_IDLE,
-    DIME = NullItemID.ID_DIME_IDLE
+    PENNY = NullItems.ID_PENNY_IDLE,
+    NICKEL = NullItems.ID_NICKEL_IDLE,
+    DIME = NullItems.ID_DIME_IDLE
 }
 
 local CostumeState = {
@@ -68,17 +70,17 @@ function mod.updateCostume()
                 frameCounter = 0
 
             elseif not isShooting and currentCostumeState ~= CostumeState.IDLE_APPLIED then
-                player:TryRemoveNullCostume(NullItemID.ID_PENNY)
-                player:TryRemoveNullCostume(NullItemID.ID_NICKEL)
-                player:TryRemoveNullCostume(NullItemID.ID_DIME)
+                player:TryRemoveNullCostume(NullItems.ID_PENNY)
+                player:TryRemoveNullCostume(NullItems.ID_NICKEL)
+                player:TryRemoveNullCostume(NullItems.ID_DIME)
                 player:AddNullCostume(currentIdleCostume)
                 currentCostumeState = CostumeState.IDLE_APPLIED
                 frameCounter = 0
 
             elseif isShooting and currentCostumeState ~= CostumeState.SHOOT_APPLIED then
-                player:TryRemoveNullCostume(NullItemID.ID_PENNY_IDLE)
-                player:TryRemoveNullCostume(NullItemID.ID_NICKEL_IDLE)
-                player:TryRemoveNullCostume(NullItemID.ID_DIME_IDLE)
+                player:TryRemoveNullCostume(NullItems.ID_PENNY_IDLE)
+                player:TryRemoveNullCostume(NullItems.ID_NICKEL_IDLE)
+                player:TryRemoveNullCostume(NullItems.ID_DIME_IDLE)
                 player:AddNullCostume(currentShootCostume)
                 currentCostumeState = CostumeState.SHOOT_APPLIED
                 frameCounter = 0

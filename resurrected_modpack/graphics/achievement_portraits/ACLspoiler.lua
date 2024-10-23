@@ -2,14 +2,14 @@ local ACLspoiler = {}
 
 local requireLink = {}
 for i = 1, #ACLbox do -- GRABS ALL REQUIRED GRID DOCS
-		requireLink[i] = require("resources.scripts.acl.ACL_"..ACLbox[i])
+		requireLink[i] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_"..ACLbox[i])
 
 end
 
 function ACLspoiler:RecheckLinks()
 
 for i = 1, #ACLbox do -- GRABS ALL REQUIRED GRID DOCS
-		requireLink[i] = require("resources.scripts.acl.ACL_"..ACLbox[i])
+		requireLink[i] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_"..ACLbox[i])
 end
 
 end

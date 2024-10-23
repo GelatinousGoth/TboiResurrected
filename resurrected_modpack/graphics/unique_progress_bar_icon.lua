@@ -490,8 +490,8 @@ end
 
 local loadedIconForStageAPI = false
 
-function mod:RenderForStageAPI(name)
-	if not StageAPI or name ~= "StageAPI-RenderAboveHUD" then return end
+function mod:RenderForStageAPI()
+	if not StageAPI then return end
 	local stageAnimData = StageAPI.TransitionAnimationData
 	---@type Sprite
 	local stageAPIIcon = stageAnimData.Sprites.IsaacIndicator
@@ -515,7 +515,7 @@ function mod:RenderForStageAPI(name)
 	mod:RenderIsaacIcons(renderPos, true)
 end
 
-mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, mod.RenderForStageAPI)
+TR_Manager:RegisterShader(mod, "StageAPI-RenderAboveHUD", mod.RenderForStageAPI, {})
 
 --#endregion
 

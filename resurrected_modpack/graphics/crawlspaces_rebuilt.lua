@@ -1,7 +1,8 @@
 local TR_Manager = require("resurrected_modpack.manager")
-local mod = TR_Manager:RegisterMod("crawlspaces_rebuilt", 1)
+CrawlspacesRebuilt = TR_Manager:RegisterMod("crawlspaces rebuilt", 1)
+local mod = CrawlspacesRebuilt
 
-include("decorations.lua")
+include("resurrected_modpack.graphics.crawlspaces_rebuilt.decorations")
 local json = require("json")
 local decorations = mod.decorations
 
@@ -1533,41 +1534,6 @@ function mod:applyGravity()
 end
 
 
-function mod:getShaderParams(shaderName)
-    local room = game:GetRoom()
-    local screenCenter = room:GetCenterPos()
-    local time = isaac.GetFrameCount()
-    local pos = isaac.WorldToRenderPosition(isaac.GetPlayer().Position) + room:GetRenderScrollOffset()
-
-    if shaderName == "itemDungeonVignette" then
-        --display the crawlspace shader if the current room is a crawlspace and shaders are enabled
-        local configStrength = shaderStrength
-        --if shaders are disabled, override this to 0
-        if (not doShaders) or (not mod.isNonRotgutCrawlspace()) then configStrength = 0 end
-
-        return {
-            ModConfigStrength = configStrength,
-            ScreenCenter = {screenCenter.X, screenCenter.Y},
-            Time = time,
-            TrapdoorOpenAmount = trapdoorOpenAmount,
-            PlayerPosition = {pos.X, pos.Y},
-        }
-
-    elseif shaderName == "rotgutDungeonVignette" then
-        local configStrength = shaderStrength
-
-        if (not doShaders) or (not mod.isRotgutCrawlspace()) then configStrength = 0 end
-
-        return {
-            ModConfigStrength = configStrength,
-            Time = time,
-            PlayerPosition = {pos.X, pos.Y}
-        }
-
-    end
-end
-
-
 --nitpicky, but since there are a few ways to spawn poops during a room this feels necessary
 function mod:postPoopEntitySpawned(ent)
     --i was so damn close to forgetting this check before release oh my god
@@ -1578,7 +1544,58 @@ function mod:postPoopEntitySpawned(ent)
     end
 end
 
+function mod:itemDungeonVignetteShader()
+    local room = game:GetRoom()
+    local screenCenter = room:GetCenterPos()
+    local time = isaac.GetFrameCount()
+    local pos = isaac.WorldToRenderPosition(isaac.GetPlayer().Position) + room:GetRenderScrollOffset()
 
+    --display the crawlspace shader if the current room is a crawlspace and shaders are enabled
+    local configStrength = shaderStrength
+    --if shaders are disabled, override this to 0
+    if (not doShaders) or (not mod.isNonRotgutCrawlspace()) then configStrength = 0 end
+
+    return {
+        ModConfigStrength = configStrength,
+        ScreenCenter = {screenCenter.X, screenCenter.Y},
+        Time = time,
+        TrapdoorOpenAmount = trapdoorOpenAmount,
+        PlayerPosition = {pos.X, pos.Y},
+    }
+end
+
+local DefaultItemDungeonVignetteParams = {
+    ModConfigStrength = 0,
+    ScreenCenter = {0, 0},
+    Time = 0,
+    TrapdoorOpenAmount = 0,
+    PlayerPosition = {0, 0},
+}
+
+function mod:rotgutDungeonVignetteShader()
+    local room = game:GetRoom()
+    local time = isaac.GetFrameCount()
+    local pos = isaac.WorldToRenderPosition(isaac.GetPlayer().Position) + room:GetRenderScrollOffset()
+
+    local configStrength = shaderStrength
+
+    if (not doShaders) or (not mod.isRotgutCrawlspace()) then configStrength = 0 end
+
+    return {
+        ModConfigStrength = configStrength,
+        Time = time,
+        PlayerPosition = {pos.X, pos.Y}
+    }
+end
+
+local DefaultRotgutDungeonVignetteParams = {
+    ModConfigStrength = 0,
+    Time = 0,
+    PlayerPosition = {0, 0}
+}
+
+TR_Manager:RegisterShader(mod, "itemDungeonVignette", mod.itemDungeonVignetteShader, DefaultItemDungeonVignetteParams)
+TR_Manager:RegisterShader(mod, "rotgutDungeonVignette", mod.rotgutDungeonVignetteShader, DefaultRotgutDungeonVignetteParams)
 
 --CALLBACKS
 
@@ -1588,7 +1605,6 @@ if REPENTOGON then
     mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.applyGravity) --post render because gravity needs to be applied 60 times per second ig?
     mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.render)
     --mod:AddCallback(ModCallbacks.MC_USE_ITEM, mod.debugTrigger, CollectibleType.COLLECTIBLE_BUTTER_BEAN)
-    mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, mod.getShaderParams)
     mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.loadConfigSettings)
     mod:AddCallback(ModCallbacks.MC_POST_GRID_ENTITY_SPAWN, mod.postPoopEntitySpawned)
 else
