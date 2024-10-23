@@ -248,7 +248,7 @@ function TR_Manager:RemoveModData(mod)
         TR_Manager:LoadData()
     end
 
-    self.ModData[mod.TR_Mod].SaveData = nil
+    self.ModData[mod.TR_ID].SaveData = nil
 end
 
 local modTemplate = {}
