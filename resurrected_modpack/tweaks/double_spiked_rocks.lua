@@ -2,6 +2,8 @@ local TR_Manager = require("resurrected_modpack.manager")
 
 local mod = TR_Manager:RegisterMod("Double Spiked Rocks", 1)
 
+local modDSR = RegisterMod("Double Spiked Rocks", 1)
+
 -------------------------------------------------------------------------------------------------------------------------------------------
 -- Update Enums
 -------------------------------------------------------------------------------------------------------------------------------------------
@@ -21,28 +23,13 @@ local SPIKE_COUNT_CHEST = 7
 local SPIKE_VELOCITY = 9
 local SPIKE_DAMAGE = 30
 local SPIKE_SIZE = 0.8
+-- Coin stats
+local COIN_COUNT = 8
+local COIN_VELOCITY = 9
+local COIN_SIZE = 0.8
 
 -- Game states to lower utilization
 local currentRoomChecked = false
-
--------------------------------------------------------------------------------------------------------------------------------------------
---[[ For debug purpose only
-
-local debugText = ""
-local function debug()
-    debugText = ""
-    local entitys = Isaac.FindByType(1000)
-    if entitys ~= nil then
-        for _, entity in pairs(entitys) do
-            debugText = debugText .. " " .. tostring(entity.Variant)
-        end
-    end
-
-    Isaac.RenderText(debugText, 60, 60, 0, 1, 0, 1)
-end
-mod:AddCallback(ModCallbacks.MC_POST_RENDER, debug)
---]]
--------------------------------------------------------------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------------------------------------------------------------
 -- Return all gridEntities with the gridEntityType from the current room
@@ -145,7 +132,7 @@ end
 -- Spawn spikeExplosion or coinExplosion for every destroyed and unmarked spikeRock or goldRock exactly once.
 -- Don't sapwn spikeExplosion if a player holds flatFile.
 -------------------------------------------------------------------------------------------------------------------------------------------
-function mod:onRockDestroy(type, variant, subtype, _, _, _, seed)
+function modDSR:onRockDestroy(type, variant, subtype, _, _, _, seed)
     local room = game:GetLevel():GetCurrentRoom()
     local spikedRocks = getGridEntities(room, GridEntityType.GRID_ROCK_SPIKED)
 
@@ -164,7 +151,7 @@ end
 -------------------------------------------------------------------------------------------------------------------------------------------
 -- Determines if entity collides with something and handels it as a spikeCollision.
 -------------------------------------------------------------------------------------------------------------------------------------------
-function mod:onImpact(entity)
+function modDSR:onImpact(entity)
     if entity.Height >= -5 or entity:CollidesWithGrid() then
         spikeCollision(entity)
     end
@@ -173,7 +160,7 @@ end
 -------------------------------------------------------------------------------------------------------------------------------------------
 -- Determines if the a spikeProjectile or spikeTear has hurt an entity and handels the spikeCollision.
 -------------------------------------------------------------------------------------------------------------------------------------------
-function mod:onDamage(_, _, _, source)
+function modDSR:onDamage(_, _, _, source)
     if source.Type == EntityType.ENTITY_PROJECTILE and source.Variant == ProjectileVariant.PROJECTILE_SPIKE then
         spikeCollision(source.Entity)
     elseif source.Type == EntityType.ENTITY_TEAR and source.Variant == TearVariant.SPIKE then
@@ -187,12 +174,12 @@ end
 -------------------------------------------------------------------------------------------------------------------------------------------
 local frameCount = 0
 -- Sets currentRoomChecked to false
-function mod:onRoomChange()
+function modDSR:onRoomChange()
     currentRoomChecked = false
 end
 
 -- Marks spiked rocks if player has flat file
-function mod:onUpdate()
+function modDSR:onUpdate()
     if not currentRoomChecked then
         if hasPlayerFlatFile() then
             if frameCount == 0 then
@@ -210,10 +197,10 @@ end
 -- ModCallbacks ---------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------
-mod:AddCallback(ModCallbacks.MC_POST_PROJECTILE_UPDATE, mod.onImpact, ProjectileVariant.PROJECTILE_SPIKE)
-mod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, mod.onImpact, TearVariant.SPIKE)
-mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, mod.onDamage)
-mod:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN, mod.onRockDestroy, EntityType.ENTITY_EFFECT, EffectVariant.ROCK_PARTICLE)
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.onRoomChange)
-mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.onUpdate)
+modDSR:AddCallback(ModCallbacks.MC_POST_PROJECTILE_UPDATE, modDSR.onImpact, ProjectileVariant.PROJECTILE_SPIKE)
+modDSR:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, modDSR.onImpact, TearVariant.SPIKE)
+modDSR:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, modDSR.onDamage)
+modDSR:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN, modDSR.onRockDestroy, EntityType.ENTITY_EFFECT, EffectVariant.ROCK_PARTICLE)
+modDSR:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, modDSR.onRoomChange)
+modDSR:AddCallback(ModCallbacks.MC_POST_UPDATE, modDSR.onUpdate)
 -------------------------------------------------------------------------------------------------------------------------------------------
