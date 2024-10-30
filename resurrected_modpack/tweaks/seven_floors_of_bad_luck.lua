@@ -54,9 +54,6 @@ function mod:onUpdate()
 					end
 					local spawnItem = CollectibleType.COLLECTIBLE_SHARD_OF_GLASS
 					math.randomseed(Game():GetSeeds():GetStartSeed() + storage.MirrorMisfortune) -- does this work? I don't know.
-					if (not anyTMags and math.random() < 0.2) or (anyTMags and math.random() < 0.8) then
-						spawnItem = CollectibleType.COLLECTIBLE_BROKEN_GLASS_CANNON
-					end
 					Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, spawnItem, room:GetGridPosition(pedestalIdx), Vector.Zero, nil)
 					local player = Isaac.GetPlayer(0)
 					player:AddCacheFlags(CacheFlag.CACHE_LUCK)
