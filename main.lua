@@ -1,6 +1,9 @@
 local TR_Manager = require("resurrected_modpack.manager")
 TR_Manager:Init()
 
+require("resurrected_modpack.modcompat.ANM2")
+require("resurrected_modpack.modcompat.VS_screen")
+
 -- require("resurrected_modpack.enums")
 
 -- require("resurrected_modpack.tools.custom_callbacks")
@@ -73,5 +76,3 @@ TR_Manager:LoadMod("resurrected_modpack.sounds.shepard_tone")
 TR_Manager:LoadMod("resurrected_modpack.sounds.bell_chime_for_good_items")
 
 TR_Manager:LoadMod("resurrected_modpack.music.unique_mega_satan_music")
-
-TR_Manager:LoadMod("resurrected_modpack.compatibility.reworked_foes")

@@ -25,8 +25,8 @@
 			<Event Name="Summon" Id="4"/>
 		</Events>
 	</Content>
-	<Animations DefaultAnimation="Idle">
-		<Animation Name="Idle" FrameNum="30" Loop="true">
+	<Animations DefaultAnimation="Idle1">
+		<Animation Name="Idle1" FrameNum="30" Loop="true">
 			<RootAnimation>
 				<Frame XPosition="0" YPosition="0" XScale="100" YScale="100" Delay="30" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
 			</RootAnimation>
