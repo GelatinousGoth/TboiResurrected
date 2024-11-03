@@ -84,9 +84,7 @@ local function onPostModLoad()
         ["gfx/403.000_theforsaken.anm"] = {anm2 = true, layers = {0}},
 
         ["gfx/062.001_scolex.anm2"] = {anm2 = false, layers = {0}},
-        ["gfx/102.000_isaac (final boss)"] = {anm2 = false, layers = {0}},
         ["gfx/265.001_sistersvis.anm2"] = {anm2 = false, layers = {0}},
-        ["gfx/266.000_mega gurdy.anm2"] = {anm2 = false, layers = {0}},
         ["gfx/270.000_megafred.anm2"] = {anm2 = false, layers = {0}},
 
         ["gfx/052.000_pride.anm2"] = {anm2 = false, layers = {0}},

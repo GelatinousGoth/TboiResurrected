@@ -1,19 +1,28 @@
 local mod = RegisterMod("TR ModCompat: VS Screen", 1)
 
----@type table<string, boolean>
-local portraits = {
-    ["gfx/ui/boss/portrait_102.1_bluebaby.png"] = true
-}
+local portraits = {}
 
-local names = {
-    ["gfx/ui/boss/bossname_102.1_bluebaby.png"] = true
-}
+local names = {}
 
 local BOSS_PORTRAIT_LAYER_1 = 4
 local BOSS_PORTRAIT_LAYER_2 = 9
 local BOSS_NAME_LAYER = 7
 
 local COMPAT_SUFFIX = "_modcompat"
+
+local function insert_elements(tbl, other)
+    for key, value in pairs(other) do
+        tbl[key] = value
+    end
+end
+
+local function has_at_least_one_key(tbl)
+    for _, _ in pairs(tbl) do
+        return true
+    end
+
+    return false
+end
 
 local function get_modcompat_sheet(str)
     local pos = #str - 3
@@ -55,4 +64,23 @@ local function onRender()
     end
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_RENDER, onRender)
+local function onPostModLoad()
+    local reworkedPortraits = {
+        ["gfx/ui/boss/portrait_102.1_bluebaby.png"] = true
+    }
+
+    local reworkedNames = {
+        ["gfx/ui/boss/bossname_102.1_bluebaby.png"] = true
+    }
+
+    if not ReworkedFoes then
+        insert_elements(portraits, reworkedPortraits)
+        insert_elements(names, reworkedNames)
+    end
+
+    if has_at_least_one_key(portraits) or has_at_least_one_key(names) then
+        mod:AddCallback(ModCallbacks.MC_POST_RENDER, onRender)
+    end
+end
+
+mod:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, onPostModLoad)
