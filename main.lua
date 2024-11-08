@@ -66,7 +66,6 @@ TR_Manager:LoadMod("resurrected_modpack.qol.hanging_dream_catcher")
 TR_Manager:LoadMod("resurrected_modpack.qol.hud_toggle")
 TR_Manager:LoadMod("resurrected_modpack.qol.items_renamed")
 TR_Manager:LoadMod("resurrected_modpack.qol.coin_flip")
-TR_Manager:LoadMod("resurrected_modpack.qol.voided_items")
 TR_Manager:LoadMod("resurrected_modpack.qol.ff_fortunes")
 TR_Manager:LoadMod("resurrected_modpack.qol.melee_range_fix")
 
