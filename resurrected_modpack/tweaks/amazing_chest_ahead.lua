@@ -17,7 +17,7 @@ local function IsNewChest(chest)
 end
 
 function mod:ChestReplace(pickup)
-	if not mod.Functions.IsAchievementUnlocked(Achievement.WOODEN_CHEST) then
+	if not Isaac.GetPersistentGameData():Unlocked(Achievement.WOODEN_CHEST) then
 		return
 	end
 	local room = game:GetRoom()
@@ -54,7 +54,7 @@ mod:AddPriorityCallback(ModCallbacks.MC_POST_PICKUP_INIT, math.maxinteger, mod.L
 --Red Chest Extra Loot
 
 function mod:RedChestLoot(pickup)
-	if not mod.Functions.IsAchievementUnlocked(Achievement.RED_KEY) then
+	if not Isaac.GetPersistentGameData():Unlocked(Achievement.RED_KEY) then
 		return
 	end
 	if pickup:GetSprite():IsPlaying("Open") and pickup:GetSprite():GetFrame() == 1 then

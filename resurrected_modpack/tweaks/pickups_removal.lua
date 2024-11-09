@@ -4,9 +4,6 @@ local mod = TR_Manager:RegisterMod("Pickups Removal", 1)
 local itemConfig = Isaac.GetItemConfig()
 
 local CardsIWantToBlock = {}
-local PillsIWantToBlock = {
-	[PillEffect.PILLEFFECT_INFESTED_EXCLAMATION] = true
-}
 
 local availabilityConditions = {}
 
@@ -14,21 +11,11 @@ local function NotAvailable()
 	return false
 end
 
-local function TableAppend(tbl, append)
+local function table_append(tbl, append)
 	for _, value in ipairs(append) do
 		table.insert(tbl, value)
 	end
 end
-
-function mod:BlockPill(SelectedPillEffect, PillColor)
-	if PillsIWantToBlock[SelectedPillEffect] then
-		return PillsIWantToBlock[SelectedPillEffect]
-	end
-end
-
-mod:AddCallback(ModCallbacks.MC_GET_PILL_EFFECT, mod.BlockPill)
-
-local initialized = false
 
 local function InitRemovedPickupsList()
 	local blockedCards_FF = {}
@@ -59,11 +46,9 @@ local function InitRemovedPickupsList()
 		FiendFolio.ITEM.CARD.PLUS_3_FIREBALLS
 	}
 
-	PillsIWantToBlock[FiendFolio.ITEM.PILL.SPIDER_UNBOXING] = {Replace = PillEffect.PILLEFFECT_INFESTED_QUESTION}
-
 	::END_OF_FF::
 
-	TableAppend(CardsIWantToBlock, blockedCards_FF)
+	table_append(CardsIWantToBlock, blockedCards_FF)
 end
 
 local function BlockCards()

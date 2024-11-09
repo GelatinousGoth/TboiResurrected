@@ -118,7 +118,7 @@ function TR_Manager:AddCallback(mod, callbackId, priority, fn, param)
     table.insert(self.ModData[mod.TR_ID].Callbacks, callbackEntry)
 
     if (self.ModData[mod.TR_ID].Enabled) then
-        Isaac.AddPriorityCallback(TboiRekindled, callbackId, priority, fn, param)
+        Isaac.AddPriorityCallback(mod, callbackId, priority, fn, param)
     end
 
     if callbackId == ModCallbacks.MC_GET_SHADER_PARAMS and isFirstShaderWarn then
@@ -143,7 +143,7 @@ function TR_Manager:RemoveCallback(mod, callbackId, fn)
         end
     end
 
-    Isaac.RemoveCallback(TboiRekindled, callbackId, fn)
+    Isaac.RemoveCallback(mod, callbackId, fn)
 end
 
 function TR_Manager:SaveData()

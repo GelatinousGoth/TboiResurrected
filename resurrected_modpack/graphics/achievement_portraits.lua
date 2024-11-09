@@ -773,250 +773,250 @@ end
 
 ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.Check)
 
-	function ACLadmin:selectCursor()  -- DECIDES WHERE CURSOR IS PLACED
+function ACLadmin:selectCursor()  -- DECIDES WHERE CURSOR IS PLACED
 	
-		if StatsMenu.IsSecretsMenuVisible() and selectMenu == true and hideMenu == false then
-		
-			if Input.IsActionTriggered(ButtonAction.ACTION_RIGHT, Kindex) then
-				Portrait:Play("ExitRight",true)
-				for i=1, #requireLink[boxID].grid do
-					requireLink[boxID].grid[i].Tile:Play("ExitRight")
-				end
-				if boxID == #ACLbox and #ACLbox % SelectMenuWidth ~= 0 then
-				boxID = boxID - ((#ACLbox % SelectMenuWidth))
-				elseif boxID % SelectMenuWidth == 0 then
-				boxID = boxID - (4 - SelectMenuThree)
-				else
-				boxID = boxID + 1
-				end
-				CursorSprite:ReplaceSpritesheet(3, "gfx/ui/portrait/tile/arrow_"..requireLink[boxID].size..".png")
-				CursorSprite:LoadGraphics()
-				f = false
-				keptPortrait = boxID
+	if StatsMenu.IsSecretsMenuVisible() and selectMenu == true and hideMenu == false then
+	
+		if Input.IsActionTriggered(ButtonAction.ACTION_RIGHT, Kindex) or Input.IsActionTriggered(ButtonAction.ACTION_SHOOTRIGHT, Kindex) then
+			Portrait:Play("ExitRight",true)
+			for i=1, #requireLink[boxID].grid do
+				requireLink[boxID].grid[i].Tile:Play("ExitRight")
 			end
-			if Input.IsActionTriggered(ButtonAction.ACTION_LEFT, Kindex) then
-				Portrait:Play("ExitRight",true)
-				for i=1, #requireLink[boxID].grid do
-					requireLink[boxID].grid[i].Tile:Play("ExitRight")
-				end
-				if boxID % SelectMenuWidth == 1 then
-					if boxID + (4 - SelectMenuThree) > #ACLbox then
-					boxID = #ACLbox
-					else
-					boxID = boxID + (4 - SelectMenuThree)
-					end
-				else
-				boxID = boxID - 1
-				end
-				ACLspoiler:spoilerCheck(1, boxID)
-				CursorSprite:ReplaceSpritesheet(3, "gfx/ui/portrait/tile/arrow_"..requireLink[boxID].size..".png")
-				CursorSprite:LoadGraphics()
-				f = false
-				keptPortrait = boxID
+			if boxID == #ACLbox and #ACLbox % SelectMenuWidth ~= 0 then
+			boxID = boxID - ((#ACLbox % SelectMenuWidth))
+			elseif boxID % SelectMenuWidth == 0 then
+			boxID = boxID - (4 - SelectMenuThree)
+			else
+			boxID = boxID + 1
 			end
-			if Input.IsActionTriggered(ButtonAction.ACTION_DOWN, Kindex) then
-				Portrait:Play("ExitRight",true)
-				for i=1, #requireLink[boxID].grid do
-					requireLink[boxID].grid[i].Tile:Play("ExitRight")
+			CursorSprite:ReplaceSpritesheet(3, "gfx/ui/portrait/tile/arrow_"..requireLink[boxID].size..".png")
+			CursorSprite:LoadGraphics()
+			f = false
+			keptPortrait = boxID
+		end
+		if Input.IsActionTriggered(ButtonAction.ACTION_LEFT, Kindex) or Input.IsActionTriggered(ButtonAction.ACTION_SHOOTLEFT, Kindex) then
+			Portrait:Play("ExitRight",true)
+			for i=1, #requireLink[boxID].grid do
+				requireLink[boxID].grid[i].Tile:Play("ExitRight")
+			end
+			if boxID % SelectMenuWidth == 1 then
+				if boxID + (4 - SelectMenuThree) > #ACLbox then
+				boxID = #ACLbox
+				else
+				boxID = boxID + (4 - SelectMenuThree)
 				end
-				if boxID > (#ACLbox - (#ACLbox % SelectMenuWidth)) or boxID > (#ACLbox - SelectMenuWidth) or boxID > #ACLbox then
-					if boxID % SelectMenuWidth ~= 0 then
-						boxID = boxID % SelectMenuWidth
-					else 
-						boxID = SelectMenuWidth
-					end
-				movePortrait = true
-				--FUCKED UP
-					if #ACLmenu % SelectMenuWidth ~= 0 then
-						h = #ACLmenu + (SelectMenuWidth - (#ACLmenu % SelectMenuWidth))
-					else
-						h = #ACLmenu
-					end
-					totalcolumn = h / SelectMenuWidth
+			else
+			boxID = boxID - 1
+			end
+			ACLspoiler:spoilerCheck(1, boxID)
+			CursorSprite:ReplaceSpritesheet(3, "gfx/ui/portrait/tile/arrow_"..requireLink[boxID].size..".png")
+			CursorSprite:LoadGraphics()
+			f = false
+			keptPortrait = boxID
+		end
+		if Input.IsActionTriggered(ButtonAction.ACTION_DOWN, Kindex) or Input.IsActionTriggered(ButtonAction.ACTION_SHOOTDOWN, Kindex) then
+			Portrait:Play("ExitRight",true)
+			for i=1, #requireLink[boxID].grid do
+				requireLink[boxID].grid[i].Tile:Play("ExitRight")
+			end
+			if boxID > (#ACLbox - (#ACLbox % SelectMenuWidth)) or boxID > (#ACLbox - SelectMenuWidth) or boxID > #ACLbox then
+				if boxID % SelectMenuWidth ~= 0 then
+					boxID = boxID % SelectMenuWidth
+				else 
+					boxID = SelectMenuWidth
+				end
+			movePortrait = true
+			--FUCKED UP
+				if #ACLmenu % SelectMenuWidth ~= 0 then
+					h = #ACLmenu + (SelectMenuWidth - (#ACLmenu % SelectMenuWidth))
+				else
+					h = #ACLmenu
+				end
+				totalcolumn = h / SelectMenuWidth
 
-					for i = 1, #ACLmenu do
-						if i % SelectMenuWidth == 0 then
-						
-								rowtile[i] = 2 - SelectMenuThree
-							
-						else
-							rowtile[i] = i % SelectMenuWidth - 3
-						end
-						for a = 1, totalcolumn do
-							if i <= (a * SelectMenuWidth) then
-								columntile[i] = a - 2
-								break
-							end
-						end
-					end
-				--FUCKED UP
-				else
-				boxID = boxID + SelectMenuWidth
-				end
-				--CHECK IF MENU MUST PAN OR NOT
-				if movePortrait == true and columntile[#ACLbox] ~= 1 and boxID > SelectMenuWidth * 2 then
-					for i = 1, #ACLbox do
-							columntile[i] = columntile[i] - 1
-					end
-				end
-				
-				ACLspoiler:spoilerCheck(1, boxID)
-				
-				movePortrait = true
-				CursorSprite:ReplaceSpritesheet(3, "gfx/ui/portrait/tile/arrow_"..requireLink[boxID].size..".png")
-				CursorSprite:LoadGraphics()
-				f = false
-				keptPortrait = boxID
-			end
-			if Input.IsActionTriggered(ButtonAction.ACTION_UP, Kindex) then
-				Portrait:Play("ExitRight",true)
-				for i=1, #requireLink[boxID].grid do
-					requireLink[boxID].grid[i].Tile:Play("ExitRight")
-				end
-				if boxID <= SelectMenuWidth then
-					for i=1, SelectMenuWidth do
+				for i = 1, #ACLmenu do
+					if i % SelectMenuWidth == 0 then
 					
-						if (boxID % SelectMenuWidth) == i % SelectMenuWidth and #ACLbox % SelectMenuWidth ~= boxID % SelectMenuWidth and #ACLbox % SelectMenuWidth ~= 0 and boxID % SelectMenuWidth ~= 0 and boxID % SelectMenuWidth > #ACLbox % SelectMenuWidth then
-							boxID = #ACLbox - (#ACLbox % SelectMenuWidth) + (boxID % SelectMenuWidth) - SelectMenuWidth
-							break
-							
-						elseif (boxID % SelectMenuWidth) == i % SelectMenuWidth and #ACLbox % SelectMenuWidth ~= boxID % SelectMenuWidth and #ACLbox % SelectMenuWidth ~= 0 then 
-							boxID = #ACLbox - (#ACLbox % SelectMenuWidth) + (boxID % SelectMenuWidth)
-							break
+							rowtile[i] = 2 - SelectMenuThree
 						
-						elseif (boxID % SelectMenuWidth) == i % SelectMenuWidth and #ACLbox % SelectMenuWidth ~= boxID % SelectMenuWidth then
-						boxID = #ACLbox + ((boxID % SelectMenuWidth) - SelectMenuWidth)
+					else
+						rowtile[i] = i % SelectMenuWidth - 3
+					end
+					for a = 1, totalcolumn do
+						if i <= (a * SelectMenuWidth) then
+							columntile[i] = a - 2
 							break
 						end
-
-					end
-					if #ACLbox % SelectMenuWidth == boxID % SelectMenuWidth then
-						boxID = #ACLbox
-					end
-
-				movePortrait = false
-				
-					for i = 1, #ACLbox do
-							columntile[i] = columntile[i] - (columntile[#ACLbox] - 1)
-					end
-				
-				else
-				boxID = boxID - SelectMenuWidth
-				end
-				
-				if movePortrait == true and columntile[1] ~= -1 and columntile[boxID] ~= 0  then
-					for i = 1, #ACLbox do
-							columntile[i] = columntile[i] + 1
 					end
 				end
-				
-				ACLspoiler:spoilerCheck(1, boxID)
-				
-				movePortrait = true
-				CursorSprite:ReplaceSpritesheet(3, "gfx/ui/portrait/tile/arrow_"..requireLink[boxID].size..".png")
-				CursorSprite:LoadGraphics()
-				f = false
-				keptPortrait = boxID
+			--FUCKED UP
+			else
+			boxID = boxID + SelectMenuWidth
+			end
+			--CHECK IF MENU MUST PAN OR NOT
+			if movePortrait == true and columntile[#ACLbox] ~= 1 and boxID > SelectMenuWidth * 2 then
+				for i = 1, #ACLbox do
+						columntile[i] = columntile[i] - 1
+				end
 			end
 			
-		end	
-	
-	end
-	ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.selectCursor)
+			ACLspoiler:spoilerCheck(1, boxID)
+			
+			movePortrait = true
+			CursorSprite:ReplaceSpritesheet(3, "gfx/ui/portrait/tile/arrow_"..requireLink[boxID].size..".png")
+			CursorSprite:LoadGraphics()
+			f = false
+			keptPortrait = boxID
+		end
+		if Input.IsActionTriggered(ButtonAction.ACTION_UP, Kindex) or Input.IsActionTriggered(ButtonAction.ACTION_SHOOTUP, Kindex) then
+			Portrait:Play("ExitRight",true)
+			for i=1, #requireLink[boxID].grid do
+				requireLink[boxID].grid[i].Tile:Play("ExitRight")
+			end
+			if boxID <= SelectMenuWidth then
+				for i=1, SelectMenuWidth do
+				
+					if (boxID % SelectMenuWidth) == i % SelectMenuWidth and #ACLbox % SelectMenuWidth ~= boxID % SelectMenuWidth and #ACLbox % SelectMenuWidth ~= 0 and boxID % SelectMenuWidth ~= 0 and boxID % SelectMenuWidth > #ACLbox % SelectMenuWidth then
+						boxID = #ACLbox - (#ACLbox % SelectMenuWidth) + (boxID % SelectMenuWidth) - SelectMenuWidth
+						break
+						
+					elseif (boxID % SelectMenuWidth) == i % SelectMenuWidth and #ACLbox % SelectMenuWidth ~= boxID % SelectMenuWidth and #ACLbox % SelectMenuWidth ~= 0 then 
+						boxID = #ACLbox - (#ACLbox % SelectMenuWidth) + (boxID % SelectMenuWidth)
+						break
+					
+					elseif (boxID % SelectMenuWidth) == i % SelectMenuWidth and #ACLbox % SelectMenuWidth ~= boxID % SelectMenuWidth then
+					boxID = #ACLbox + ((boxID % SelectMenuWidth) - SelectMenuWidth)
+						break
+					end
 
-	function ACLadmin:MoveRight()
-				if cursor % requireLink[boxID].dimX == 0 then
-				cursor = cursor - (requireLink[boxID].dimX - 1)
-				else
-				cursor = cursor + 1
 				end
-				if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
-				ACLadmin:MoveRight()
+				if #ACLbox % SelectMenuWidth == boxID % SelectMenuWidth then
+					boxID = #ACLbox
 				end
-	end
-	function ACLadmin:MoveLeft()
-				if cursor % requireLink[boxID].dimX == 1 then
-				cursor = cursor + (requireLink[boxID].dimX - 1)
-				else
-				cursor = cursor - 1
-				end
-				if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
-				ACLadmin:MoveLeft()
-				end
-	end
-	function ACLadmin:MoveUp()
-				if cursor <= requireLink[boxID].dimX then
-				cursor = cursor + (requireLink[boxID].dimX * (requireLink[boxID].dimY - 1))
-				else
-				cursor = cursor - requireLink[boxID].dimX
-				end
-				if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
-				ACLadmin:MoveUp()
-				end
-	end
-	function ACLadmin:MoveDown()
-				if cursor > (requireLink[boxID].dimX * (requireLink[boxID].dimY - 1)) then
-				cursor = cursor - (requireLink[boxID].dimX * (requireLink[boxID].dimY - 1))
-				else
-				cursor = cursor + requireLink[boxID].dimX
-				end
-				if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
-				ACLadmin:MoveDown()
-				end
-	end
 
-	function ACLadmin:controlCursor()  -- DECIDES WHERE CURSOR IS PLACED
-	
-		if StatsMenu.IsSecretsMenuVisible() and selectMenu == false and hideMenu == false then
-	
+			movePortrait = false
+			
+				for i = 1, #ACLbox do
+						columntile[i] = columntile[i] - (columntile[#ACLbox] - 1)
+				end
+			
+			else
+			boxID = boxID - SelectMenuWidth
+			end
+			
+			if movePortrait == true and columntile[1] ~= -1 and columntile[boxID] ~= 0  then
+				for i = 1, #ACLbox do
+						columntile[i] = columntile[i] + 1
+				end
+			end
+			
+			ACLspoiler:spoilerCheck(1, boxID)
+			
+			movePortrait = true
+			CursorSprite:ReplaceSpritesheet(3, "gfx/ui/portrait/tile/arrow_"..requireLink[boxID].size..".png")
+			CursorSprite:LoadGraphics()
+			f = false
+			keptPortrait = boxID
+		end
 		
-		
-			if Input.IsActionTriggered(ButtonAction.ACTION_RIGHT, Kindex) then
-				ACLadmin:MoveRight()
-				ACLspoiler:spoilerCheck(cursor, boxID)
-				CursorSprite:Play("Idle", true)
+	end	
+
+end
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.selectCursor)
+
+function ACLadmin:MoveRight()
+			if cursor % requireLink[boxID].dimX == 0 then
+			cursor = cursor - (requireLink[boxID].dimX - 1)
+			else
+			cursor = cursor + 1
 			end
-			
-			if Input.IsActionTriggered(ButtonAction.ACTION_LEFT, Kindex) then
-				ACLadmin:MoveLeft()
-				ACLspoiler:spoilerCheck(cursor, boxID)
-				CursorSprite:Play("Idle", true)
+			if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
+			ACLadmin:MoveRight()
 			end
-			
-			if Input.IsActionTriggered(ButtonAction.ACTION_DOWN, Kindex) then
-				ACLadmin:MoveDown()
-				ACLspoiler:spoilerCheck(cursor, boxID)
-				CursorSprite:Play("Idle", true)
+end
+function ACLadmin:MoveLeft()
+			if cursor % requireLink[boxID].dimX == 1 then
+			cursor = cursor + (requireLink[boxID].dimX - 1)
+			else
+			cursor = cursor - 1
 			end
-			
-			if Input.IsActionTriggered(ButtonAction.ACTION_UP, Kindex) then
-				ACLadmin:MoveUp()
-				ACLspoiler:spoilerCheck(cursor, boxID)
-				CursorSprite:Play("Idle", true)
+			if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
+			ACLadmin:MoveLeft()
 			end
-			
-			if Input.IsActionTriggered(ButtonAction.ACTION_PILLCARD, 0) or Input.IsActionTriggered(ButtonAction.ACTION_BOMB, 0) or Input.IsActionTriggered(ButtonAction.ACTION_MENULT, Kindex) or Input.IsActionTriggered(ButtonAction.ACTION_MENURT, Kindex) then
-				cursor = 1
+end
+function ACLadmin:MoveUp()
+			if cursor <= requireLink[boxID].dimX then
+			cursor = cursor + (requireLink[boxID].dimX * (requireLink[boxID].dimY - 1))
+			else
+			cursor = cursor - requireLink[boxID].dimX
 			end
-			if Input.IsActionTriggered(ButtonAction.ACTION_DROP, Kindex) or Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, 0) then 
-			--CHECKING IF COLLECTION IS VIABLE PUT HERE LATER
+			if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
+			ACLadmin:MoveUp()
 			end
-			if Input.IsActionTriggered(ButtonAction.ACTION_UP, Kindex) or 
-			Input.IsActionTriggered(ButtonAction.ACTION_DOWN, Kindex) or 
-			Input.IsActionTriggered(ButtonAction.ACTION_LEFT, Kindex) or 
-			Input.IsActionTriggered(ButtonAction.ACTION_SHOOTDOWN, 0) or 
-			Input.IsActionTriggered(ButtonAction.ACTION_SHOOTLEFT, 0) or 
-			Input.IsActionTriggered(ButtonAction.ACTION_SHOOTRIGHT, 0) or 
-			Input.IsActionTriggered(ButtonAction.ACTION_SHOOTUP, 0) or 
-			Input.IsActionTriggered(ButtonAction.ACTION_RIGHT, Kindex) then
-			--[[Portrait:ReplaceSpritesheet(3, "gfx/ui/achievement/"..requireLink[boxID].grid[cursor].gfx)
-			Portrait:LoadGraphics()]]--
-			ACLadmin:ChangePortraitImg()
+end
+function ACLadmin:MoveDown()
+			if cursor > (requireLink[boxID].dimX * (requireLink[boxID].dimY - 1)) then
+			cursor = cursor - (requireLink[boxID].dimX * (requireLink[boxID].dimY - 1))
+			else
+			cursor = cursor + requireLink[boxID].dimX
 			end
-		end	
+			if requireLink[boxID].grid[cursor].Enum == 0 or requireLink[boxID].grid[cursor].Enum == -1 then
+			ACLadmin:MoveDown()
+			end
+end
+
+function ACLadmin:controlCursor()  -- DECIDES WHERE CURSOR IS PLACED
+
+	if StatsMenu.IsSecretsMenuVisible() and selectMenu == false and hideMenu == false then
+
 	
-	end
-	ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.controlCursor)
+	
+		if Input.IsActionTriggered(ButtonAction.ACTION_RIGHT, Kindex) or Input.IsActionTriggered(ButtonAction.ACTION_SHOOTRIGHT, Kindex) then
+			ACLadmin:MoveRight()
+			ACLspoiler:spoilerCheck(cursor, boxID)
+			CursorSprite:Play("Idle", true)
+		end
+		
+		if Input.IsActionTriggered(ButtonAction.ACTION_LEFT, Kindex) or Input.IsActionTriggered(ButtonAction.ACTION_SHOOTLEFT, Kindex) then
+			ACLadmin:MoveLeft()
+			ACLspoiler:spoilerCheck(cursor, boxID)
+			CursorSprite:Play("Idle", true)
+		end
+		
+		if Input.IsActionTriggered(ButtonAction.ACTION_DOWN, Kindex) or Input.IsActionTriggered(ButtonAction.ACTION_SHOOTDOWN, Kindex) then
+			ACLadmin:MoveDown()
+			ACLspoiler:spoilerCheck(cursor, boxID)
+			CursorSprite:Play("Idle", true)
+		end
+		
+		if Input.IsActionTriggered(ButtonAction.ACTION_UP, Kindex) or Input.IsActionTriggered(ButtonAction.ACTION_SHOOTUP, Kindex)then
+			ACLadmin:MoveUp()
+			ACLspoiler:spoilerCheck(cursor, boxID)
+			CursorSprite:Play("Idle", true)
+		end
+		
+		if Input.IsActionTriggered(ButtonAction.ACTION_PILLCARD, 0) or Input.IsActionTriggered(ButtonAction.ACTION_BOMB, 0) or Input.IsActionTriggered(ButtonAction.ACTION_MENULT, Kindex) or Input.IsActionTriggered(ButtonAction.ACTION_MENURT, Kindex) then
+			cursor = 1
+		end
+		if Input.IsActionTriggered(ButtonAction.ACTION_DROP, Kindex) or Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, 0) then 
+		--CHECKING IF COLLECTION IS VIABLE PUT HERE LATER
+		end
+		if Input.IsActionTriggered(ButtonAction.ACTION_UP, Kindex) or 
+		Input.IsActionTriggered(ButtonAction.ACTION_DOWN, Kindex) or 
+		Input.IsActionTriggered(ButtonAction.ACTION_LEFT, Kindex) or 
+		Input.IsActionTriggered(ButtonAction.ACTION_SHOOTDOWN, 0) or 
+		Input.IsActionTriggered(ButtonAction.ACTION_SHOOTLEFT, 0) or 
+		Input.IsActionTriggered(ButtonAction.ACTION_SHOOTRIGHT, 0) or 
+		Input.IsActionTriggered(ButtonAction.ACTION_SHOOTUP, 0) or 
+		Input.IsActionTriggered(ButtonAction.ACTION_RIGHT, Kindex) then
+		--[[Portrait:ReplaceSpritesheet(3, "gfx/ui/achievement/"..requireLink[boxID].grid[cursor].gfx)
+		Portrait:LoadGraphics()]]--
+		ACLadmin:ChangePortraitImg()
+		end
+	end	
+
+end
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACLadmin.controlCursor)
 
 	
 	
