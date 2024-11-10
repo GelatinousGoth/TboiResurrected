@@ -40,6 +40,7 @@ TR_Manager:LoadMod("resurrected_modpack.graphics.reflective_downpour_mirror")
 TR_Manager:LoadMod("resurrected_modpack.graphics.unique_hazards")
 TR_Manager:LoadMod("resurrected_modpack.graphics.unique_stage_variants")
 TR_Manager:LoadMod("resurrected_modpack.graphics.better_boss_rush_backdrop")
+TR_Manager:LoadMod("resurrected_modpack.graphics.voiding_effect")
 
 TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.chests_before_mother")

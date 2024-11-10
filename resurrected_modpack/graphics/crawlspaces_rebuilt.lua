@@ -19,11 +19,11 @@ local ROTGUT_TRAPDOOR_POS = 7
 local ROTGUT_ABOVE_DOOR_POS = 74
 local BLACKMARKET_DOOR_POS = 74
 --roots
-local DUNGEON_SPRITESHEET_ROOT = "gfx/content/dungeon/"
-local GIDEON_SPRITESHEET_ROOT = "gfx/content/gideon/"
-local ROTGUT_SPRITESHEET_ROOT = "gfx/content/rotgut/"
-local VIGNETTE_SPRITESHEET_PATH = "gfx/content/vignettes/vignette.anm2"
-local POOPROOT = "gfx/content/poopsprites/"
+local DUNGEON_SPRITESHEET_ROOT = "gfx/grid/crawlspaces/dungeon/"
+local GIDEON_SPRITESHEET_ROOT = "gfx/grid/crawlspaces/gideon/"
+local ROTGUT_SPRITESHEET_ROOT = "gfx/grid/crawlspaces/rotgut/"
+local VIGNETTE_SPRITESHEET_PATH = "gfx/grid/crawlspaces/vignettes/vignette.anm2"
+local POOPROOT = "gfx/grid/crawlspaces/poopsprites/"
 --rng shenanigans
 local RECOMMENDED_SHIFT_IDX = 35
 local IDLE_ANIMATION_TRIGGER_CHANCE = 0.01 --may want to be lowered or raised as more animations are added.
@@ -605,7 +605,7 @@ function mod.getSpriteRoot()
         spriteRoot = mod.isGideon() and GIDEON_SPRITESHEET_ROOT or DUNGEON_SPRITESHEET_ROOT
     else
         local suffix = FiendFolio.getCrawlspaceBackdropSuffix()
-        if suffix ~= "default" then spriteRoot = "gfx/content/fiendfolio_compat/" .. suffix .. "/" end
+        if suffix ~= "default" then spriteRoot = "gfx/grid/crawlspaces/fiendfolio_compat/" .. suffix .. "/" end
     end
 
     return spriteRoot
@@ -1038,7 +1038,7 @@ function mod.replaceDungeonSprites(spriteRoot, roomDecor)
             mod.playDecoration(mod.newDecoration("spikes", "floor", {}, {}, sprite, i, 0), spriteRoot)
 
         elseif type == GridEntityType.GRID_SPIKES or type == GridEntityType.GRID_SPIKES_ONOFF then
-            sprite:ReplaceSpritesheet(0, "gfx/content/wall_spikes.png")
+            sprite:ReplaceSpritesheet(0, "gfx/grid/crawlspaces/wall_spikes.png")
             sprite:LoadGraphics()
 
         --background decorations
@@ -1107,7 +1107,7 @@ function mod.replaceDungeonSprites(spriteRoot, roomDecor)
         --for ff crawlspaces, replace the gfx
         if FiendFolio and FiendFolio:getCrawlspaceBackdropSuffix() ~= "default" then
             local suffix = FiendFolio:getCrawlspaceBackdropSuffix()
-            sprite:ReplaceSpritesheet(0, "gfx/content/fiendfolio_compat/" .. suffix .. "/tiles_itemdungeon_" .. suffix .. ".png")
+            sprite:ReplaceSpritesheet(0, "gfx/grid/crawlspaces/fiendfolio_compat/" .. suffix .. "/tiles_itemdungeon_" .. suffix .. ".png")
             sprite:LoadGraphics()
         end
         sprite:Play("Floor1", true)
@@ -1291,7 +1291,7 @@ function mod:identifyRoom()
         if FiendFolio and backdrop == BackdropType.DUNGEON then
             local suffix = FiendFolio:getCrawlspaceBackdropSuffix()
             FiendFolio.scheduleForUpdate(function()
-                FiendFolio.ReplaceCrawlspaceTileGfx('gfx/content/fiendfolio_compat/' .. suffix .. '/tiles_itemdungeon_' .. suffix .. '.png')
+                FiendFolio.ReplaceCrawlspaceTileGfx('gfx/grid/crawlspaces/fiendfolio_compat/' .. suffix .. '/tiles_itemdungeon_' .. suffix .. '.png')
             end,
             2, ModCallbacks.MC_INPUT_ACTION, false)
         end
@@ -1317,12 +1317,12 @@ function mod:identifyRoom()
         decorTable = decorations[suffix]
 
         --if the suffix is not default then change the spritesheet root to that variant's details spritesheet
-        if suffix ~= "default" then spriteRoot = "gfx/content/fiendfolio_compat/" .. suffix .. "/" end
+        if suffix ~= "default" then spriteRoot = "gfx/grid/crawlspaces/fiendfolio_compat/" .. suffix .. "/" end
 
         --this is nabbed straight from the FF code, i don't completely understand how it works internally but it's how they trigger their sprite replacement so it's how i'm gonna do it
         FiendFolio.scheduleForUpdate(function()
             --first call the FF crawlspace tile replace fuction with spritesheets that are compatable with this mod's crawlspace anm2. hopefully i'm not messing with anything by stealing their methods like this :D
-            FiendFolio.ReplaceCrawlspaceTileGfx('gfx/content/fiendfolio_compat/' .. suffix .. '/tiles_itemdungeon_' .. suffix .. '.png')
+            FiendFolio.ReplaceCrawlspaceTileGfx('gfx/grid/crawlspaces/fiendfolio_compat/' .. suffix .. '/tiles_itemdungeon_' .. suffix .. '.png')
             --then call my function to replace sprites
             CrawlspacesRebuilt.replaceDungeonSprites(spriteRoot, decorTable)
         end,

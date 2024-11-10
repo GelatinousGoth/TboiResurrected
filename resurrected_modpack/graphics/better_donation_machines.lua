@@ -67,7 +67,7 @@ function mod:OnNewRoom()
 
             local sprite = donationMachine:GetSprite()
 
-            local spriteSheet = "/gfx/slots/donation_machine_lvl" .. spriteLevel .. uniqueCoinsSuffix .. ".png"
+            local spriteSheet = "/gfx/items/slots/donationlevels/donation_machine_lvl" .. spriteLevel .. uniqueCoinsSuffix .. ".png"
 
             for i = 0, sprite:GetLayerCount() - 1, 1 do
                 if not (i == 4 and UNIQUE_COINS_MOD) then
@@ -86,7 +86,7 @@ function mod:OnNewRoom()
 
             local sprite = donationMachine:GetSprite()
 
-            local spriteSheet = "gfx/slots/donation_machine_greed" .. uniqueCoinsSuffix .. ".png"
+            local spriteSheet = "gfx/items/slots/donationlevels/donation_machine_greed" .. uniqueCoinsSuffix .. ".png"
 
             for i = 0, sprite:GetLayerCount() - 1, 1 do
                 if not (i == 4 and UNIQUE_COINS_MOD) then

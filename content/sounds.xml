@@ -26,4 +26,7 @@
 		<sample weight="1" path="keepah/keepahpanic2.wav" />
 	</sound>
 	
+	<sound name="appearsmoke01withrevers">
+		<sample weight="1" path="appearsmoke01withrevers.wav" />
+	</sound>
 </sounds>
