@@ -77,12 +77,25 @@ local arena = {
     }
 }
 
+if StageAPI then
+    local arenaBackdrop = StageAPI.BackdropHelper({
+        NFloors = {"nfloor"},
+        LFloors = {"lfloor"},
+        Walls = {"1", "2", "3", "4", "5", "6"}
+    }, "gfx/backdrop/custom/arena_", ".png")
+
+    arena = StageAPI.RoomGfx(arenaBackdrop, nil)
+
+    function changeBackdrop(backdrop)
+        StageAPI.ChangeRoomGfx(backdrop)
+    end
+end
+
 function mod:MC_POST_NEW_ROOM()
 	-- boss rush backdrop change code
 	if Game():GetRoom():GetType() == RoomType.ROOM_BOSSRUSH then
-	changeBackdrop(arena)
-
+	    changeBackdrop(arena)
 	end
-
 end
+
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,mod.MC_POST_NEW_ROOM)
