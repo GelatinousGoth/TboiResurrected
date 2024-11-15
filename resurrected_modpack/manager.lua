@@ -22,6 +22,7 @@
 ---@field Shaders table<string, function>
 ---@field SaveData string?
 ---@field Enabled boolean
+---@field HasToggle boolean
 
 ---@class TR_ModSaveData
 ---@field SaveData string?
@@ -36,8 +37,67 @@
 ---@field InitializingModsList integer[]
 ---@field ModData table<integer, TR_ModData>
 ---@field Shaders table<string, TR_Shader>
+---@field DssMenuData table
 
 local json = require("json")
+local dssmenucore = require("resurrected_modpack.vendor.dssmenucore")
+
+---@type DSSMenuProvider
+local DSSMenuProvider = {
+    GetGamepadToggleSetting = function ()
+        return TR_Manager.DssMenuData.GamepadToggleSetting
+    end,
+    GetHudOffsetSetting = function ()
+        return TR_Manager.DssMenuData.HudOffsetSetting
+    end,
+    GetMenuBuzzerSetting = function ()
+        return TR_Manager.DssMenuData.MenuBuzzerSetting
+    end,
+    GetMenuHintSetting = function ()
+        return TR_Manager.DssMenuData.MenuHintSetting
+    end,
+    GetMenuKeybindSetting = function ()
+        return TR_Manager.DssMenuData.MenuKeybindSetting
+    end,
+    GetMenusNotified = function ()
+        return TR_Manager.DssMenuData.MenusNotified
+    end,
+    GetMenusPoppedUp = function ()
+        return TR_Manager.DssMenuData.MenusPoppedUp
+    end,
+    GetPaletteSetting = function ()
+        return TR_Manager.DssMenuData.PalletteSetting
+    end,
+    SaveGamepadToggleSetting = function (gamepadToggleSetting)
+        TR_Manager.DssMenuData.GamepadToggleSetting = gamepadToggleSetting
+    end,
+    SaveHudOffsetSetting = function (hudOffsetSetting)
+        TR_Manager.DssMenuData.HudOffsetSetting = hudOffsetSetting
+    end,
+    SaveMenuBuzzerSetting = function (menuBuzzerSetting)
+        TR_Manager.DssMenuData.MenuBuzzerSetting = menuBuzzerSetting
+    end,
+    SaveMenuHintSetting = function (menuHintSetting)
+        TR_Manager.DssMenuData.MenuHintSetting = menuHintSetting
+    end,
+    SaveMenuKeybindSetting = function (menuKeybindSetting)
+        TR_Manager.DssMenuData.MenuKeybindSetting = menuKeybindSetting
+    end,
+    SaveMenusNotified = function (menusNotified)
+        TR_Manager.DssMenuData.MenusNotified = menusNotified
+    end,
+    SaveMenusPoppedUp = function (menusPoppedUp)
+        TR_Manager.DssMenuData.MenusPoppedUp = menusPoppedUp
+    end,
+    SavePaletteSetting = function (paletteSetting)
+        TR_Manager.DssMenuData.PalletteSetting = paletteSetting
+    end,
+    SaveSaveData = function()
+        TR_Manager:SaveData()
+    end
+}
+
+local dssmod = dssmenucore.init("Dead Sea Scrolls (Tboi Rekindled)", DSSMenuProvider)
 
 ---@type ModReference
 local TboiRekindled = RegisterMod("Tboi Rekindled", 1)
@@ -46,20 +106,21 @@ local TboiRekindled = RegisterMod("Tboi Rekindled", 1)
 local TR_Manager = {
     ModData = {},
     Shaders = {},
-    InitializingModsList = {}
+    InitializingModsList = {},
+    DssMenuData = {}
 }
 
-local function WarningHandler(warning)
+local function warning_handler(warning)
     Console.PrintWarning(warning)
     Isaac.DebugString("[WARN]" .. warning .. "\n")
 end
 
-local function ErrorHandler(error)
+local function error_handler(error)
     Console.PrintError(error)
     Isaac.DebugString("[ERROR]" .. error .. "\n")
 end
 
-local function AddModToMCM(modId)
+local function add_mod_to_mcm(modId)
     if not ModConfigMenu then
         return
     end
@@ -87,12 +148,89 @@ local function AddModToMCM(modId)
     })
 end
 
-local function RemoveModFromMCM(modId)
+local function remove_mod_from_mcm(modId)
     if not ModConfigMenu then
         return
     end
 
     ModConfigMenu.RemoveSetting("Tboi Rekindled", "Mods", tostring(modId))
+end
+
+local dssDirectory = {}
+
+dssDirectory.main = {
+    title = "tboi rekindled",
+    buttons = {
+        {str = "resume game", action = "resume"},
+        {str = "settings", dest = "menusettings"},
+        dssmod.changelogsButton,
+        {str = '', nosel = true},
+        {str = "mods", dest = "mods", tooltip = { strset = {'enable',  'or', 'disable', 'individual', 'mods' }}},
+    },
+    tooltip = dssmod.menuOpenToolTip
+}
+
+---Must be defined so that DssMenu settings can be changed if we are the only mod using it.
+dssDirectory.menusettings = {
+    title = 'menu settings',
+    buttons = {
+        dssmod.hudOffsetButton,
+        dssmod.gamepadToggleButton,
+        dssmod.menuKeybindButton,
+        dssmod.menuHintButton,
+        dssmod.menuBuzzerButton,
+        dssmod.paletteButton
+    },
+    tooltip = dssmod.menuOpenToolTip
+}
+
+dssDirectory.mods = {
+    title = "mods",
+    buttons = {
+        {str = "resume game", action = "resume"},
+        {str = '', nosel = true}
+    },
+    tooltip = dssmod.menuOpenToolTip
+}
+
+local function add_mod_to_dss(modId)
+    local modData = TR_Manager.ModData[modId]
+
+    local button = {
+        str = string.lower(modData.Mod.Name),
+        fsize = 1,
+        choices = {'enabled', 'disabled'},
+        variable = "Tboi Rekindled (" .. modData.Mod.Name .. ")",
+        setting = 1,
+        load = function ()
+            return modData.Enabled and 1 or 2
+        end,
+        store = function (var)
+        end,
+        func = function(button)
+            if button.setting == 1 then
+                TR_Manager:EnableMod(modId)
+            else
+                TR_Manager:DisableMod(modId)
+            end
+        end,
+    }
+
+    if (#dssDirectory.mods.buttons > 2) then
+        table.insert(dssDirectory.mods.buttons, {str = "", fsize = 1, nosel = true})
+    end
+    table.insert(dssDirectory.mods.buttons, button)
+end
+
+local function remove_mod_from_dss(modId)
+    local modName = string.lower(TR_Manager.ModData[modId].Mod.Name)
+
+    for index, button in ipairs(dssDirectory.mods.buttons) do
+        if button.str == modName then
+            table.remove(dssDirectory.mods.buttons, index)
+            break;
+        end
+    end
 end
 
 local isFirstShaderWarn = true
@@ -122,7 +260,7 @@ function TR_Manager:AddCallback(mod, callbackId, priority, fn, param)
     end
 
     if callbackId == ModCallbacks.MC_GET_SHADER_PARAMS and isFirstShaderWarn then
-        WarningHandler(string.format(shaderCallbackWarning, mod.Name))
+        warning_handler(string.format(shaderCallbackWarning, mod.Name))
         isFirstShaderWarn = false
     end
 end
@@ -148,7 +286,8 @@ end
 
 function TR_Manager:SaveData()
     local saveData = {
-        ModSaveData = {}
+        ModSaveData = {},
+        DssMenuData = self.DssMenuData
     }
 
     for _, modData in ipairs(self.ModData) do
@@ -188,6 +327,31 @@ end
 
 local loadedData = false
 
+local function apply_mod_save_data(modSaveData)
+    if type(modSaveData) ~= "table" then
+        return
+    end
+
+    for _, mod in ipairs(TR_Manager.ModData) do
+        ---@type TR_ModSaveData?
+        local saveData = modSaveData[mod.Mod.Name]
+        if not saveData then
+            goto continue
+        end
+
+        mod.SaveData = saveData.SaveData
+        if mod.Enabled ~= saveData.Enabled then
+            if not saveData.Enabled then
+                TR_Manager:DisableMod(mod.Mod.TR_ID)
+            else
+                TR_Manager:EnableMod(mod.Mod.TR_ID)
+            end
+        end
+
+        ::continue::
+    end
+end
+
 function TR_Manager:LoadData()
     loadedData = true;
 
@@ -196,30 +360,12 @@ function TR_Manager:LoadData()
     end
 
     local encodedData = TboiRekindled:LoadData()
-    local success, result = xpcall(json.decode, ErrorHandler, encodedData)
+    local success, result = xpcall(json.decode, error_handler, encodedData)
     local data = success and result or {}
 
-    if type(data.ModSaveData) ~= "table" then
-        return
-    end
-
-    for _, mod in ipairs(self.ModData) do
-        ---@type TR_ModSaveData?
-        local saveData = data.ModSaveData[mod.Mod.Name]
-        if not saveData then
-            goto continue
-        end
-
-        mod.SaveData = saveData.SaveData
-        if mod.Enabled ~= saveData.Enabled then
-            if (saveData.Enabled == false) then
-                self:DisableMod(mod.Mod.TR_ID)
-            else
-                self:EnableMod(mod.Mod.TR_ID)
-            end
-        end
-
-        ::continue::
+    apply_mod_save_data(data.ModSaveData)
+    if type(data.DssMenuData) == "table" then
+        self.DssMenuData = data.DssMenuData
     end
 end
 
@@ -302,8 +448,9 @@ end
 
 ---@param modName string
 ---@param version integer? # Unused
+---@param hasToggle boolean
 ---@return table
-function TR_Manager:RegisterMod(modName, version)
+function TR_Manager:RegisterMod(modName, version, hasToggle)
     ---@type TR_Mod
     local mod = {
         TR_ID = #TR_Manager.ModData + 1,
@@ -324,13 +471,17 @@ function TR_Manager:RegisterMod(modName, version)
         Shaders = {},
         SaveData = nil,
         Enabled = true,
+        HasToggle = hasToggle or false
     }
 
     self.ModData[mod.TR_ID] = modData
 
     table.insert(self.InitializingModsList, mod.TR_ID)
 
-    AddModToMCM(mod.TR_ID)
+    if hasToggle then
+        add_mod_to_mcm(mod.TR_ID)
+        add_mod_to_dss(mod.TR_ID)
+    end
 
     return mod
 end
@@ -347,7 +498,7 @@ function TR_Manager:EnableMod(modId)
     end
 
     if type(modData.Mod.pre_enable_mod) == "function" then
-        local success, result = xpcall(modData.Mod.pre_enable_mod, ErrorHandler, modData.Mod)
+        local success, result = xpcall(modData.Mod.pre_enable_mod, error_handler, modData.Mod)
         if success and result then
             return
         end
@@ -358,7 +509,7 @@ function TR_Manager:EnableMod(modId)
     end
 
     if type(modData.Mod.post_enable_mod) == "function" then
-        xpcall(modData.Mod.pre_enable_mod, ErrorHandler, modData.Mod)
+        xpcall(modData.Mod.pre_enable_mod, error_handler, modData.Mod)
     end
 
     modData.Enabled = true
@@ -367,7 +518,7 @@ end
 ---@param modId integer
 function TR_Manager:DisableMod(modId)
     local modData = self.ModData[modId]
-    if not modData.Enabled then
+    if not modData.Enabled or not modData.HasToggle then
         return
     end
 
@@ -376,7 +527,7 @@ function TR_Manager:DisableMod(modId)
     end
 
     if type(modData.Mod.pre_disable_mod) == "function" then
-        local success, result = xpcall(modData.Mod.pre_disable_mod, ErrorHandler, modData.Mod)
+        local success, result = xpcall(modData.Mod.pre_disable_mod, error_handler, modData.Mod)
         if success and result then
             return
         end
@@ -387,14 +538,14 @@ function TR_Manager:DisableMod(modId)
     end
 
     if type(modData.Mod.post_disable_mod) == "function" then
-        xpcall(modData.Mod.pre_disable_mod, ErrorHandler, modData.Mod)
+        xpcall(modData.Mod.pre_disable_mod, error_handler, modData.Mod)
     end
 
     modData.Enabled = false
 end
 
 ---@param modId integer
-local function DeleteMod(modId)
+local function delete_mod(modId)
     local modData = TR_Manager.ModData[modId]
 
     for _, callback in ipairs(modData.Callbacks) do
@@ -407,7 +558,8 @@ local function DeleteMod(modId)
 
     table.remove(TR_Manager.ModData, modId)
 
-    RemoveModFromMCM(modId)
+    remove_mod_from_mcm(modId)
+    remove_mod_from_dss(modId)
 end
 
 local loadErrorMessage = [[
@@ -416,17 +568,17 @@ ModPath : %s
 Error: %s
 If you are seeing this message please notify the developers of Tboi Rekindled through the Steam Workshop page. ]]
 
-local function LoadErrorHandler(error, path)
+local function load_error_handler(error, path)
     local message = string.format(loadErrorMessage, path, error)
-    ErrorHandler(message)
+    error_handler(message)
 end
 
 ---@param path string
 function TR_Manager:LoadMod(path)
     self.InitializingModsList = {}
-    if not xpcall(require, function(err) LoadErrorHandler(err, tostring(path)) end, path) then
+    if not xpcall(require, function(err) load_error_handler(err, tostring(path)) end, path) then
         for i = #self.InitializingModsList, 1, -1 do
-            DeleteMod(self.InitializingModsList[i])
+            delete_mod(self.InitializingModsList[i])
         end
     end
     self.InitializingModsList = {}
@@ -456,22 +608,22 @@ local shaderRegisterWarnings = {
 ---@param defaultParams table
 function TR_Manager:RegisterShader(mod, shaderName, shaderFun, defaultParams)
     if type(defaultParams) ~= "table"  then
-        WarningHandler(string.format(shaderRegisterWarnings[1], tostring(mod.Name), tostring(shaderName)))
+        warning_handler(string.format(shaderRegisterWarnings[1], tostring(mod.Name), tostring(shaderName)))
         return
     end
 
     if type(shaderName) ~= "string" then
-        WarningHandler(string.format(shaderRegisterWarnings[2], tostring(mod.Name)))
+        warning_handler(string.format(shaderRegisterWarnings[2], tostring(mod.Name)))
         return
     end
 
     if type(shaderFun) ~= "function" then
-        WarningHandler(string.format(shaderRegisterWarnings[3], tostring(mod.Name), tostring(shaderName)))
+        warning_handler(string.format(shaderRegisterWarnings[3], tostring(mod.Name), tostring(shaderName)))
         return
     end
 
     if type(mod) ~= "table" and not mod.TR_ID then
-        WarningHandler(string.format(shaderRegisterWarnings[4], tostring(shaderName)))
+        warning_handler(string.format(shaderRegisterWarnings[4], tostring(shaderName)))
         return
     end
 
@@ -495,7 +647,7 @@ local function ShaderManager(_, shaderName)
         return shaderData.DefaultParams
     end
 
-    local success, result = xpcall(shaderData.Function, ErrorHandler)
+    local success, result = xpcall(shaderData.Function, error_handler)
     if not success or type(result) ~= "table" then
         return shaderData.DefaultParams
     else
@@ -515,5 +667,26 @@ function TR_Manager:Init()
 
     Isaac.DebugString("[Tboi Rekindled] \"Tboi Rekindled\" initialized.\n")
 end
+
+local dssDirectoryKey = {
+    Item = dssDirectory.main,
+    Main = 'main',
+    Idle = false,
+    MaskAlpha = 1,
+    Settings = {},
+    SettingsChanged = false,
+    Path = {}
+}
+
+local dssMenu = {
+    Run = dssmod.runMenu,
+    Open = dssmod.openMenu,
+    Close = dssmod.closeMenu,
+    Directory = dssDirectory,
+    DirectoryKey = dssDirectoryKey,
+    UseSubMenu = true
+}
+
+DeadSeaScrollsMenu.AddMenu("Tboi Rekindled", dssMenu)
 
 return TR_Manager;
