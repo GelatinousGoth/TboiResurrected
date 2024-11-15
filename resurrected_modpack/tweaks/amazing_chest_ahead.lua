@@ -1,6 +1,6 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-local mod = TR_Manager:RegisterMod("Amazing Chest Ahead", 1)
+local mod = TR_Manager:RegisterMod("Amazing Chest Ahead", 1, true)
 
 local game = Game()
 
