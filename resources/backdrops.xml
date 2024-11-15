@@ -261,7 +261,9 @@
 		holeinwall	= "door_08_holeinwall_arcade.png"
 	/>
 	
-	<backdrop id="26" gfx="effect_error.anm2" walls="0" /> <!-- special handling -->
+	<backdrop id="26" gfx="effect_error.anm2" walls="0" 
+	    rocks       = "rocks_error.png" 
+	/>
 	
 	<!-- blue womb entrance -->
 	<backdrop id="27" gfx="17_blue secret.png" walls="1" wallvariants="2" floors="1" floorvariants="6"
