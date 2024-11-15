@@ -1,6 +1,6 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-local mod = TR_Manager:RegisterMod("Bombable Devil Statue", 1)
+local mod = TR_Manager:RegisterMod("Bombable Devil Statue", 1, true)
 
 local game = Game() 
 local level = game:GetLevel() 

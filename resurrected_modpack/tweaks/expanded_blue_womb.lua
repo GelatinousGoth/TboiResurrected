@@ -1,6 +1,6 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-local mod = TR_Manager:RegisterMod("Expanded Blue Womb", 1)
+local mod = TR_Manager:RegisterMod("Expanded Blue Womb", 1, true)
 
 local LEVEL = Game():GetLevel()
 local LOCKED_ROOM_TYPES = {

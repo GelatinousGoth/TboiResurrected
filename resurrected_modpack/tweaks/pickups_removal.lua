@@ -1,5 +1,5 @@
 local TR_Manager = require("resurrected_modpack.manager")
-local mod = TR_Manager:RegisterMod("Pickups Removal", 1)
+local mod = TR_Manager:RegisterMod("Pickups Removal", 1, true)
 
 local itemConfig = Isaac.GetItemConfig()
 

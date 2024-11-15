@@ -1,6 +1,6 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-local mod = TR_Manager:RegisterMod("Enemy Blood Donations", 1)
+local mod = TR_Manager:RegisterMod("Enemy Blood Donations", 1, true)
 
 local BASE_DONATION_DMG = 25
 local DONATION_DMG_PER_FLOOR = 5

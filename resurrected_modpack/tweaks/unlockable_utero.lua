@@ -1,15 +1,15 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-local mod = TR_Manager:RegisterMod("Unlockable Utero", 1)
+local mod = TR_Manager:RegisterMod("Unlockable Utero", 1, true)
 
 if REPENTOGON then
 
-    Achievement.UTERO = Isaac.GetAchievementIdByName("The Utero")
+    UTERO_ACHIEVEMENT = Isaac.GetAchievementIdByName("The Utero")
 
     function mod:preLevelSelect(level, type)
         if level == LevelStage.STAGE4_1 or level == LevelStage.STAGE4_2 then
             if type == StageType.STAGETYPE_WOTL then
-                if not Isaac.GetPersistentGameData():Unlocked(Achievement.UTERO) then
+                if not Isaac.GetPersistentGameData():Unlocked(UTERO_ACHIEVEMENT) then
                     print("Unlockable Utero: Utero replaced")
                     return { level, StageType.STAGETYPE_ORIGINAL }
                 end
@@ -27,7 +27,7 @@ if REPENTOGON then
             persistentGameData:IsBossKilled(BossType.MR_FRED) and
             persistentGameData:IsBossKilled(BossType.SCOLEX) then
 
-            persistentGameData:TryUnlock(Achievement.UTERO)
+            persistentGameData:TryUnlock(UTERO_ACHIEVEMENT)
         end
     end
     mod:AddCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, mod.CheckUteroUnlock)

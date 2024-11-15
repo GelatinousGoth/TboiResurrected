@@ -1,7 +1,7 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
 local ModName = "Seven Floors of Bad Luck"
-local mod = TR_Manager:RegisterMod(ModName, 1)
+local mod = TR_Manager:RegisterMod(ModName, 1, true)
 
 local json = require("json")
 

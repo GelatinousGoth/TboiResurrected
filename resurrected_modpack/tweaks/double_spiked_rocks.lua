@@ -1,6 +1,6 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-local mod = TR_Manager:RegisterMod("Double Spiked Rocks", 1)
+local mod = TR_Manager:RegisterMod("Double Spiked Rocks", 1, true)
 
 local modDSR = RegisterMod("Double Spiked Rocks", 1)
 
