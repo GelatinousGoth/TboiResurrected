@@ -4,7 +4,7 @@ local mod = TR_Manager:RegisterMod("Unlockable Utero", 1, true)
 
 if REPENTOGON then
 
-    UTERO_ACHIEVEMENT = Isaac.GetAchievementIdByName("The Utero")
+    local UTERO_ACHIEVEMENT = Isaac.GetAchievementIdByName("The Utero")
 
     function mod:preLevelSelect(level, type)
         if level == LevelStage.STAGE4_1 or level == LevelStage.STAGE4_2 then
