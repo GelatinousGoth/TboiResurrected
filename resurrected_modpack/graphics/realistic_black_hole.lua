@@ -45,7 +45,7 @@ if mod:HasData() then
 end
 
 if mod.savedata.blackHoleEnabled == nil then mod.savedata.blackHoleEnabled = true end
-if mod.savedata.voidEnabled == nil then mod.savedata.voidEnabled = true end
+if mod.savedata.voidEnabled == nil then mod.savedata.voidEnabled = false end
 
 function mod:SaveModdedModData()
     mod:SaveData(json.encode(mod.savedata))
@@ -66,6 +66,13 @@ mod.ShaderData = {
 	blackHoleTime = 0,
     blackHoleSize = 1,
 
+}
+
+local defaultBlackHoleShaderParams = {
+    Enabled = 0,
+    BlackPosition = {0,  0,  0},
+    Time = 0,
+    WarpCheck = {0, 0}
 }
 
 function mod:ShadersRender(shaderName)
@@ -98,7 +105,8 @@ function mod:ShadersRender(shaderName)
 		end
 	end
 end
-mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, mod.ShadersRender)
+
+TR_Manager:RegisterShader(mod, "Black_Hole", mod.ShadersRender, defaultBlackHoleShaderParams)
 
 -- not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway
 mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function()

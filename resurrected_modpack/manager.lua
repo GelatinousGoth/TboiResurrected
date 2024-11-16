@@ -448,7 +448,7 @@ end
 
 ---@param modName string
 ---@param version integer? # Unused
----@param hasToggle boolean
+---@param hasToggle boolean?
 ---@return table
 function TR_Manager:RegisterMod(modName, version, hasToggle)
     ---@type TR_Mod
