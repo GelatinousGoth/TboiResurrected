@@ -73,8 +73,7 @@ local backdropSkinList = {
 }
 
 -- current patchnotes v 1.4 --
--- - added Spelunky's Spiketr... uhm I mean the catacombs variant for the Grudge enemy
--- - reactivated the (functional?) Revelations code for the Grudge enemy
+-- - updated the Poky Womb variant
 
 -- main code --
 function Mod:onNewStage()
@@ -89,7 +88,7 @@ function Mod:onNewStage()
 		revelation.Floor = true
 	end 
 end
-mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Mod.onNewStage)
+Spikes:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, Mod.onNewStage)
 
 
 function Mod:onEntitySpawn(entity)
@@ -152,7 +151,7 @@ function Mod:onEntitySpawn(entity)
 				or backdrop == 58
 				or backdrop == 59 then
 					if room:HasLava() then
-						-- if the room contains lave, then the sprite will be replaced with the alt variant
+						-- if the room contains lava, then the sprite will be replaced with the alt variant
 						sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_slide_alt" .. backdropSkinList[backdrop])
 						sprite:LoadGraphics()
 					else
@@ -160,6 +159,12 @@ function Mod:onEntitySpawn(entity)
 						sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_slide" .. backdropSkinList[backdrop])
 						sprite:LoadGraphics()
 					end
+
+				elseif backdrop == 47 then	-- gehenna
+					-- give it an unique animation
+					sprite:Load("gfx/monster_wall hugger_gehanna.anm2", true)
+					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_slide_alt" .. backdropSkinList[backdrop])
+					sprite:LoadGraphics()
 				else
 					
 					-- if it doesn't need complatibility the sprite can simply replaced with the current floor variant
@@ -170,7 +175,7 @@ function Mod:onEntitySpawn(entity)
 		end
 	end
 end
-mod:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Mod.onEntitySpawn, EntityType.ENTITY_POKY)
+Spikes:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Mod.onEntitySpawn, EntityType.ENTITY_POKY)
 
 function Mod:onWallHuggerSpawn(entity)
 
@@ -221,10 +226,10 @@ function Mod:onWallHuggerSpawn(entity)
 		end
 	end
 end
-mod:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Mod.onWallHuggerSpawn, EntityType.ENTITY_WALL_HUGGER)
+Spikes:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Mod.onWallHuggerSpawn, EntityType.ENTITY_WALL_HUGGER)
 
 if REPENTANCE then
-	function Mod:onWallHuggerSpawn(entity)
+	function Mod:onGrudgeSpawn(entity)
 
 		local level = game:GetLevel()
 		local room = game:GetRoom()
@@ -250,8 +255,11 @@ if REPENTANCE then
 						
 					elseif backdrop == 1
 					or backdrop == 2
+					or backdrop == 4
+					or backdrop == 7
 					or backdrop == 10
 					or backdrop == 11
+					or backdrop == 13
 					or backdrop == 31 then
 						-- if it doesn't need complatibility the sprite can simply replaced with the current floor variant
 						sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/grudge/monster_grudge" .. backdropSkinList[backdrop])
@@ -261,5 +269,5 @@ if REPENTANCE then
 			end
 		end
 	end
-	mod:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Mod.onWallHuggerSpawn, EntityType.ENTITY_GRUDGE)
+	Spikes:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Mod.onGrudgeSpawn, EntityType.ENTITY_GRUDGE)
 end
