@@ -33,6 +33,7 @@ local validSpritesSheets = {
     ["gfx/bosses/classic/boss_070_ItLives.png"] = true,
     ["gfx/bosses/classic/miniboss_09_pride.png"] = true,
     ["gfx/bosses/classic/miniboss_10_superpride.png"] = true,
+    ["gfx/bosses/rebirth/megafred.png"] = true
 }
 
 local function string_insert(str, insertText, pos)
