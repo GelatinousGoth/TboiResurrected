@@ -556,10 +556,13 @@ local function delete_mod(modId)
         TboiRekindled:RemoveCallback(callback.Callback, callback.Function)
     end
 
+    if modData.HasToggle then
+        remove_mod_from_mcm(modId)
+        remove_mod_from_dss(modId)
+    end
+
     table.remove(TR_Manager.ModData, modId)
 
-    remove_mod_from_mcm(modId)
-    remove_mod_from_dss(modId)
 end
 
 local loadErrorMessage = [[
