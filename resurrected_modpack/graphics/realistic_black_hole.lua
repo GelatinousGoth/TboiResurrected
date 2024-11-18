@@ -1,6 +1,7 @@
 local TR_Manager = require("resurrected_modpack.manager")
-mod = TR_Manager:RegisterMod("Realistic Black Hole", 1)
+RealisticBH = TR_Manager:RegisterMod("Realistic Black Hole", 1)
 
+local mod = RealisticBH
 local game = Game()
 local json = require("json")
 
@@ -107,11 +108,6 @@ function mod:ShadersRender(shaderName)
 end
 
 TR_Manager:RegisterShader(mod, "Black_Hole", mod.ShadersRender, defaultBlackHoleShaderParams)
-
--- not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway not sure if this shader crash fix by agentcucco is still necessary, but i'll put it in anyway
-mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function()
-	Isaac.ExecuteCommand("reloadshaders")
-end)
 
 ------------------------------------------------------------
 --BLACK HOLE DISTORTION-------------------------------------

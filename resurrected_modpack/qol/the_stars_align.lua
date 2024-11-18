@@ -1,5 +1,5 @@
 local TR_Manager = require("resurrected_modpack.manager")
-mod = TR_Manager:RegisterMod("The Stars Align", 1)
+local mod = TR_Manager:RegisterMod("The Stars Align", 1, true)
 
 local game = Game()
 
