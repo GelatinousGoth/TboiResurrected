@@ -42,6 +42,17 @@
 local json = require("json")
 local dssmenucore = require("resurrected_modpack.vendor.dssmenucore")
 
+---@type ModReference
+local TboiRekindled = RegisterMod("Tboi Rekindled", 1)
+
+---@class TR_Manager
+local TR_Manager = {
+    ModData = {},
+    Shaders = {},
+    InitializingModsList = {},
+    DssMenuData = {}
+}
+
 ---@type DSSMenuProvider
 local DSSMenuProvider = {
     GetGamepadToggleSetting = function ()
@@ -98,17 +109,6 @@ local DSSMenuProvider = {
 }
 
 local dssmod = dssmenucore.init("Dead Sea Scrolls (Tboi Rekindled)", DSSMenuProvider)
-
----@type ModReference
-local TboiRekindled = RegisterMod("Tboi Rekindled", 1)
-
----@class TR_Manager
-local TR_Manager = {
-    ModData = {},
-    Shaders = {},
-    InitializingModsList = {},
-    DssMenuData = {}
-}
 
 local function warning_handler(warning)
     Console.PrintWarning(warning)
