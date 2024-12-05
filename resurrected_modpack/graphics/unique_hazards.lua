@@ -39,7 +39,7 @@ local backdropSkinList = {
 	"_bluewomb.png",	-- blue womb secret room
 	"_shop.png",		-- ultra greed shop
 	"_basement.png",	-- dungeon
-	"_cellar.png",		-- sacrifice (30)
+	"_depths.png",		-- sacrifice (30)
 	"_basement.png",	-- current stage (up to Rep) --
 	"_mines.png",
 	"_mausoleum.png",
@@ -146,6 +146,11 @@ function Mod:onEntitySpawn(entity)
 						sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_slide" .. backdropSkinList[backdrop])
 						sprite:LoadGraphics()
 					end
+
+				elseif backdrop == 31 then
+					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_slide_dross.png")
+					sprite:LoadGraphics()
+					
 				elseif backdrop == 32
 				or backdrop == 37
 				or backdrop == 58
@@ -160,11 +165,10 @@ function Mod:onEntitySpawn(entity)
 						sprite:LoadGraphics()
 					end
 
-				elseif backdrop == 47 then	-- gehenna
-					-- give it an unique animation
-					sprite:Load("gfx/monster_wall hugger_gehanna.anm2", true)
-					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_slide_alt" .. backdropSkinList[backdrop])
+				elseif backdrop == 45 then
+					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_slide_dross.png")
 					sprite:LoadGraphics()
+
 				else
 					
 					-- if it doesn't need complatibility the sprite can simply replaced with the current floor variant
@@ -216,6 +220,11 @@ function Mod:onWallHuggerSpawn(entity)
 						sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/wall hugger/monster_wall hugger" .. backdropSkinList[backdrop])
 						sprite:LoadGraphics()
 					end
+				elseif backdrop == 47 then	-- gehenna
+					-- give it an unique animation
+					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_wall hugger_anm" .. backdropSkinList[backdrop])
+					sprite:Load("gfx/monster_wall hugger_gehanna.anm2", true)
+					sprite:LoadGraphics()
 				else
 				
 					-- if it doesn't need complatibility the sprite can simply replaced with the current floor variant
@@ -259,10 +268,13 @@ if REPENTANCE then
 					or backdrop == 7
 					or backdrop == 10
 					or backdrop == 11
-					or backdrop == 13
-					or backdrop == 31 then
+					or backdrop == 13 then
 						-- if it doesn't need complatibility the sprite can simply replaced with the current floor variant
 						sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/grudge/monster_grudge" .. backdropSkinList[backdrop])
+						sprite:LoadGraphics()
+					elseif backdrop == 31 then
+						-- if it doesn't need complatibility the sprite can simply replaced with the current floor variant
+						sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/grudge/monster_grudge_downpour.png")
 						sprite:LoadGraphics()
 					end
 				end	
