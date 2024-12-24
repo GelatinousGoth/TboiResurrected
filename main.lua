@@ -42,6 +42,7 @@ TR_Manager:LoadMod("resurrected_modpack.graphics.unique_stage_variants")
 TR_Manager:LoadMod("resurrected_modpack.graphics.better_boss_rush_backdrop")
 TR_Manager:LoadMod("resurrected_modpack.graphics.voiding_effect")
 TR_Manager:LoadMod("resurrected_modpack.graphics.realistic_black_hole")
+TR_Manager:LoadMod("resurrected_modpack.graphics.tainted_lost_death_animation")
 
 TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.chests_before_mother")
@@ -70,6 +71,7 @@ TR_Manager:LoadMod("resurrected_modpack.qol.coin_flip")
 TR_Manager:LoadMod("resurrected_modpack.qol.ff_fortunes")
 TR_Manager:LoadMod("resurrected_modpack.qol.melee_range_fix")
 TR_Manager:LoadMod("resurrected_modpack.qol.the_stars_align")
+TR_Manager:LoadMod("resurrected_modpack.qol.low_firerate_chargebar")
 
 TR_Manager:LoadMod("resurrected_modpack.shaders.hotter_mines")
 
