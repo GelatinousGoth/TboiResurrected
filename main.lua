@@ -73,6 +73,7 @@ TR_Manager:LoadMod("resurrected_modpack.qol.ff_fortunes")
 TR_Manager:LoadMod("resurrected_modpack.qol.melee_range_fix")
 TR_Manager:LoadMod("resurrected_modpack.qol.the_stars_align")
 TR_Manager:LoadMod("resurrected_modpack.qol.low_firerate_chargebar")
+TR_Manager:LoadMod("resurrected_modpack.qol.soul_4_me")
 
 TR_Manager:LoadMod("resurrected_modpack.shaders.hotter_mines")
 
