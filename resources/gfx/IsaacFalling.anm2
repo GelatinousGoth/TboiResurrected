@@ -1,9 +1,9 @@
 <AnimatedActor>
-	<Info CreatedBy="LuFeDiRo" CreatedOn="25/7/2023 16:57:55" Version="236" Fps="30"/>
+	<Info CreatedBy="LuFeDiRo" CreatedOn="11/26/2024 10:38:17 PM" Version="237" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="characters\costumes\character_001_isaac.png" Id="0"/>
-			<Spritesheet Path="costumes\ghost.png" Id="1"/>
+			<Spritesheet Path="characters\costumes\ghost.png" Id="1"/>
 			<Spritesheet Path="characters\costumes\Falling_isaac.png" Id="2"/>
 			<Spritesheet Path="characters\costumes\Basement base.png" Id="3"/>
 		</Spritesheets>

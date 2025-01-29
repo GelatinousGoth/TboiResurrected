@@ -3,16 +3,80 @@
         <sample weight = "1" path = "Chime.wav" />
     </sound>
 	
-	<sound name = "Falling">
-		<sample weight = "1" path = "player/Falling.wav"/>
+    <sound name="Falling">
+		<sample weight="1" path="player/Falling.wav"/>
 	</sound>
 	
-	<sound name = "GroundHit">
-		<sample weight = "1" path = "player/GroundHit.wav"/>
+	<sound name="GroundHit">
+		<sample weight="1" path="player/GroundHit.wav"/>
 	</sound>
 	
-	<sound name = "Reroll">
-		<sample weight = "1" path = "player/Reroll.wav"/>
+	<sound name="Reroll">
+		<sample weight="1" path="player/Reroll.wav"/>
+	</sound>
+	
+	<sound name="Wind">
+		<sample weight="1" path="player/Wind.wav"/>
+	</sound>
+	
+	<sound name="GroundDrill">
+		<sample weight="1" path="player/GroundDrill.wav"/>
+	</sound>
+	
+	<sound name="PortalOpen">
+		<sample weight="1" path="player/PortalOpen.wav"/>
+	</sound>
+	
+	<sound name="PortalSpit">
+		<sample weight="1" path="player/PortalSpit.wav"/>
+	</sound>
+	
+	<sound name="PortalClose">
+		<sample weight="1" path="player/PortalClose.wav"/>
+	</sound>
+	
+	<sound name="WingSound">
+		<sample weight="1" path="player/WingSound.wav"/>
+	</sound>
+	
+	<sound name="RopeSwing">
+		<sample weight="1" path="player/RopeSwing.wav"/>
+	</sound>
+	
+	<sound name="CutRope">
+		<sample weight="1" path="player/CutRope.wav"/>
+	</sound>
+	
+	<sound name="LazDeath">
+		<sample weight="1" path="player/LazDeath.wav"/>
+	</sound>
+	
+	<sound name="LazRevive">
+		<sample weight="1" path="player/LazRevive.wav"/>
+	</sound>
+	
+	<sound name="MeatDrop">
+		<sample weight="1" path="player/MeatDrop.wav"/>
+	</sound>
+	
+	<sound name="BookFlying">
+		<sample weight="1" path="player/BookFlying.wav"/>
+	</sound>
+	
+	<sound name="BookCrash">
+		<sample weight="1" path="player/BookCrash.wav"/>
+	</sound>
+	
+	<sound name="GTBeth">
+		<sample weight="1" path="player/GTBeth.wav"/>
+	</sound>
+	
+	<sound name="Lazer">
+		<sample weight="1" path="player/Lazer.wav"/>
+	</sound>
+	
+	<sound name="BitTouch">
+		<sample weight="1" path="player/BitTouch.wav"/>
 	</sound>
 	
 	<sound name="keepah_chirp">

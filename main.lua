@@ -44,6 +44,7 @@ TR_Manager:LoadMod("resurrected_modpack.graphics.voiding_effect")
 TR_Manager:LoadMod("resurrected_modpack.graphics.realistic_black_hole")
 TR_Manager:LoadMod("resurrected_modpack.graphics.tainted_lost_death_animation")
 TR_Manager:LoadMod("resurrected_modpack.graphics.fancy_boss_hp_bar")
+TR_Manager:LoadMod("resurrected_modpack.graphics.extra_npcs")
 
 TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.chests_before_mother")

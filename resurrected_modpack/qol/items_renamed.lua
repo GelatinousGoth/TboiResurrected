@@ -43,7 +43,7 @@ function mod:InitItemsRenamed()
     end
 
     trinkets = {
-        {TrinketType.TRINKET_NOSE_GOBLIN, "Booger", "Nose Picker"},
+        {TrinketType.TRINKET_NOSE_GOBLIN, "Mucus", "Nose Goblin"},
 		{TrinketType.TRINKET_MOMS_PEARL, "Clam Pearl", "It Emanates Purity"},
 		{TrinketType.TRINKET_MYSTERIOUS_PAPER, "Blank Paper", "???"},
 		{TrinketType.TRINKET_BROKEN_ANKH, "Shattered Ankh", "Eternal Life?"},
