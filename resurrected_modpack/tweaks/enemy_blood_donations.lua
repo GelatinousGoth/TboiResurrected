@@ -41,7 +41,7 @@ function EnemyBloodDonations:SlotUpdate(slot)
 
     local enemies = Isaac.FindInCapsule(slot:GetCollisionCapsule(), EntityPartition.ENEMY)
     for _, enemy in ipairs(enemies) do
-        if not enemy:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then
+        if not enemy:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) and enemy:IsVulnerableEnemy() and enemy:IsActiveEnemy() then
             slot:SetState(2)
 
             slot:GetSprite():Play("Initiate")
@@ -50,6 +50,9 @@ function EnemyBloodDonations:SlotUpdate(slot)
             if slot:GetDropRNG():RandomFloat() < EXPLODE_CHANCE then
                 slot:GetData().ImprovedExplodeMachine = true
             end
+
+            SFXManager():Play(SoundEffect.SOUND_MEATY_DEATHS, 0.8)
+            enemy:BloodExplode()
 
             local damage = GetBloodDonationDamage(enemy:IsBoss())
             enemy:TakeDamage(damage, 0, EntityRef(slot), 1)

@@ -47,7 +47,7 @@ end
 
 ---@param pickup EntityPickup
 local function processPriceReplacement(pickup)
-    if pickup.Price < 0 and pickup.Price ~= PickupPrice.PRICE_SPIKES then
+    if pickup.Price < 0 and pickup.Price ~= PickupPrice.PRICE_SPIKES and pickup.Price ~= PickupPrice.PRICE_FREE then
         if shouldFakeYourSoulEffect() then
             pickup.Price = PickupPrice.PRICE_SOUL
         end
@@ -59,7 +59,7 @@ if REPENTOGON then
     --just set price sprite to soul one
     ---@param pickup EntityPickup
     mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, function (_, pickup)
-        if pickup.Price <= 0 and pickup.Price ~= PickupPrice.PRICE_SPIKES then
+        if pickup.Price < 0 and pickup.Price ~= PickupPrice.PRICE_SPIKES and pickup.Price ~= PickupPrice.PRICE_FREE then
             if shouldFakeYourSoulEffect() then
                 pickup:GetPriceSprite():SetFrame(4)
              end

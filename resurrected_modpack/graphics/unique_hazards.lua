@@ -40,7 +40,7 @@ local backdropSkinList = {
 	"_shop.png",		-- ultra greed shop
 	"_basement.png",	-- dungeon
 	"_depths.png",		-- sacrifice (30)
-	"_basement.png",	-- current stage (up to Rep) --
+	"_downpour.png",	-- current stage (up to Rep) --
 	"_mines.png",
 	"_mausoleum.png",
 	"_corpse.png",
@@ -121,6 +121,9 @@ function Mod:onEntitySpawn(entity)
 						sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/poky/monster_poky" .. backdropSkinList[backdrop])
 						sprite:LoadGraphics()
 					end
+				elseif backdrop == 31 then
+					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/poky/monster_poky_basement.png")
+					sprite:LoadGraphics()
 				else
 					if backdrop ~= 46 then	-- currently no alt spritesheet for mines available
 						-- if it doesn't need complatibility the sprite can simply replaced with the current floor variant
@@ -147,9 +150,9 @@ function Mod:onEntitySpawn(entity)
 						sprite:LoadGraphics()
 					end
 
-				elseif backdrop == 31 then
-					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_slide_dross.png")
-					sprite:LoadGraphics()
+				-- elseif backdrop == 31 then
+				--	sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_slide_dross.png")
+				--	sprite:LoadGraphics()
 					
 				elseif backdrop == 32
 				or backdrop == 37
@@ -167,6 +170,10 @@ function Mod:onEntitySpawn(entity)
 
 				elseif backdrop == 45 then
 					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_slide_dross.png")
+					sprite:LoadGraphics()
+
+				elseif backdrop == 47 then --gehanna
+					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_slide_depths.png")
 					sprite:LoadGraphics()
 
 				else
@@ -207,6 +214,9 @@ function Mod:onWallHuggerSpawn(entity)
 						sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/wall hugger/monster_wall hugger" .. backdropSkinList[backdrop])
 						sprite:LoadGraphics()
 					end
+				elseif backdrop == 31 then	-- downpour
+					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/wall hugger/monster_wall hugger_basement.png")
+					sprite:LoadGraphics()
 				elseif backdrop == 32
 				or backdrop == 37
 				or backdrop == 58
@@ -220,9 +230,23 @@ function Mod:onWallHuggerSpawn(entity)
 						sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/wall hugger/monster_wall hugger" .. backdropSkinList[backdrop])
 						sprite:LoadGraphics()
 					end
+				elseif backdrop == 33 		-- mausoleum	
+				or backdrop == 38
+				or backdrop == 40
+				or backdrop == 41
+				or backdrop == 42 then
+					-- give it an unique animation
+					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/wall hugger/monster_wall hugger_anm" .. backdropSkinList[backdrop])
+					sprite:Load("gfx/monster_wall hugger_mausoleum.anm2", true)
+					sprite:LoadGraphics()
+
+				elseif backdrop == 45 then
+					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/wall hugger/monster_wall hugger_dross.png")
+					sprite:LoadGraphics()
+
 				elseif backdrop == 47 then	-- gehenna
 					-- give it an unique animation
-					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/slide/monster_wall hugger_anm" .. backdropSkinList[backdrop])
+					sprite:ReplaceSpritesheet(0, "gfx/monsters/custom/wall hugger/monster_wall hugger_anm" .. backdropSkinList[backdrop])
 					sprite:Load("gfx/monster_wall hugger_gehanna.anm2", true)
 					sprite:LoadGraphics()
 				else

@@ -36,6 +36,7 @@ function mod:InitItemsRenamed()
 			{FiendFolio.ITEM.COLLECTIBLE.GREG_THE_EGG, "Suprise Egg", "A Hutts hatching"},
 			{FiendFolio.ITEM.COLLECTIBLE.SMALL_WOOD, "Wooden Plank", "Ouch, I've got a Splinter"},
 			{FiendFolio.ITEM.COLLECTIBLE.SMALL_PIPE, "Loose Pipe", "Congratulations on the Pipe!"},
+			{FiendFolio.ITEM.COLLECTIBLE.EMOJI_GLASSES, "Emoji Glasses", "Web Hieroglyphs"},
         }
         for _, itemInfo in ipairs(ffItems) do
             table.insert(items, itemInfo)
