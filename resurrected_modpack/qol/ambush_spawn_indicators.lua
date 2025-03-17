@@ -1,5 +1,5 @@
 local TR_Manager = require("resurrected_modpack.manager")
-local AmbushSpawnIndicators = TR_Manager:RegisterMod("Ambush Spawn Indicators", 1)
+AmbushSpawnIndicators = TR_Manager:RegisterMod("Ambush Spawn Indicators", 1)
 
 
 
