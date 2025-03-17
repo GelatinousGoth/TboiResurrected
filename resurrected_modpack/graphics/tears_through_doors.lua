@@ -35,6 +35,6 @@ function tearMod:OnTearUpdate(tear)
 end
 
 -- Register the callback
-mod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, tearMod.OnTearUpdate)
+tearMod:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, tearMod.OnTearUpdate)
 
 print("TearsThroughDoors mod loaded (v4)!")
