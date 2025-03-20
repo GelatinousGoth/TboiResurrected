@@ -127,8 +127,7 @@ function mod:DoorLockerInit(entity)
 			EntityFlag.FLAG_HIDE_HP_BAR |
 			EntityFlag.FLAG_NO_REWARD |
 			EntityFlag.FLAG_NO_PLAYER_CONTROL |
-			EntityFlag.FLAG_NO_QUERY |
-			EntityFlag.FLAG_DONT_COUNT_BOSS_HP
+			EntityFlag.FLAG_NO_QUERY
 		)
 		entity:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
 		entity.Visible = false
