@@ -1,10 +1,8 @@
 local TR_Manager = require("resurrected_modpack.manager")
 AmbushSpawnIndicators = TR_Manager:RegisterMod("Ambush Spawn Indicators", 1)
 
-
-
 --[[ Load scripts ]]--
-local scriptsFolder = "resurrected_modpack/qol/ambush_spawn_indicators"
+local scriptsFolder = "resurrected_modpack.qol.ambush_spawn_indicators"
 
 -- Only if REPENTOGON is enabled
 if REPENTOGON then
@@ -19,7 +17,7 @@ if REPENTOGON then
 	}
 
 	for i, script in pairs(scripts) do
-		include(scriptsFolder .. script)
+		include(scriptsFolder .. "." .. script)
 	end
 
 

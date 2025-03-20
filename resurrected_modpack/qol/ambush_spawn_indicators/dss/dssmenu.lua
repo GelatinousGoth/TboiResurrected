@@ -61,7 +61,7 @@ function MenuProvider.SaveMenusPoppedUp(var)
 	mod.SavedData.DSS.MenusPoppedUp = var
 end
 
-local DSSInitializerFunction = require("ambush_scripts.dss.dssmenucore")
+local DSSInitializerFunction = require("resurrected_modpack.qol.ambush_spawn_indicators.dss.dssmenucore")
 local dssmod = DSSInitializerFunction(DSSModName, DSSCoreVersion, MenuProvider)
 
 
