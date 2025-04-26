@@ -3,6 +3,7 @@ TR_Manager:Init()
 
 require("resurrected_modpack.modcompat.ANM2")
 require("resurrected_modpack.modcompat.VS_screen")
+require("resurrected_modpack.modcompat.disable_mods")
 
 -- require("resurrected_modpack.enums")
 
@@ -45,6 +46,7 @@ TR_Manager:LoadMod("resurrected_modpack.graphics.realistic_black_hole")
 TR_Manager:LoadMod("resurrected_modpack.graphics.tainted_lost_death_animation")
 TR_Manager:LoadMod("resurrected_modpack.graphics.fancy_boss_hp_bar")
 TR_Manager:LoadMod("resurrected_modpack.graphics.extra_npcs")
+TR_Manager:LoadMod("resurrected_modpack.graphics.shop_parrot")
 TR_Manager:LoadMod("resurrected_modpack.graphics.tears_through_doors")
 
 TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")

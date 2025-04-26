@@ -22,6 +22,7 @@
 ---@field Shaders table<string, function>
 ---@field SaveData string?
 ---@field Enabled boolean
+---@field ForceDisable boolean
 ---@field HasToggle boolean
 
 ---@class TR_ModSaveData
@@ -52,6 +53,11 @@ local TR_Manager = {
     InitializingModsList = {},
     DssMenuData = {}
 }
+
+local function is_mod_enabled(id)
+    local modData = TR_Manager.ModData[id]
+    return modData.Enabled and not modData.ForceDisable
+end
 
 ---@type DSSMenuProvider
 local DSSMenuProvider = {
@@ -255,7 +261,7 @@ function TR_Manager:AddCallback(mod, callbackId, priority, fn, param)
 
     table.insert(self.ModData[mod.TR_ID].Callbacks, callbackEntry)
 
-    if (self.ModData[mod.TR_ID].Enabled) then
+    if is_mod_enabled(mod.TR_ID) then
         Isaac.AddPriorityCallback(mod, callbackId, priority, fn, param)
     end
 
@@ -340,7 +346,7 @@ local function apply_mod_save_data(modSaveData)
         end
 
         mod.SaveData = saveData.SaveData
-        if mod.Enabled ~= saveData.Enabled then
+        if mod.Enabled ~= saveData.Enabled then -- Current Status different from saveData
             if not saveData.Enabled then
                 TR_Manager:DisableMod(mod.Mod.TR_ID)
             else
@@ -471,6 +477,7 @@ function TR_Manager:RegisterMod(modName, version, hasToggle)
         Shaders = {},
         SaveData = nil,
         Enabled = true,
+        ForceDisable = false,
         HasToggle = hasToggle or false
     }
 
@@ -489,7 +496,7 @@ end
 ---@param modId integer
 function TR_Manager:EnableMod(modId)
     local modData = self.ModData[modId]
-    if modData.Enabled then
+    if modData.Enabled or modData.ForceDisable then
         return
     end
 
@@ -515,15 +522,11 @@ function TR_Manager:EnableMod(modId)
     modData.Enabled = true
 end
 
----@param modId integer
-function TR_Manager:DisableMod(modId)
-    local modData = self.ModData[modId]
-    if not modData.Enabled or not modData.HasToggle then
-        return
-    end
-
+---@param manager TR_Manager
+---@param modData TR_ModData
+local function disable_mod(manager, modData)
     for _, shaderName in ipairs(modData.Shaders) do
-        self.Shaders[shaderName].Enabled = false
+        manager.Shaders[shaderName].Enabled = false
     end
 
     if type(modData.Mod.pre_disable_mod) == "function" then
@@ -540,8 +543,29 @@ function TR_Manager:DisableMod(modId)
     if type(modData.Mod.post_disable_mod) == "function" then
         xpcall(modData.Mod.pre_disable_mod, error_handler, modData.Mod)
     end
+end
+
+---@param modId integer
+function TR_Manager:DisableMod(modId)
+    local modData = self.ModData[modId]
+    if not modData.Enabled or not modData.HasToggle or modData.ForceDisable then
+        return
+    end
+
+    disable_mod(self, modData)
 
     modData.Enabled = false
+end
+
+function TR_Manager:ForceDisable(modId)
+    local modData = self.ModData[modId]
+    if modData.ForceDisable then
+        return
+    end
+
+    disable_mod(self, modData)
+
+    modData.ForceDisable = true
 end
 
 ---@param modId integer
@@ -692,4 +716,15 @@ local dssMenu = {
 
 DeadSeaScrollsMenu.AddMenu("Tboi Rekindled", dssMenu)
 
-return TR_Manager;
+---@param name string
+---@return integer?
+function TR_Manager:GetModIdByName(name)
+    for k, v in pairs(self.ModData) do
+        local mod = v.Mod
+        if mod.Name == name then
+            return v.Mod.TR_ID
+        end
+    end
+end
+
+return TR_Manager
