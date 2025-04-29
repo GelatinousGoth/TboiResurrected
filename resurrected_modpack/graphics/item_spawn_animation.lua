@@ -1,5 +1,5 @@
 local TR_Manager = require("resurrected_modpack.manager")
-local mod = TR_Manager:RegisterMod("Item Spawn Animation", 1, true)
+local mod = TR_Manager:RegisterMod("Item Spawn Animation", 1)
 
 local game = Game()
 local itempool = game:GetItemPool()

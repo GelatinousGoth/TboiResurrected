@@ -1,5 +1,5 @@
 local TR_Manager = require("resurrected_modpack.manager")
-OptionsReminderMod = TR_Manager:RegisterMod("Options? Reminder", 1, true)
+OptionsReminderMod = TR_Manager:RegisterMod("Options? Reminder", 1)
 
 local OPTION_GROUPS = {}
 

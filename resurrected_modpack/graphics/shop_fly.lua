@@ -1,5 +1,5 @@
 local TR_Manager = require("resurrected_modpack.manager")
-local mod = TR_Manager:RegisterMod("Shop Fly", 1, true)
+local mod = TR_Manager:RegisterMod("Shop Fly", 1)
 
 local monster = {}
 monster.name = "Shop Parrot"

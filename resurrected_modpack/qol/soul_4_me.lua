@@ -1,6 +1,6 @@
 ---@type ModReference
 local TR_Manager = require("resurrected_modpack.manager")
-local mod = TR_Manager:RegisterMod("Soul4Me", 1, true)
+local mod = TR_Manager:RegisterMod("Soul4Me", 1)
 local game = Game()
 
 ---@return EntityPlayer[]

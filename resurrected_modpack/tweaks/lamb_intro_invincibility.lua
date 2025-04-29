@@ -1,6 +1,6 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-local mod = TR_Manager:RegisterMod("Lamb Intro Invincibility", 1, true)
+local mod = TR_Manager:RegisterMod("Lamb Intro Invincibility", 1)
 
 function mod:SpawnInvincibility(entity)
     return entity:ToNPC().State ~= (NpcState.STATE_APPEAR or NpcState.STATE_APPEAR_CUSTOM or NpcState.STATE_INIT)
