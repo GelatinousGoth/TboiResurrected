@@ -4,6 +4,7 @@ TR_Manager:Init()
 require("resurrected_modpack.modcompat.ANM2")
 require("resurrected_modpack.modcompat.VS_screen")
 require("resurrected_modpack.modcompat.disable_mods")
+require("resurrected_modpack.modcompat.custom_boss_weight_fix")
 
 -- require("resurrected_modpack.enums")
 

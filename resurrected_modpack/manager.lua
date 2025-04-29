@@ -682,6 +682,11 @@ local function ShaderManager(_, shaderName)
     end
 end
 
+---@return DSSMod
+function TR_Manager:GetDSSMod()
+    return dssmod
+end
+
 function TR_Manager:Init()
     TboiRekindled:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, ShaderManager)
 
