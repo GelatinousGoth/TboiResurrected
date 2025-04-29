@@ -1,0 +1,13 @@
+<data>
+    <entity Group="Giant Props" Kind="Global" ID="999" Image="giantprops/Giant Prop (Chapter Unique).png" Name="Giant Prop (Chapter Unique)" Subtype="0" Variant="34895" PlaceVisual="1,0.8" DisableOffsetIndicator="1" />
+
+    <entity Group="Giant Props" Kind="Global" ID="999" Image="giantprops/Giant Shopkeeper (Universal).png" Name="Giant Shopkeeper (Universal)" Subtype="0" Variant="34896" PlaceVisual="1,0.8" DisableOffsetIndicator="1" />
+
+    <entity Group="Giant Props" Kind="Global" ID="999" Image="giantprops/Giant Bomb Rock (Universal).png" Name="Giant Bomb Rock (Universal)" Subtype="1" Variant="34896" PlaceVisual="1,0.8" DisableOffsetIndicator="1" />
+
+    <group Name="Grids">
+        <entity Name="Giant Prop (Chapter Unique)" />
+        <entity Name="Giant Shopkeeper (Universal)" />
+        <entity Name="Giant Bomb Rock (Universal)" />
+    </group>
+</data>

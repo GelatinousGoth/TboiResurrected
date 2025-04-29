@@ -110,6 +110,21 @@
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
 	
+	<entity anm2path="grid/1000.spawner_effect.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Unique Giant Prop Spawner Effect" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="34895">
+    </entity>
+
+    <entity anm2path="grid/1000.spawner_effect.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Universal Giant Prop Spawner Effect" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="34896">
+    </entity>
+    
+    <entity anm2path="mushroomtissue.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Mushroom Tissue" numGridCollisionPoints="24" shadowSize="16" stageHP="0" variant="300" subtype="7055">
+    </entity>
+
+    <entity anm2path="psychmushroom.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Psychehedelic Fungi" numGridCollisionPoints="24" shadowSize="16" stageHP="0" variant="300" subtype="7056">
+    </entity>
+
+    <entity anm2path="pyrite.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" id="5" name="Pyrite" numGridCollisionPoints="24" shadowSize="14" stageHP="0" variant="576" subtype="0">
+    </entity>
+	
 	<entity anm2path="grid/door_downpour_mirror.anm2" id="1000" variant="1259" name="Downpour Door Shine" />
 	
 	<entity anm2path="famil_parrot.anm2" baseHP="0" tags="noreroll" boss="0" champion="0" collisionDamage="0" collisionMass="1" collisionRadius="12" friction="1" id="700" name="Shop Parrot" numGridCollisionPoints="0" shadowSize="12" stageHP="0" variant="220" gridCollision="walls" shutdoors="false">

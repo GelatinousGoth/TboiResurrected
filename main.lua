@@ -70,6 +70,7 @@ TR_Manager:LoadMod("resurrected_modpack.tweaks.unlockable_utero")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.pickups_removal")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.minisaac_for_mom")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.hush_itempool")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.giant_props")
 
 TR_Manager:LoadMod("resurrected_modpack.qol.hanging_dream_catcher")
 TR_Manager:LoadMod("resurrected_modpack.qol.hud_toggle")

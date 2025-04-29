@@ -1,0 +1,102 @@
+<data>
+    <stage Name="Basement">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Pot.png" />
+        </Gfx>
+    </stage>
+    <stage Name="Cellar">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Pot.png" />
+        </Gfx>
+    </stage>
+    <stage Name="Burning Basement">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Pot.png" />
+        </Gfx>
+    </stage>
+    <stage Name="Caves">
+        <Gfx>
+			<Entity ID="999" Variant="34895" Image="giantprops/Giant Mushroom.png" />
+        </Gfx>
+    </stage>
+    <stage Name="Catacombs">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Mushroom.png" />
+        </Gfx>
+    </stage>
+    <stage Name="Flooded Caves">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Flooded Mushroom.png" />
+        </Gfx>
+    </stage>
+    <stage Name="Depths">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Skull.png" />
+        </Gfx>
+    </stage>
+    <stage Name="Necropolis">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Skull.png" />
+        </Gfx>
+    </stage>
+    <stage Name="Dank Depths">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Skull.png" />
+        </Gfx>
+    </stage>
+	<stage Name="Womb">
+        <Gfx>
+			<Entity ID="999" Variant="34895" Image="giantprops/Giant Womb Polyp.png" />
+        </Gfx>
+    </stage>
+    <stage Name="Utero">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Utero Polyp.png" />
+        </Gfx>
+    </stage>
+    <stage Name="Scarred Womb">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Scarred Polyp.png" />
+        </Gfx>
+    </stage>
+    <stage Name="Cathedral">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Holy Pot.png" />
+        </Gfx>
+    </stage>
+	<stage Name="Downpour">
+        <Gfx>
+			<Entity ID="999" Variant="34895" Image="giantprops/Giant Downpour Bucket.png" />
+        </Gfx>
+    </stage>
+	<stage Name="Dross">
+        <Gfx>
+            <Entity ID="999" Variant="34895" Image="giantprops/Giant Dross Bucket.png" />
+        </Gfx>
+    </stage>
+		<stage Name="Mines">
+        <Gfx>
+			<Entity ID="999" Variant="34895" Image="giantprops/Giant Mines Gold.png" />
+        </Gfx>
+    </stage>
+	<stage Name="Ashpit">
+        <Gfx>
+			<Entity ID="999" Variant="34895" Image="giantprops/Giant Ashpit Gold.png" />
+        </Gfx>
+	</stage>
+	<stage Name="Mausoleum">
+        <Gfx>
+			<Entity ID="999" Variant="34895" Image="giantprops/Giant Mauso Skull.png" />
+        </Gfx>
+	</stage>
+	<stage Name="Gehenna">
+        <Gfx>
+			<Entity ID="999" Variant="34895" Image="giantprops/Giant Gehenna Skull.png" />
+        </Gfx>
+	</stage>
+	<stage Name="Corpse">
+        <Gfx>
+			<Entity ID="999" Variant="34895" Image="giantprops/Giant Corpse Polyp.png" />
+        </Gfx>
+	</stage>
+</data>
