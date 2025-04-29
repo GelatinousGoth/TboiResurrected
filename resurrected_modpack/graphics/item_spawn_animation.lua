@@ -6,9 +6,9 @@ local itempool = game:GetItemPool()
 local itemConfig = Isaac.GetItemConfig()
 local MOD_PREFIX = "_IGTRA"
 
-local modStorage = require("resurrected_modpack.graphics.dss.modStorage")
+local modStorage = require("resurrected_modpack.graphics.item_spawn_animation.modStorage")
 modStorage.setMod(mod)
-require("resurrected_modpack.graphics.dss.dssmenu")
+require("resurrected_modpack.graphics.item_spawn_animation.dssmenu")
 
 local TMTRAINER_START_ID = 4000000000
 local cycle = true

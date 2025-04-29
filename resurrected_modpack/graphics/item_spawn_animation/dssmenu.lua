@@ -1,5 +1,7 @@
+local TR_Manager = require("resurrected_modpack.manager")
+
 local dssmenu = {}
-local mod = require("resurrected_modpack.graphics.dss.modStorage").getMod()
+local mod = require("resurrected_modpack.graphics.item_spawn_animation.modStorage").getMod()
 
 local MenuSaveData = {
     CYCLES = 10,
@@ -15,8 +17,8 @@ local json = require("json")
 local INITIALIZED = false
 function mod.GetSaveData()
     if not INITIALIZED then
-        if Isaac.HasModData(mod) then
-            MenuSaveData = json.decode(Isaac.LoadModData(mod))
+        if mod:HasData() then
+            MenuSaveData = json.decode(mod:LoadData())
         end
 
         INITIALIZED = true
@@ -26,88 +28,10 @@ function mod.GetSaveData()
 end
 
 function mod.StoreSaveData()
-    Isaac.SaveModData(mod, json.encode(MenuSaveData))
+    mod:SaveData(json.encode(MenuSaveData))
 end
 
-local DSSModName = "Innocence Glitched Animation"
-local MenuProvider = {}
-
-function MenuProvider.SaveSaveData()
-    mod.StoreSaveData()
-end
-
-function MenuProvider.GetPaletteSetting()
-    return mod.GetSaveData().MenuPalette
-end
-
-function MenuProvider.SavePaletteSetting(var)
-    mod.GetSaveData().MenuPalette = var
-end
-
-function MenuProvider.GetHudOffsetSetting()
-    if not REPENTANCE then
-        return mod.GetSaveData().HudOffset
-    else
-        return Options.HUDOffset * 10
-    end
-end
-
-function MenuProvider.SaveHudOffsetSetting(var)
-    if not REPENTANCE then
-        mod.GetSaveData().HudOffset = var
-    end
-end
-
-function MenuProvider.GetGamepadToggleSetting()
-    return mod.GetSaveData().GamepadToggle
-end
-
-function MenuProvider.SaveGamepadToggleSetting(var)
-    mod.GetSaveData().GamepadToggle = var
-end
-
-function MenuProvider.GetMenuKeybindSetting()
-    return mod.GetSaveData().MenuKeybind
-end
-
-function MenuProvider.SaveMenuKeybindSetting(var)
-    mod.GetSaveData().MenuKeybind = var
-end
-
-function MenuProvider.GetMenuHintSetting()
-    return mod.GetSaveData().MenuHint
-end
-
-function MenuProvider.SaveMenuHintSetting(var)
-    mod.GetSaveData().MenuHint = var
-end
-
-function MenuProvider.GetMenuBuzzerSetting()
-    return mod.GetSaveData().MenuBuzzer
-end
-
-function MenuProvider.SaveMenuBuzzerSetting(var)
-    mod.GetSaveData().MenuBuzzer = var
-end
-
-function MenuProvider.GetMenusNotified()
-    return mod.GetSaveData().MenusNotified
-end
-
-function MenuProvider.SaveMenusNotified(var)
-    mod.GetSaveData().MenusNotified = var
-end
-
-function MenuProvider.GetMenusPoppedUp()
-    return mod.GetSaveData().MenusPoppedUp
-end
-
-function MenuProvider.SaveMenusPoppedUp(var)
-    mod.GetSaveData().MenusPoppedUp = var
-end
-
-local dssmenucore = include("resurrected_modpack.graphics.dss.dssmenucore")
-local dssmod = dssmenucore.init(DSSModName, MenuProvider)
+local dssmod = TR_Manager:GetDSSMod()
 
 local function sharedButtonDisplayCondition(button, item, tbl)
     return tbl.Name == "Menu" or not DeadSeaScrollsMenu.CanOpenGlobalMenu()
