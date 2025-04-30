@@ -1,8 +1,8 @@
 local TR_Manager = require("resurrected_modpack.manager")
-local mod = TR_Manager:RegisterMod("The Stars Align", 1)
+local mod = TR_Manager:RegisterMod("The Stars Align", 1, true)
 
 local game = Game()
-
+SFX_Align = Isaac.GetSoundIdByName("Align")
 -- Funzione per controllare se c'è un Planetarium nel livello corrente
 local function hasPlanetarium()
     local level = game:GetLevel()
@@ -27,12 +27,12 @@ end
 
 -- Funzione di aggiornamento per mostrare il messaggio
 function mod:onUpdate()
-    if game:IsGreedMode() then return end
-    if self.show then
-        game:GetHUD():ShowItemText("The stars align...")
-        SFXManager():Play(SoundEffect.SOUND_SUPERHOLY, 2)
-        self.show = false
-    end
+        if game:IsGreedMode() then return end
+        if self.show then
+            game:GetHUD():ShowItemText("The stars align...")
+            SFXManager():Play(SFX_Align, 2)
+            self.show = false
+        end
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.onNewLevel)

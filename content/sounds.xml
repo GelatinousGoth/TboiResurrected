@@ -3,6 +3,10 @@
         <sample weight = "1" path = "Chime.wav" />
     </sound>
 	
+	<sound name = "Align">
+        <sample weight = "1" path = "Align.wav" />
+    </sound>
+	
     <sound name="Falling">
 		<sample weight="1" path="player/Falling.wav"/>
 	</sound>
@@ -100,4 +104,9 @@
 	<sound name="deadseascrolls_whoosh">
 		<sample weight="1" path="deadseascrolls/whoosh.wav" />
 	</sound>
+
+	<sound name="Align">
+		<sample weight="1" path = "Align.wav"/>
+	</sound>
+	
 </sounds>
