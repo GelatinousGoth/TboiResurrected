@@ -84,6 +84,7 @@ TR_Manager:LoadMod("resurrected_modpack.qol.low_firerate_chargebar")
 TR_Manager:LoadMod("resurrected_modpack.qol.soul_4_me")
 TR_Manager:LoadMod("resurrected_modpack.qol.ambush_spawn_indicators")
 TR_Manager:LoadMod("resurrected_modpack.qol.options_reminder")
+TR_Manager:LoadMod("resurrected_modpack.qol.accurate_devil_beggars")
 
 TR_Manager:LoadMod("resurrected_modpack.shaders.hotter_mines")
 
