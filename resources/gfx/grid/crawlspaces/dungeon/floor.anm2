@@ -3,7 +3,7 @@
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="..\dungeon_details.png" Id="0"/>
-			<Spritesheet Path="..\..\grid\tiles_itemdungeon.png" Id="1"/>
+			<Spritesheet Path="..\..\tiles_itemdungeon.png" Id="1"/>
 			<Spritesheet Path="..\poopsprites\poop.png" Id="2"/>
 			<Spritesheet Path="..\floor_spikes.png" Id="3"/>
 		</Spritesheets>
