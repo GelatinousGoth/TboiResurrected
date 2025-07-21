@@ -30,7 +30,7 @@
 ---@field Enabled boolean
 
 ---@class TR_Shader
----@field Function function
+---@field Function function?
 ---@field DefaultParams table
 ---@field Enabled boolean
 
@@ -573,10 +573,12 @@ local function delete_mod(modId)
     local modData = TR_Manager.ModData[modId]
 
     for _, callback in ipairs(modData.Callbacks) do
+---@diagnostic disable-next-line: param-type-mismatch
         TboiRekindled:RemoveCallback(callback.Callback, callback.Function)
     end
 
     for _, callback in ipairs(modData.Callbacks) do
+---@diagnostic disable-next-line: param-type-mismatch
         TboiRekindled:RemoveCallback(callback.Callback, callback.Function)
     end
 
@@ -611,9 +613,24 @@ function TR_Manager:LoadMod(path)
     self.InitializingModsList = {}
 end
 
+---@param shaderName string
+---@param defaultParams table
+function TR_Manager:RegisterShader(shaderName, defaultParams)
+    if self.Shaders[shaderName] then
+        warning_handler(string.format("[TBOI Rekindled] shader \"%s\" already exists, skipping registration.", shaderName))
+        return
+    end
+
+    self.Shaders[shaderName] = {
+        Function = nil,
+        DefaultParams = defaultParams,
+        Enabled = false,
+    }
+end
+
 local shaderRegisterWarnings = {
     [1] = [[
-    [TBOI Rekindled] mod "%s" has registered shader "%s" without any Default Parameters.
+    [TBOI Rekindled] mod "%s" has registered a shader that doesn't exist "%s".
     If you are seeing this message please notify the developers of Tboi Rekindled through the Steam Workshop page.]],
 
     [2] = [[
@@ -632,15 +649,15 @@ local shaderRegisterWarnings = {
 ---@param mod TR_Mod | ModReference
 ---@param shaderName string
 ---@param shaderFun function
----@param defaultParams table
-function TR_Manager:RegisterShader(mod, shaderName, shaderFun, defaultParams)
-    if type(defaultParams) ~= "table"  then
-        warning_handler(string.format(shaderRegisterWarnings[1], tostring(mod.Name), tostring(shaderName)))
+function TR_Manager:RegisterShaderFunction(mod, shaderName, shaderFun)
+    if type(shaderName) ~= "string" then
+        warning_handler(string.format(shaderRegisterWarnings[2], tostring(mod.Name)))
         return
     end
 
-    if type(shaderName) ~= "string" then
-        warning_handler(string.format(shaderRegisterWarnings[2], tostring(mod.Name)))
+    local shader = self.Shaders[shaderName]
+    if not shader then
+        warning_handler(string.format(shaderRegisterWarnings[1], tostring(mod.Name), tostring(shaderName)))
         return
     end
 
@@ -654,11 +671,8 @@ function TR_Manager:RegisterShader(mod, shaderName, shaderFun, defaultParams)
         return
     end
 
-    self.Shaders[shaderName] = {
-        Function = shaderFun,
-        DefaultParams = defaultParams,
-        Enabled = self.ModData[mod.TR_ID].Enabled
-    }
+    shader.Function = shaderFun
+    shader.Enabled = is_mod_enabled(mod.TR_ID)
 
     table.insert(self.ModData[mod.TR_ID].Shaders, shaderName)
 end
@@ -670,7 +684,7 @@ local function ShaderManager(_, shaderName)
 
     local shaderData = TR_Manager.Shaders[shaderName]
 
-    if not shaderData.Enabled then
+    if not shaderData.Enabled or not shaderData.Function then
         return shaderData.DefaultParams
     end
 

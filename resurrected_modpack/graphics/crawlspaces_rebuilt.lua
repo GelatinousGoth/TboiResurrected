@@ -1564,14 +1564,6 @@ function mod:itemDungeonVignetteShader()
     }
 end
 
-local DefaultItemDungeonVignetteParams = {
-    ModConfigStrength = 0,
-    ScreenCenter = {0, 0},
-    Time = 0,
-    TrapdoorOpenAmount = 0,
-    PlayerPosition = {0, 0},
-}
-
 function mod:rotgutDungeonVignetteShader()
     local room = game:GetRoom()
     local time = isaac.GetFrameCount()
@@ -1588,14 +1580,8 @@ function mod:rotgutDungeonVignetteShader()
     }
 end
 
-local DefaultRotgutDungeonVignetteParams = {
-    ModConfigStrength = 0,
-    Time = 0,
-    PlayerPosition = {0, 0}
-}
-
-TR_Manager:RegisterShader(mod, "itemDungeonVignette", mod.itemDungeonVignetteShader, DefaultItemDungeonVignetteParams)
-TR_Manager:RegisterShader(mod, "rotgutDungeonVignette", mod.rotgutDungeonVignetteShader, DefaultRotgutDungeonVignetteParams)
+TR_Manager:RegisterShaderFunction(mod, "itemDungeonVignette", mod.itemDungeonVignetteShader)
+TR_Manager:RegisterShaderFunction(mod, "rotgutDungeonVignette", mod.rotgutDungeonVignetteShader)
 
 --CALLBACKS
 

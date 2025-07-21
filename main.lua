@@ -1,6 +1,8 @@
 local TR_Manager = require("resurrected_modpack.manager")
 TR_Manager:Init()
 
+require("resurrected_modpack.shaders")
+
 require("resurrected_modpack.modcompat.ANM2")
 require("resurrected_modpack.modcompat.VS_screen")
 require("resurrected_modpack.modcompat.disable_mods")

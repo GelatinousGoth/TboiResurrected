@@ -515,7 +515,7 @@ function mod:RenderForStageAPI()
 	mod:RenderIsaacIcons(renderPos, true)
 end
 
-TR_Manager:RegisterShader(mod, "StageAPI-RenderAboveHUD", mod.RenderForStageAPI, {})
+TR_Manager:RegisterShaderFunction(mod, "StageAPI-RenderAboveHUD", mod.RenderForStageAPI)
 
 --#endregion
 

@@ -69,13 +69,6 @@ mod.ShaderData = {
 
 }
 
-local defaultBlackHoleShaderParams = {
-    Enabled = 0,
-    BlackPosition = {0,  0,  0},
-    Time = 0,
-    WarpCheck = {0, 0}
-}
-
 function mod:ShadersRender(shaderName)
 	if shaderName == "Black_Hole" then --Only the black circle!!!!! the distortion is just a shockwave
 		if mod.ShaderData.blackHole then
@@ -107,7 +100,7 @@ function mod:ShadersRender(shaderName)
 	end
 end
 
-TR_Manager:RegisterShader(mod, "Black_Hole", mod.ShadersRender, defaultBlackHoleShaderParams)
+TR_Manager:RegisterShaderFunction(mod, "Black_Hole", mod.ShadersRender)
 
 ------------------------------------------------------------
 --BLACK HOLE DISTORTION-------------------------------------

@@ -85,13 +85,7 @@ function mod:ShaderUpdate(name)
     }
 end
 
-local DefaultParameters = {
-    Time = 0,
-    Intensity = 0,
-    WaveSpeed = 0
-}
-
-TR_Manager:RegisterShader(mod, "Hot_HeatWave", mod.ShaderUpdate, DefaultParameters)
+TR_Manager:RegisterShaderFunction(mod, "Hot_HeatWave", mod.ShaderUpdate)
 
 mod:AddCallback(ModCallbacks.MC_POST_SAVESLOT_LOAD, loadSettings)
 
