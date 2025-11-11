@@ -34,13 +34,13 @@ local defaultConfig = {
     YaxisOffsetPlayer1PoDown = 0,
     YaxisOffsetPlayerEssaDown = 0,
 
-    Player1PrSkin = SkinChoices["Yellow/Red.Slow"],
-    Player1PrSkin2 = SkinChoices["Bluue.Fast"],
-    Player1PrSkin3 = SkinChoices["Yellow.Slow"],
+    Player1PrSkin = SkinChoices["Yellow.Slow"],
+    Player1PrSkin2 = SkinChoices["Yellow.Fast"],
+    Player1PrSkin3 = SkinChoices["Yellow/Red.Fast"],
 
-    Player1PoSkin = SkinChoices["Yellow/Red.Slow"],
-    Player1PoSkin2 = SkinChoices["Blue.Fast"],
-    Player1PoSkin3 = SkinChoices["Yellow.Slow"],
+    Player1PoSkin = SkinChoices["Yellow.Slow"],
+    Player1PoSkin2 = SkinChoices["Yellow.Fast"],
+    Player1PoSkin3 = SkinChoices["Yellow/Red.Fast"],
     configVersion = 1
 }
 

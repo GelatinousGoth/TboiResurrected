@@ -1,0 +1,37 @@
+<giantbook anm2root="gfx/ui/giantbook/">
+    <entry name="How to Jump" anm2="GiantBook.anm2" anim="Appear" gfx="howtojump.png">
+        <layer name="poof" r="228" g="228" b="228" a="255" />
+        <layer name="bg" r="228" g="228" b="228" a="153" />
+        <layer name="poof2" r="225" g="225" b="225" a="128" />
+    </entry>
+    <entry name="Book of Secrets" anm2="GiantBook.anm2" anim="Appear" gfx="bookofsecrets.png">
+        <layer name="poof" r="228" g="228" b="228" a="255" />
+        <layer name="bg" r="228" g="228" b="228" a="153" />
+        <layer name="poof2" r="225" g="225" b="225" a="128" />
+    </entry>
+    <entry name="Book of Sins" anm2="GiantBook.anm2" anim="Appear" gfx="bookofsins.png">
+        <layer name="poof" r="228" g="228" b="228" a="255" />
+        <layer name="bg" r="228" g="228" b="228" a="153" />
+        <layer name="poof2" r="225" g="225" b="225" a="128" />
+    </entry>
+    <entry name="Telepathy" anm2="GiantBook.anm2" anim="Appear" gfx="telepathy.png">
+        <layer name="poof" r="228" g="228" b="228" a="255" />
+        <layer name="bg" r="228" g="228" b="228" a="153" />
+        <layer name="poof2" r="225" g="225" b="225" a="128" />
+    </entry>
+    <entry name="Book of Shadows" anm2="GiantBook.anm2" anim="Appear" gfx="bookofshadows.png">
+        <layer name="poof" r="228" g="228" b="228" a="255" />
+        <layer name="bg" r="228" g="228" b="228" a="153" />
+        <layer name="poof2" r="225" g="225" b="225" a="128" />
+    </entry>
+    <entry name="Book of Dead" anm2="GiantBook.anm2" anim="Appear" gfx="bookofdead.png">
+        <layer name="poof" r="228" g="228" b="228" a="255" />
+        <layer name="bg" r="228" g="228" b="228" a="153" />
+        <layer name="poof2" r="225" g="225" b="225" a="128" />
+    </entry>
+    <entry name="Lemegeton" anm2="GiantBook.anm2" anim="Appear" gfx="solomon.png">
+        <layer name="poof" r="228" g="228" b="228" a="255" />
+        <layer name="bg" r="228" g="228" b="228" a="153" />
+        <layer name="poof2" r="225" g="225" b="225" a="128" />
+    </entry>
+</giantbook>
