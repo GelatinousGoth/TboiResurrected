@@ -96,7 +96,6 @@ TR_Manager:LoadMod("resurrected_modpack.qol.soul_4_me")
 TR_Manager:LoadMod("resurrected_modpack.qol.ambush_spawn_indicators")
 TR_Manager:LoadMod("resurrected_modpack.qol.options_reminder")
 TR_Manager:LoadMod("resurrected_modpack.qol.accurate_devil_beggars")
-TR_Manager:LoadMod("resurrected_modpack.qol.boss_rush_wave_counter")
 TR_Manager:LoadMod("resurrected_modpack.qol.clearer_hidden_enemies")
 TR_Manager:LoadMod("resurrected_modpack.qol.book_of_the_dead_reminder")
 

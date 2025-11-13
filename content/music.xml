@@ -1,3 +1,7 @@
 <music root="music/">
 	<track name="Mega Satan Fight" path="satan_666.ogg" loop="true" />
+	
+	<track name="Error Room Entry (jingle) 1" path="jingle ogg/glitch_jingle1.ogg" loop="false" mul="1.1" />
+    <track name="Error Room Entry (jingle) 2" path="jingle ogg/glitch_jingle2.ogg" loop="false" mul="1.1" />
+    <track name="Error Room Entry (jingle) 3" path="jingle ogg/glitch_jingle3.ogg" loop="false" mul="1.1" />
 </music>

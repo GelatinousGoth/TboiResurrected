@@ -175,4 +175,13 @@
 	<sound name="death_demon">
 		<sample weight="1" path="death_demon_0.wav" />
 	</sound>
+	
+	<!-- Angel Room Jingle -->
+    <sound name="Holyfind">
+        <sample weight="1" path="holyfind.wav"/>
+    </sound>
+    <!-- Dice -->
+    <sound name="Dice">
+        <sample weight="1" path="dice.wav"/>
+    </sound>
 </sounds>
