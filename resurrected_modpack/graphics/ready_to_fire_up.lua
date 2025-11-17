@@ -525,7 +525,7 @@ function mod:FiredUPRender()
         end
         ------------------------------
         if player1:GetActiveItem(ActiveSlot.SLOT_POCKET) ~= 0 and not (player1:HasCollectible(CollectibleType.COLLECTIBLE_SUMPTORIUM, false)
-                and player1:GetActiveItem(ActiveSlot.SLOT_POCKET) == CollectibleType.COLLECTIBLE_SUMPTORIUM) and not (itemConfigCard.ID > 0) and not (itemConfigPill.ID > 0) then
+                and player1:GetActiveItem(ActiveSlot.SLOT_POCKET) == CollectibleType.COLLECTIBLE_SUMPTORIUM) and not (itemConfigCard and itemConfigCard.ID > 0) and not (itemConfigPill and itemConfigPill.ID > 0) then
             if renderFlagPocket then return end
             renderFlagPocket = true
             local itemConfig = Isaac.GetItemConfig():GetCollectible(player1:GetActiveItem(ActiveSlot.SLOT_POCKET))

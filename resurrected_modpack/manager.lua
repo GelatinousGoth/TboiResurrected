@@ -244,12 +244,13 @@ local shaderCallbackWarning = [[
 [TBOI Rekindled] mod "%s" has registered a shader callback using MC_GET_SHADER_PARAMS, this could cause problems.
 If you are seeing this message please notify the developers of Tboi Rekindled through the Steam Workshop page.]]
 
+---@param manager TR_Manager
 ---@param mod TR_Mod
 ---@param callbackId CallbackID # Vanilla IDs are integers, custom IDs can be any type including strings
 ---@param priority CallbackPriority # Default priority is 0, higher goes later, using the CallbackPriority table is recommended
 ---@param fn function
 ---@param param any
-function TR_Manager:AddCallback(mod, callbackId, priority, fn, param)
+local function add_mod_callback(manager, mod, callbackId, priority, fn, param)
     ---@class TR_CallbackEntry
     local callbackEntry = {
         Mod = mod,
@@ -259,16 +260,33 @@ function TR_Manager:AddCallback(mod, callbackId, priority, fn, param)
         Param = param,
     }
 
-    table.insert(self.ModData[mod.TR_ID].Callbacks, callbackEntry)
+    table.insert(manager.ModData[mod.TR_ID].Callbacks, callbackEntry)
 
     if is_mod_enabled(mod.TR_ID) then
         Isaac.AddPriorityCallback(mod, callbackId, priority, fn, param)
     end
+end
+
+---@param mod TR_Mod
+---@param callbackId CallbackID # Vanilla IDs are integers, custom IDs can be any type including strings
+---@param priority CallbackPriority # Default priority is 0, higher goes later, using the CallbackPriority table is recommended
+---@param fn function
+---@param param any
+function TR_Manager:AddCallback(mod, callbackId, priority, fn, param)
+    add_mod_callback(self, mod, callbackId, priority, fn, param)
 
     if callbackId == ModCallbacks.MC_GET_SHADER_PARAMS and isFirstShaderWarn then
         warning_handler(string.format(shaderCallbackWarning, mod.Name))
         isFirstShaderWarn = false
     end
+end
+
+---@param mod TR_Mod
+---@param priority CallbackPriority # Default priority is 0, higher goes later, using the CallbackPriority table is recommended
+---@param fn function
+---@param param any
+function TR_Manager:AddSafeShaderCallback(mod, priority, fn, param)
+    add_mod_callback(self, mod, ModCallbacks.MC_GET_SHADER_PARAMS, priority, fn, param)
 end
 
 ---@param mod TR_Mod

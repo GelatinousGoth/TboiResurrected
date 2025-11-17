@@ -770,7 +770,9 @@ mod:AddPriorityCallback(ModCallbacks.MC_HUD_RENDER, CallbackPriority.LATE, funct
     
     if VanillaPickupSpr:GetFilename() ~= mod.PickupHUDFileReplace then
         VanillaPickupSpr:Load(mod.PickupHUDFileReplace, true)
-        VanillaPickupSpr:GetLayer(1):SetCustomShader"clockPickup_shaders/PhysHairCuttingShadder"
+        local layer = VanillaPickupSpr:GetLayer(1)
+        assert(layer, "Pickup HUD replace sprite does not have Layer 1")
+        layer:SetCustomShader"clockPickup_shaders/PhysHairCuttingShadder"
     end
 
     local isPaused = game:IsPaused()
@@ -984,7 +986,7 @@ mod:AddPriorityCallback(ModCallbacks.MC_HUD_RENDER, CallbackPriority.LATE, funct
 
 end)
 
-mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function()
+TR_Manager:AddSafeShaderCallback(mod, CallbackPriority.DEFAULT, function()
     IsShaderRenderState = true
 end)
 --AnyPlayer, IsHasBirthright

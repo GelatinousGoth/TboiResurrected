@@ -3,7 +3,7 @@
 local TR_Manager = require("resurrected_modpack.manager")
 _G.UniqueProgressBarIcon = TR_Manager:RegisterMod("UniqueProgressBarIcon", 1)
 
----@class ModReference
+---@class TR_Mod
 local mod = UniqueProgressBarIcon
 
 if not REPENTOGON then return end
@@ -490,8 +490,8 @@ end
 
 local loadedIconForStageAPI = false
 
-function mod:RenderForStageAPI()
-	if not StageAPI then return end
+function mod:RenderForStageAPI(name)
+	if not StageAPI or name ~= "StageAPI-RenderAboveHUD" then return end
 	local stageAnimData = StageAPI.TransitionAnimationData
 	---@type Sprite
 	local stageAPIIcon = stageAnimData.Sprites.IsaacIndicator
@@ -515,7 +515,7 @@ function mod:RenderForStageAPI()
 	mod:RenderIsaacIcons(renderPos, true)
 end
 
-TR_Manager:RegisterShaderFunction(mod, "StageAPI-RenderAboveHUD", mod.RenderForStageAPI)
+TR_Manager:AddSafeShaderCallback(mod, CallbackPriority.DEFAULT, mod.RenderForStageAPI)
 
 --#endregion
 

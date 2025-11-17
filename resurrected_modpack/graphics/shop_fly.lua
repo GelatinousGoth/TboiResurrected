@@ -450,7 +450,6 @@ local function update_talk_data(entity, data, sprite)
 	data.talk_animation = talkAnimation
 	sprite.PlaybackSpeed = playbackSpeed
 	if reset_buy_donate then
-		print("Reset")
 		data.buy = 0
 		data.donate = 0
 	end

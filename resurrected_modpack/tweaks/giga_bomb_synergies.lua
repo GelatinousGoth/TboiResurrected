@@ -1,7 +1,7 @@
 local TR_Manager = require("resurrected_modpack.manager")
 GigaBombsSynergiesMod = TR_Manager:RegisterMod("Giga-Bomb Synergies", 1)
 
-local myFolder = "loi_GigaBombsSynergies"
+local myFolder = "resurrected_modpack.tweaks.loi_GigaBombsSynergies"
 local LOCAL_TSIL = require(myFolder .. ".TSIL")
 LOCAL_TSIL.Init(myFolder)
 

@@ -1,5 +1,6 @@
+local TR_Manager = require("resurrected_modpack.manager")
 local ModID = "Critical Health"
-local Mod = RegisterMod(ModID, 1)
+local Mod = TR_Manager:RegisterMod(ModID, 1)
 
 Mod.critical = 0
 Mod.Damage = 0
@@ -38,10 +39,10 @@ function Mod:SyncWithConfig()
 end
 
 function Mod:LoadConfig()
-  if Isaac.HasModData(Mod) then 
+  if Mod:HasData() then 
     Mod.Config = json.decode(Mod:LoadData(Mod))
 
-    if Mod.Config == null then 
+    if Mod.Config == nil then 
       Mod:InitConfig()
     end
 
@@ -50,8 +51,6 @@ function Mod:LoadConfig()
     Mod:InitConfig()
   end
 end
-
-Mod:LoadConfig()
 
 function Mod:GetDSSData()
   if Mod.Config == nil then 
@@ -348,14 +347,9 @@ function Mod:PostUpdate()
        Mod.critical = math.max((math.sin(Isaac.GetFrameCount() / 100) + 1.5) / 4,Mod.Damage)
       
     elseif (effectivehealth <= 1 and player:GetPlayerType() ~= PlayerType.PLAYER_THELOST) and (not player:IsDead()) then
-      
-        end
-      
       if Mod.Damage > 0 then
         Mod.Damage = Mod.Damage - 0.1
       end
-        
-      
       Mod.critical = math.max((math.sin(Isaac.GetFrameCount() / 100) + 1.5) / 2,Mod.Damage)
     else
       if Mod.critical ~= - 1 then
@@ -392,34 +386,32 @@ Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mod.OnDamage, EntityType.ENTITY
 
 
 
-function Mod:OnRender(shadername) 
-  if shadername ~= "Critical Health" then return else
-    local Time
-    local Amount
-    
-    if Game():GetHUD():IsVisible() and not Game():IsPaused() and Mod.critical > 0 and Mod.effectivehealth <= 1 and (Mod.Config.Enabled or false) == true then
-      Mod.Bip.Color = Color(1,1,1,math.max(Mod.critical,0.8 )) * (Mod.Config.ColorMod or DefaultColor)
-      Mod.Bip:Play("Idle",true)
-      Mod.Bip:SetFrame( math.floor(Isaac.GetFrameCount() / 1.5)%120 )
-      Mod.Bip:Render( Vector(Mod.width / 2 ,Mod.height / 2))
-    end
-    
-    if Mod.critical and (Mod.Config.Enabled or false) == true then
-      Amount = Mod.critical
-    else
-      Amount = 0
-    end
+function Mod:OnRender(shadername)
+  local Time
+  local Amount
 
-    local params = {
-      Amount = Amount,
-      RMod = (Mod.Config.ColorMod or DefaultColor).R,
-      GMod = (Mod.Config.ColorMod or DefaultColor).G,
-      BMod = (Mod.Config.ColorMod or DefaultColor).B,
-      AMod = (Mod.Config.ColorMod or DefaultColor).A,
-    }
-
-    return params;
+  if Game():GetHUD():IsVisible() and not Game():IsPaused() and Mod.critical > 0 and Mod.effectivehealth <= 1 and (Mod.Config.Enabled or false) == true then
+    Mod.Bip.Color = Color(1,1,1,math.max(Mod.critical,0.8 )) * (Mod.Config.ColorMod or DefaultColor)
+    Mod.Bip:Play("Idle",true)
+    Mod.Bip:SetFrame( math.floor(Isaac.GetFrameCount() / 1.5)%120 )
+    Mod.Bip:Render( Vector(Mod.width / 2 ,Mod.height / 2))
   end
+
+  if Mod.critical and (Mod.Config.Enabled or false) == true then
+    Amount = Mod.critical
+  else
+    Amount = 0
+  end
+
+  local params = {
+    Amount = Amount,
+    RMod = (Mod.Config.ColorMod or DefaultColor).R,
+    GMod = (Mod.Config.ColorMod or DefaultColor).G,
+    BMod = (Mod.Config.ColorMod or DefaultColor).B,
+    AMod = (Mod.Config.ColorMod or DefaultColor).A,
+  }
+
+  return params;
 end
 
-Mod:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, Mod.OnRender)
+TR_Manager:RegisterShaderFunction(Mod, "Critical Health", Mod.OnRender)
