@@ -5,8 +5,6 @@ EnhancementChamber.HasMinimap = true
 
 -- Default Data --
 EnhancementChamber.DefaultData = {
-    altarType = -1,
-    altarPayment = 0,
     disableRedDamage = false,
     diceTriggered = false,
     diceRestart = false,
@@ -42,7 +40,6 @@ EnhancementChamber.ConfigDescSpecial = {
     grave = "Reworked Grave Rooms with gravestones, custom door, death music and minimap icon. Graves give old chest instead of random chest.",
     library = "Can only take one item instead of all. Libraries have 20% extra chance to generate by holding one book and 33% with two books.",
     sacrifice = "Replaces the spike with demon/angel altars. Altars can disable red heart damage punishment. Reworks sacrifice door and condition to enter.",
-    shop = "Shops can sell trinkets instead of sacks. Reworks shop variants to golden and junk shops."
 }
 
 -- Special Room order --
@@ -56,8 +53,7 @@ EnhancementChamber.ConfigSpecialOrder = {
     "error",
     "grave",
     "library",
-    "sacrifice",
-    "shop"
+    "sacrifice"
 }
 
 -- Miscellaneous config --
