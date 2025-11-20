@@ -57,7 +57,7 @@ TR_Manager:LoadMod("resurrected_modpack.graphics.giant_books")
 TR_Manager:LoadMod("resurrected_modpack.graphics.unique_delirium_ending_chest")
 TR_Manager:LoadMod("resurrected_modpack.graphics.items_drop_on_death")
 TR_Manager:LoadMod("resurrected_modpack.graphics.sheol_trapdoor")
-TR_Manager:LoadMod("resurrected_modpack.graphics.animated_pickup_counter")
+-- TR_Manager:LoadMod("resurrected_modpack.graphics.animated_pickup_counter")
 
 TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.chests_before_mother")
