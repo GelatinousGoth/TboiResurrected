@@ -19,8 +19,7 @@ function mod.roomIconUpdate()
             elseif config["grave"] and mod.checkRoom(RoomType.ROOM_DEFAULT, "Grave", roomDesc) then
                 getRoom.PermanentIcons = {"grave_icon"}
             elseif config["dice"] and roomDesc.Data.Type == RoomType.ROOM_DICE and data.diceTriggered then
-                getRoom.PermanentIcons = {"dice_triggered_icon"}
-                end
+                getRoom.PermanentIcons = {"dice_triggered_icon"}               
             end
         end
     end

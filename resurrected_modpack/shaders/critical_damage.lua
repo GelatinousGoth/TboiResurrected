@@ -18,8 +18,8 @@ function Mod:InitConfig()
     HUDColorMod = {
       R = 1,
       G = 0, 
-      B = 0,
-      A = 1
+      B = 0.05,
+      A = 0.25
     },
     Enabled = true,
     DSS = {}
@@ -28,7 +28,7 @@ end
 
 Mod:InitConfig()
 
-local DefaultColor = Color(1,0,0,1)
+local DefaultColor = Color(1,0,0.05,0.25)
 
 local json = require("json")
 

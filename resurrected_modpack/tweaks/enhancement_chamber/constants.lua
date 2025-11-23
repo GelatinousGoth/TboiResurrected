@@ -40,6 +40,7 @@ EnhancementChamber.ConfigDescSpecial = {
     grave = "Reworked Grave Rooms with gravestones, custom door, death music and minimap icon. Graves give old chest instead of random chest.",
     library = "Can only take one item instead of all. Libraries have 20% extra chance to generate by holding one book and 33% with two books.",
     sacrifice = "Replaces the spike with demon/angel altars. Altars can disable red heart damage punishment. Reworks sacrifice door and condition to enter.",
+	shop = "Shops sell trinkets."
 }
 
 -- Special Room order --
@@ -53,7 +54,8 @@ EnhancementChamber.ConfigSpecialOrder = {
     "error",
     "grave",
     "library",
-    "sacrifice"
+    "sacrifice",
+	"shop"
 }
 
 -- Miscellaneous config --
