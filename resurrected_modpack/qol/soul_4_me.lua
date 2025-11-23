@@ -1,6 +1,7 @@
 ---@type ModReference
 local TR_Manager = require("resurrected_modpack.manager")
 local mod = TR_Manager:RegisterMod("Soul4Me", 1)
+
 local game = Game()
 
 ---@return EntityPlayer[]
@@ -78,10 +79,13 @@ else
         if not collder:ToPlayer() then return end
         local plr = collder:ToPlayer() ---@cast plr EntityPlayer
 
-        if pickup.Price == PickupPrice.PRICE_SOUL and shouldFakeYourSoulEffect(plr) and pickup.Wait == 0 and not plr:IsHoldingItem() then
-            for _, ent in pairs(Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE)) do
+        local level = game:GetLevel()
+        local isCurrentStartingRoom = (not game:IsGreedMode() and level:GetStage() == LevelStage.STAGE6) and (level:GetCurrentRoomIndex() == level:GetStartingRoomIndex())
+
+        if pickup.Price == PickupPrice.PRICE_SOUL and shouldFakeYourSoulEffect(plr) and pickup.Wait == 0 and (plr:CanPickupItem() and not plr:IsHoldingItem()) then
+            for _, ent in pairs(Isaac.FindByType(EntityType.ENTITY_PICKUP)) do
                 local pick = ent:ToPickup() ---@cast pick EntityPickup
-                if pick ~= pickup and pick.Price < 0 then
+                if pick ~= pickup and ((pickup.Variant == PickupVariant.PICKUP_COLLECTIBLE and pick.SubType ~= 0 and pick.Price < 0) or isCurrentStartingRoom and pick.Variant == PickupVariant.PICKUP_REDCHEST ) then
                     Isaac.Spawn(EntityType.ENTITY_EFFECT, 15, 0 , pick.Position + Vector(0, 10), Vector.Zero, nil)
                     pick.Timeout = 4
                 end

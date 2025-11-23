@@ -7,6 +7,7 @@ require("resurrected_modpack.modcompat.ANM2")
 require("resurrected_modpack.modcompat.VS_screen")
 require("resurrected_modpack.modcompat.disable_mods")
 require("resurrected_modpack.modcompat.custom_boss_weight_fix")
+require("resurrected_modpack.modcompat.boss_icons")
 
 -- require("resurrected_modpack.enums")
 
@@ -105,5 +106,6 @@ TR_Manager:LoadMod("resurrected_modpack.shaders.critical_damage")
 TR_Manager:LoadMod("resurrected_modpack.sounds.shepard_tone")
 TR_Manager:LoadMod("resurrected_modpack.sounds.bell_chime_for_good_items")
 TR_Manager:LoadMod("resurrected_modpack.sounds.character_hit_sounds")
+TR_Manager:LoadMod("resurrected_modpack.sounds.rag_mega_sounds_like_rag_man")
 
 TR_Manager:LoadMod("resurrected_modpack.music.unique_mega_satan_music")

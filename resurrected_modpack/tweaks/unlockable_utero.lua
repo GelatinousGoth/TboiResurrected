@@ -4,12 +4,26 @@ local mod = TR_Manager:RegisterMod("Unlockable Utero", 1)
 
 if REPENTOGON then
 
-    local UTERO_ACHIEVEMENT = Isaac.GetAchievementIdByName("The Utero")
+    Achievement.UTERO = Isaac.GetAchievementIdByName("The Utero")
+
+    local function GetAbsoluteStageFromStage(stage)
+        if not Game():IsGreedMode() then
+            return stage
+        end
+        if stage < 5 then
+            return (stage * 2) - 1
+        end
+        if stage == LevelStage.STAGE5_GREED then
+            return LevelStage.STAGE5
+        end
+        return LevelStage.STAGE_NULL
+    end
 
     function mod:preLevelSelect(level, type)
-        if level == LevelStage.STAGE4_1 or level == LevelStage.STAGE4_2 then
+        local absoluteStage = GetAbsoluteStageFromStage(level)
+        if absoluteStage == LevelStage.STAGE4_1 or absoluteStage == LevelStage.STAGE4_2 then
             if type == StageType.STAGETYPE_WOTL then
-                if not Isaac.GetPersistentGameData():Unlocked(UTERO_ACHIEVEMENT) then
+                if not Isaac.GetPersistentGameData():Unlocked(Achievement.UTERO) then
                     print("Unlockable Utero: Utero replaced")
                     return { level, StageType.STAGETYPE_ORIGINAL }
                 end
@@ -27,7 +41,7 @@ if REPENTOGON then
             persistentGameData:IsBossKilled(BossType.MR_FRED) and
             persistentGameData:IsBossKilled(BossType.SCOLEX) then
 
-            persistentGameData:TryUnlock(UTERO_ACHIEVEMENT)
+            persistentGameData:TryUnlock(Achievement.UTERO)
         end
     end
     mod:AddCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, mod.CheckUteroUnlock)
@@ -37,7 +51,7 @@ if REPENTOGON then
             mod:CheckUteroUnlock()
         end
     end
-    mod:AddCallback(ModCallbacks.MC_POST_SAVESLOT_LOAD, mod.CheckUteroUnlock)
+    mod:AddCallback(ModCallbacks.MC_POST_SAVESLOT_LOAD, mod.postSaveSlotLoad)
 
 else
     print("Unlockable Utero requires REPENTOGON installed to function!")
