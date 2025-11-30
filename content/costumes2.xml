@@ -23,4 +23,7 @@
 	<costume type="none" anm2path="polySparkle.anm2" />
 	<costume type="none" hasSkinAlt="true" anm2path="4point5VoltSparks.anm2" />
 	<costume type="none" hasOverlay="true" anm2path="mysteriousDrip.anm2" />
+	
+    <costume anm2path="necromancercostumenewzz.anm2" priority="35" type="none" />
+    <costume anm2path="necromancerbodypart.anm2"  priority="35" type="none" />
 </costumes>

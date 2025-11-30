@@ -132,6 +132,7 @@
 		waterpit	= "grid_uteroblood_pit_large.png"
 		bridge		= "grid_bridge_utero.png"
 		door		= "door_01_utero.png"
+		spikes		= "grid_spikes_utero.png"
 		holeinwall	= "door_08_holeinwall_utero.png"
 		waterpitsmode	= "1"
 	/>
@@ -348,6 +349,7 @@
 		bridge		= "grid_bridge_corpse.png"
 		door		= "door_01_corpsedoor.png"
 		holeinwall	= "door_08_holeinwall_corpse.png"
+		spikes		= "grid_spikes_corpse.png"
 		waterpitsmode	= "1"
 	/>
 	
@@ -364,6 +366,7 @@
 		waterpit	= "grid_pit_downpour_large.png"
 		bridge		= "grid_bridge_downpour.png"
 		door		= "door_downpour.png"
+		holeinwall	= "door_08_holeinwall_downpour.png"
 		waterpitsmode	= "2"
 	/>
 	
@@ -383,6 +386,7 @@
 		pit			= "grid_mausoleum_pit_large.png"
 		bridge		= "grid_bridge_mausoleum.png"
 		door		= "door_mausoleum.png"
+		holeinwall	= "door_08_holeinwall_mausoleum.png"
 	/>
 	
 	<backdrop id="39"  gfx="0Dx_Corpse Entrance.png" walls="1" wallvariants="1" floors="1" floorvariants="2"
@@ -439,7 +443,8 @@
 		pit			= "grid_pit_corpse2.png"
 		waterpit	= "grid_pit_blood_corpse2.png"
 		bridge		= "grid_bridge_corpse2.png"
-		door		= "door_01_corpse2door.png"
+		door		= "door_01_corpse2door.png
+		spikes		= "grid_spikes_corpse.png"
 		holeinwall	= "door_08_holeinwall_corpse.png"
 		waterpitsmode	= "1"
 	/>
@@ -454,12 +459,14 @@
 		bridge		= "grid_bridge_corpse3.png"
 		door		= "door_01_corpse3door.png"
 		holeinwall	= "door_08_holeinwall_corpse.png"
-		spikes		= "grid_spikes_bloody.png"
+		spikes		= "grid_spikes_corpse.png"
+		waterpitsmode	= "0"
 	/>
 	
 	<backdrop id="45"  gfx="02x_Dross.png" walls="4" wallvariants="2" floors="3" floorvariants="1"
 		lfloorgfx	= "02x_dross_Lfloor.png"
 		nfloorgfx	= "02x_dross_Nfloor.png"
+		watergfx	= "water.png"
 		props		= "props_02x_dross.anm2"
 		rocks		= "rocks_dross.png"
 		pit			= "grid_dross_pit_large.png"
@@ -499,12 +506,16 @@
 	<backdrop id="48"  gfx="0dx_corpse entrance_gehenna.png" walls="1" wallvariants="1" floors="1" floorvariants="2"
 		lfloorgfx	= "06x_Gehenna_Lfloor.png"
 		nfloorgfx	= "06x_Gehenna_Nfloor.png"
+		watergfx	= "water_blood_corpse.png"
 		props		= "Props_09_Sheol.anm2"
 		rocks		= "rocks_gehenna.png"
 		pit			= "grid_pit_gehenna.png"
+		waterpit	= "grid_pit_blood_corpse.png"
 		bridge		= "grid_bridge_gehenna.png"
 		door		= "door_01_gehennadoor.png"
 		holeinwall	= "door_08_holeinwall_gehenna.png"
+		spikes		= "grid_spikes_corpse.png"
+		waterpitsmode	= "1"
 	/>
 	
 	<backdrop id="49"  gfx="0Ex_Isaacs_Bedroom.png" walls="1" wallvariants="4" floors="1" floorvariants="1" props = "props_0ex_isaacs_bedroom.anm2" />
@@ -553,5 +564,7 @@
 		bridge		= "grid_bridge_depths.png"
 	/>
 	
+	<backdrop id="61" gfx="deathmatch.png" walls="2" wallvariants="2" floors="1" floorvariants="1"/>
+	<backdrop id="62" gfx="portal_bedroom.png" walls="1" wallvariants="4" floors="1" floorvariants="1"/>
 <!-- REPENTANCE END -->
 </backdrops>
