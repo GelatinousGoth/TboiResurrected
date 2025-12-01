@@ -443,7 +443,7 @@
 		pit			= "grid_pit_corpse2.png"
 		waterpit	= "grid_pit_blood_corpse2.png"
 		bridge		= "grid_bridge_corpse2.png"
-		door		= "door_01_corpse2door.png
+		door		= "door_01_corpse2door.png"
 		spikes		= "grid_spikes_corpse.png"
 		holeinwall	= "door_08_holeinwall_corpse.png"
 		waterpitsmode	= "1"
