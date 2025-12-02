@@ -46,7 +46,6 @@ if mod:HasData() then
 end
 
 if mod.savedata.blackHoleEnabled == nil then mod.savedata.blackHoleEnabled = true end
-if mod.savedata.voidEnabled == nil then mod.savedata.voidEnabled = false end
 
 function mod:SaveModdedModData()
     mod:SaveData(json.encode(mod.savedata))
@@ -149,25 +148,6 @@ function mod:DisableBlackHole(position)
 
 end
 
---on new room
-function mod:OnNewRoom()
-    mod:DisableBlackHole()
-    
-    if not mod.savedata.voidEnabled then return end
-
-    mod:VoidGateway()
-    
-end
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.OnNewRoom)
-
---on room reward
-function mod:OnRoomReward()
-    if not mod.savedata.voidEnabled then return end
-
-    mod:scheduleForUpdate(mod.VoidGateway, 1)
-end
-mod:AddCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, mod.OnRoomReward)
-
 ------------------------------------------------------------
 --BLACK HOLE ITEM-------------------------------------------
 ------------------------------------------------------------
@@ -196,26 +176,6 @@ end
 mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.BlackholeUpdate, EffectVariant.BLACK_HOLE)
 
 ------------------------------------------------------------
---VOID GATEWAY----------------------------------------------
-------------------------------------------------------------
-
-function mod:VoidGateway()
-    local room = game:GetRoom()
-
-    local gridSize = room:GetGridSize()
-
-    for index = 0, gridSize do
-        local grid = room:GetGridEntity(index)
-
-        if grid and grid:GetType() == GridEntityType.GRID_TRAPDOOR and grid:GetSprite():GetFilename() == "gfx/grid/VoidTrapdoor.anm2" then --is a trapdoor
-            mod:EnableBlackHole(grid.Position + Vector(0,3), 0.5)
-            --print("Void black hole enabled", grid.Position)
-            break
-        end
-    end
-end
-
-------------------------------------------------------------
 --CONFIGURATION---------------------------------------------
 ------------------------------------------------------------
 
@@ -228,14 +188,6 @@ function mod:ConsoleInput(command, args)
                 print("Black Hole item distortion is now ON")
             else
                 print("Black Hole item distortion is now OFF")
-            end
-            mod:SaveModdedModData()
-        elseif args == "Void" then
-            mod.savedata.voidEnabled = not mod.savedata.voidEnabled
-            if mod.savedata.voidEnabled then
-                print("Void gateway distortion is now ON")
-            else
-                print("Void gateway distortion is now OFF")
             end
             mod:SaveModdedModData()
         end
