@@ -770,8 +770,7 @@ mod:AddPriorityCallback(ModCallbacks.MC_HUD_RENDER, CallbackPriority.LATE, funct
     
     if VanillaPickupSpr:GetFilename() ~= mod.PickupHUDFileReplace then
         VanillaPickupSpr:Load(mod.PickupHUDFileReplace, true)
-        local layer = VanillaPickupSpr:GetLayer(1)
-        layer:SetCustomShader"clockPickup_shaders/PhysHairCuttingShadder"
+        VanillaPickupSpr:GetLayer(1):SetCustomShader"clockPickup_shaders/PhysHairCuttingShadder"
     end
 
     local isPaused = game:IsPaused()

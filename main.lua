@@ -58,7 +58,7 @@ TR_Manager:LoadMod("resurrected_modpack.graphics.unique_delirium_ending_chest")
 TR_Manager:LoadMod("resurrected_modpack.graphics.items_drop_on_death")
 TR_Manager:LoadMod("resurrected_modpack.graphics.sheol_trapdoor")
 TR_Manager:LoadMod("resurrected_modpack.graphics.necromancer_costume")
--- TR_Manager:LoadMod("resurrected_modpack.graphics.animated_pickup_counter")
+TR_Manager:LoadMod("resurrected_modpack.graphics.animated_pickup_counter")
 TR_Manager:LoadMod("resurrected_modpack.graphics.mystery_egg_stages")
 
 TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")
