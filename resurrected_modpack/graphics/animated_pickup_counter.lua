@@ -23,8 +23,8 @@ local function GenSprite(gfx, anim, frame)
     end
 end
 
-mod.PickupHUDFileReplace = "ui/hudpickups_clockreplace.anm2"
-mod.PickupHUDFileReplaceGfx = "ui/hudpickups_clockreplace.png"
+mod.PickupHUDFileReplace = "gfx/ui/hudpickups_clockreplace.anm2"
+mod.PickupHUDFileReplaceGfx = "gfx/ui/hudpickups_clockreplace.png"
 mod.GoldenBombPickupAnim = "goldbomb_сменачётототамхзкакназвать"
 mod.GoldenKeyPickupAnim = "goldkey_сменачётототамхзкакназвать"
 mod.sprs = {
@@ -771,7 +771,6 @@ mod:AddPriorityCallback(ModCallbacks.MC_HUD_RENDER, CallbackPriority.LATE, funct
     if VanillaPickupSpr:GetFilename() ~= mod.PickupHUDFileReplace then
         VanillaPickupSpr:Load(mod.PickupHUDFileReplace, true)
         local layer = VanillaPickupSpr:GetLayer(1)
-        assert(layer, "Pickup HUD replace sprite does not have Layer 1")
         layer:SetCustomShader"clockPickup_shaders/PhysHairCuttingShadder"
     end
 
