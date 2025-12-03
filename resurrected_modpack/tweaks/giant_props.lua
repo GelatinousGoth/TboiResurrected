@@ -1,6 +1,6 @@
 local TR_Manager = require("resurrected_modpack.manager")
 local mod = TR_Manager:RegisterMod("Giant Props", 1)
-
+GiantPropsMod = mod
 local game = Game()
 local sfx = SFXManager()
 local rng = RNG()
@@ -85,15 +85,15 @@ local function spawnAndPushPickup(gent, variant, subtype)
     p:GetData().resetGridColClass = true
 end
 
--- Giant prop state.
+---@enum GiantPropState
 local GridState = {
-    BLANK = 32,
+    BLANK = 1,
     --
-    MAIN_FULL = 33,
-    MAIN_BROKEN1 = 34,
-    MAIN_BROKEN2 = 35,
-    MAIN_BROKEN3 = 36,
-    RUBBLE = 37
+    MAIN_FULL = 2,
+    MAIN_BROKEN1 = 3,
+    MAIN_BROKEN2 = 4,
+    MAIN_BROKEN3 = 5,
+    RUBBLE = 6
 }
 
 -- Giant prop animation corresponding to the state.
@@ -109,110 +109,101 @@ local GridAnimName = {
     [GridState.RUBBLE] = "Rubble"
 }
 
-local UniversalGridSubtype = {
-    -- Note to future self and others: VarData seems to reset to 1 if given a value of 10 and higher to a block grid entity.
-    -- So, 0-4 will be reserved for unique props, and 5-9 to universal. Should be enough.
-    SHOPKEEPER = 5,
-    BOMB_ROCK = 6
+---@enum GiantPropVariant
+local GiantGridVariant = {
+    POT_BASEMENT = 100,
+    BUCKET_DOWNPOUR = 101,
+    BUCKET_WATERFILLED_DOWNPOUR = 102,
+    BUCKET_DROSS = 103,
+    BUCKET_CRAPFILLED_DROSS = 104,
+    MUSHROOM_CAVES = 105,
+    MUSHROOM_FLOODED_CAVES = 106,
+    FOOLS_GOLD = 107,
+    FOOLS_GOLD_ASHPIT = 108,
+    SKULL_DEPTHS = 109,
+    SKULL_MAUSOLEUM = 110,
+    SKULL_GEHENNA = 111,
+    WOMB_POLYP_RED = 112,
+    WOMB_POLYP_SCARRED = 113,
+    WOMB_POLYP_UTERO = 114,
+    CORPSE_POLYP_GREEN = 115,
+    CORPSE_POLYP_CYAN = 116,
+    CORPSE_POLYP_ROTTEN = 117,
+    POT_CATHEDRAL = 118,
+    SHOPKEEPER = 119,
+    BOMB_ROCK = 120
 }
 
-local UniqueGridSpritesheetName = {
-    [LevelStage.STAGE1_1] = {
-        [StageType.STAGETYPE_ORIGINAL] = "g_pot_basement",
-        [StageType.STAGETYPE_WOTL] = "g_pot_basement",
-        [StageType.STAGETYPE_AFTERBIRTH] = "g_pot_basement",
-        [StageType.STAGETYPE_REPENTANCE] = {
-            -- if chapter's props can take different forms, they are differentiated by VarData
-            [0] = "g_bucket_downpour",
-            [1] = "g_waterfilledbucket_downpour"
-        },
-        [StageType.STAGETYPE_REPENTANCE_B] = {
-            [0] = "g_bucket_dross",
-            [1] = "g_shitfilledbucket_dross"
-        }
-    },
-    [LevelStage.STAGE1_2] = {
-        [StageType.STAGETYPE_ORIGINAL] = "g_pot_basement",
-        [StageType.STAGETYPE_WOTL] = "g_pot_basement",
-        [StageType.STAGETYPE_AFTERBIRTH] = "g_pot_basement",
-        [StageType.STAGETYPE_REPENTANCE] = {
-            [0] = "g_bucket_downpour",
-            [1] = "g_waterfilledbucket_downpour"
-        },
-        [StageType.STAGETYPE_REPENTANCE_B] = {
-            [0] = "g_bucket_dross",
-            [1] = "g_shitfilledbucket_dross"
-        }
-    },
-    [LevelStage.STAGE2_1] = {
-        [StageType.STAGETYPE_ORIGINAL] = "g_mushroom_caves",
-        [StageType.STAGETYPE_WOTL] = "g_mushroom_caves",
-        [StageType.STAGETYPE_AFTERBIRTH] = "g_mushroom_floodedcaves",
-        [StageType.STAGETYPE_REPENTANCE] = "g_foolsgold_mines",
-        [StageType.STAGETYPE_REPENTANCE_B] = "g_foolsgold_ashpit"
-    },
-    [LevelStage.STAGE2_2] = {
-        [StageType.STAGETYPE_ORIGINAL] = "g_mushroom_caves",
-        [StageType.STAGETYPE_WOTL] = "g_mushroom_caves",
-        [StageType.STAGETYPE_AFTERBIRTH] = "g_mushroom_floodedcaves",
-        [StageType.STAGETYPE_REPENTANCE] = "g_foolsgold_mines",
-        [StageType.STAGETYPE_REPENTANCE_B] = "g_foolsgold_ashpit"
-    },
-    [LevelStage.STAGE3_1] = {
-        [StageType.STAGETYPE_ORIGINAL] = "g_skull_depths",
-        [StageType.STAGETYPE_WOTL] = "g_skull_depths",
-        [StageType.STAGETYPE_AFTERBIRTH] = "g_skull_depths",
-        [StageType.STAGETYPE_REPENTANCE] = "g_skull_mausoleum",
-        [StageType.STAGETYPE_REPENTANCE_B] = "g_skull_gehenna"
-    },
-    [LevelStage.STAGE3_2] = {
-        [StageType.STAGETYPE_ORIGINAL] = "g_skull_depths",
-        [StageType.STAGETYPE_WOTL] = "g_skull_depths",
-        [StageType.STAGETYPE_AFTERBIRTH] = "g_skull_depths",
-        [StageType.STAGETYPE_REPENTANCE] = "g_skull_mausoleum",
-        [StageType.STAGETYPE_REPENTANCE_B] = "g_skull_gehenna"
-    },
-    [LevelStage.STAGE4_1] = {
-        [StageType.STAGETYPE_ORIGINAL] = "g_wombpolyp_red",
-        [StageType.STAGETYPE_WOTL] = "g_wombpolyp_utero",
-        [StageType.STAGETYPE_AFTERBIRTH] = "g_wombpolyp_scarred",
-        [StageType.STAGETYPE_REPENTANCE] = {
-            [0] = "g_corpsepolyp_green",
-            [1] = "g_corpsepolyp_cyan",
-            [2] = "g_corpsepolyp_rotten"
-        },
-        [StageType.STAGETYPE_REPENTANCE_B] = {
-            [0] = "g_corpsepolyp_green",
-            [1] = "g_corpsepolyp_cyan",
-            [2] = "g_corpsepolyp_rotten"
-        }
-    },
-    [LevelStage.STAGE4_2] = {
-        [StageType.STAGETYPE_ORIGINAL] = "g_wombpolyp_red",
-        [StageType.STAGETYPE_WOTL] = "g_wombpolyp_utero",
-        [StageType.STAGETYPE_AFTERBIRTH] = "g_wombpolyp_scarred",
-        [StageType.STAGETYPE_REPENTANCE] = {
-            [0] = "g_corpsepolyp_green",
-            [1] = "g_corpsepolyp_cyan",
-            [2] = "g_corpsepolyp_rotten"
-        },
-        [StageType.STAGETYPE_REPENTANCE_B] = {
-            [0] = "g_corpsepolyp_green",
-            [1] = "g_corpsepolyp_cyan",
-            [2] = "g_corpsepolyp_rotten"
-        }
-    },
-    [LevelStage.STAGE5] = {
-        [StageType.STAGETYPE_WOTL] = ((FiendFolio or EvadeTaxes) and "g_pot_cathedral") or "g_pot_basement"
-    }
+-- Using rooms backdrop type when creating giant prop without specifying its variant
+local BackdropToGiantGridVariant = {
+    [BackdropType.CAVES] = GiantGridVariant.MUSHROOM_CAVES,
+    [BackdropType.CATACOMBS] = GiantGridVariant.MUSHROOM_CAVES,
+    [BackdropType.FLOODED_CAVES] = GiantGridVariant.MUSHROOM_FLOODED_CAVES,
+    [BackdropType.DEPTHS] = GiantGridVariant.SKULL_DEPTHS,
+    [BackdropType.NECROPOLIS] = GiantGridVariant.SKULL_DEPTHS,
+    [BackdropType.DANK_DEPTHS] = GiantGridVariant.SKULL_DEPTHS,
+    [BackdropType.MAUSOLEUM] = GiantGridVariant.SKULL_MAUSOLEUM,
+    [BackdropType.MAUSOLEUM2] = GiantGridVariant.SKULL_MAUSOLEUM,
+    [BackdropType.MAUSOLEUM3] = GiantGridVariant.SKULL_MAUSOLEUM,
+    [BackdropType.GEHENNA] = GiantGridVariant.SKULL_GEHENNA,
+    [BackdropType.WOMB] = GiantGridVariant.WOMB_POLYP_RED,
+    [BackdropType.SCARRED_WOMB] = GiantGridVariant.WOMB_POLYP_SCARRED,
+    [BackdropType.UTERO] = GiantGridVariant.WOMB_POLYP_UTERO,
+    [BackdropType.BLUE_WOMB] = GiantGridVariant.WOMB_POLYP_RED,
+    [BackdropType.BLUE_WOMB_PASS] = GiantGridVariant.WOMB_POLYP_RED,
+    [BackdropType.SHEOL] = GiantGridVariant.SKULL_DEPTHS,
+    [BackdropType.CATHEDRAL] = GiantGridVariant.POT_CATHEDRAL,
+    [BackdropType.DARKROOM] = GiantGridVariant.SKULL_DEPTHS,
+    [BackdropType.MEGA_SATAN] = GiantGridVariant.SKULL_DEPTHS,
+    [BackdropType.SECRET] = GiantGridVariant.MUSHROOM_CAVES,
+    [BackdropType.SACRIFICE] = GiantGridVariant.SKULL_DEPTHS,
+    [BackdropType.DOWNPOUR] = GiantGridVariant.BUCKET_DOWNPOUR,
+    [BackdropType.DOWNPOUR_ENTRANCE] = GiantGridVariant.BUCKET_DOWNPOUR,
+    [BackdropType.DROSS] = GiantGridVariant.BUCKET_DROSS,
+    [BackdropType.MINES] = GiantGridVariant.MUSHROOM_CAVES,
+    [BackdropType.MINES_ENTRANCE] = GiantGridVariant.MUSHROOM_CAVES,
+    [BackdropType.MINES_SHAFT] = GiantGridVariant.MUSHROOM_CAVES,
+    [BackdropType.ASHPIT] = GiantGridVariant.MUSHROOM_CAVES,
+    [BackdropType.ASHPIT_SHAFT] = GiantGridVariant.MUSHROOM_CAVES,
+    [BackdropType.CORPSE_ENTRANCE] = GiantGridVariant.CORPSE_POLYP_GREEN,
+    [BackdropType.CORPSE] = GiantGridVariant.CORPSE_POLYP_GREEN,
+    [BackdropType.CORPSE2] = GiantGridVariant.CORPSE_POLYP_CYAN,
+    [BackdropType.CORPSE3] = GiantGridVariant.CORPSE_POLYP_ROTTEN,
+    [BackdropType.MORTIS] = GiantGridVariant.CORPSE_POLYP_ROTTEN,
 }
 
-local UniversalGridSpritesheetName = {
-    [UniversalGridSubtype.SHOPKEEPER] = 'g_shopkeeper_universal',
-    [UniversalGridSubtype.BOMB_ROCK] = 'g_bombrock_universal'
+-- Exposing giant prop enums
+GiantPropsMod.GiantPropVariant = GiantGridVariant
+GiantPropsMod.GiantPropState = GridState
+
+-- Linking giant prop's gfx to its variant
+local GridSpritesheetName = {
+    [GiantGridVariant.POT_BASEMENT] = "g_pot_basement",
+    [GiantGridVariant.BUCKET_DOWNPOUR] = "g_bucket_downpour",
+    [GiantGridVariant.BUCKET_WATERFILLED_DOWNPOUR] = "g_waterfilledbucket_downpour",
+    [GiantGridVariant.BUCKET_DROSS] = "g_bucket_dross",
+    [GiantGridVariant.BUCKET_CRAPFILLED_DROSS] = "g_shitfilledbucket_dross",
+    [GiantGridVariant.MUSHROOM_CAVES] = "g_mushroom_caves",
+    [GiantGridVariant.MUSHROOM_FLOODED_CAVES] = "g_mushroom_floodedcaves",
+    [GiantGridVariant.FOOLS_GOLD] = "g_foolsgold_mines",
+    [GiantGridVariant.FOOLS_GOLD_ASHPIT] = "g_foolsgold_ashpit",
+    [GiantGridVariant.SKULL_DEPTHS] = "g_skull_depths",
+    [GiantGridVariant.SKULL_MAUSOLEUM] = "g_skull_mausoleum",
+    [GiantGridVariant.SKULL_GEHENNA] = "g_skull_gehenna",
+    [GiantGridVariant.WOMB_POLYP_RED] = "g_wombpolyp_red",
+    [GiantGridVariant.WOMB_POLYP_SCARRED] = "g_wombpolyp_scarred",
+    [GiantGridVariant.WOMB_POLYP_UTERO] = "g_wombpolyp_utero",
+    [GiantGridVariant.CORPSE_POLYP_GREEN] = "g_corpsepolyp_green",
+    [GiantGridVariant.CORPSE_POLYP_CYAN] = "g_corpsepolyp_cyan",
+    [GiantGridVariant.CORPSE_POLYP_ROTTEN] = "g_corpsepolyp_rotten",
+    [GiantGridVariant.POT_CATHEDRAL] = "g_pot_basement",
+    [GiantGridVariant.SHOPKEEPER] = "g_shopkeeper_universal",
+    [GiantGridVariant.BOMB_ROCK] = "g_bombrock_universal"
 }
 
 -- Returns all grid entities representing the main (or all) segments of giant props in the current room.
+---@param room Room
+---@param includeBlank boolean?
 ---@return GridEntity[]
 local function findGiantPropSegments(room, includeBlank)
     includeBlank = includeBlank or false
@@ -223,8 +214,8 @@ local function findGiantPropSegments(room, includeBlank)
         local gridEnt = room:GetGridEntity(ind)
 
         if gridEnt and gridEnt:GetType() == GridEntityType.GRID_ROCKB
-        and gridEnt:GetVariant() >= (includeBlank and GridState.BLANK or GridState.MAIN_FULL)
-        and gridEnt:GetVariant() < GridState.RUBBLE then
+        and gridEnt.VarData >= (includeBlank and GridState.BLANK or GridState.MAIN_FULL)
+        and gridEnt.VarData < GridState.RUBBLE then
             table.insert(segments, gridEnt)
         end
 
@@ -232,8 +223,10 @@ local function findGiantPropSegments(room, includeBlank)
 
     return segments
 end
-TR_Manager.findGiantPropSegments = findGiantPropSegments
+GiantPropsMod.findGiantPropSegments = findGiantPropSegments
 
+-- Returns random segment of giant prop in the current room
+---@param room Room
 ---@return GridEntity
 local function getRandomMainSegment(room)
     local segments = findGiantPropSegments(room)
@@ -242,17 +235,13 @@ local function getRandomMainSegment(room)
     return segments[rng:RandomInt(#segments) + 1]
 end
 
-local function getPropName(stage, stageType, varData)
-    varData = varData or 0
+GiantPropsMod.getRandomMainSegment = getRandomMainSegment
+
+---@param variant GiantPropVariant | integer
+---@return string
+local function getPropName(variant)
     local spritesheet
-    if varData >= 5 then
-        spritesheet = UniversalGridSpritesheetName[varData]
-    else
-        spritesheet = UniqueGridSpritesheetName[stage][stageType]
-        if type(spritesheet) == "table" then
-            spritesheet = spritesheet[varData]
-        end
-    end
+    spritesheet = GridSpritesheetName[variant]
 
     spritesheet = string.sub(spritesheet, string.find(spritesheet, "_") + 1)
     spritesheet = string.sub(spritesheet, 1, string.find(spritesheet, "_") - 1)
@@ -351,7 +340,8 @@ local GiantPropsProperties = {
         Pool = {
             CollectibleType.COLLECTIBLE_QUARTER,
             CollectibleType.COLLECTIBLE_WOODEN_NICKEL,
-            CollectibleType.COLLECTIBLE_DADS_LOST_COIN
+            CollectibleType.COLLECTIBLE_DADS_LOST_COIN,
+            CollectibleType.COLLECTIBLE_METAL_PLATE
         },
         CombatAction = function(gent)
             return
@@ -627,67 +617,60 @@ local GiantPropsProperties = {
     }
 }
 
+---@param gent GridEntity
 local function upVariant(gent)
-    if gent:GetVariant() < GridState.RUBBLE then
-        gent:SetVariant(gent:GetVariant() + 1)
+    if gent.VarData < GridState.RUBBLE then
+        gent.VarData = gent.VarData + 1
     end
 end
 
 ---@param grid GridEntity
-local function updateGrid(grid, customVarData)
-    customVarData = customVarData or grid:GetSaveState().VarData
-    if customVarData >= 5 then
-        -- Universal props. Spritesheet is determined by VarData ONLY
-        -- Also see the reference to UniversalGridSubtype
-        local s = grid:GetSprite()
-        s:Load("gfx/grid/giant_prop.anm2", true)
-        s:ReplaceSpritesheet(0, "gfx/grid/" .. UniversalGridSpritesheetName[customVarData] .. ".png")
-        s:LoadGraphics()
-        s:Play(GridAnimName[grid:GetVariant()])
-    else
-        -- Chapter unique props. Spritesheet is determined by Stage, StageType and VarData (sometimes)
-        local l = game:GetLevel()
-        if not UniqueGridSpritesheetName[l:GetStage()] then
-            Isaac.DebugString("WARNING: No unique giant prop found for this chapter!")
-            return
-        end
-
-        local s = grid:GetSprite()
-        s:Load("gfx/grid/giant_prop.anm2", true)
-        if type(UniqueGridSpritesheetName[l:GetStage()][l:GetStageType()]) == "table" then
-            -- VarData allows for differentiating props inside the same floor (like special buckets in Dross)
-            s:ReplaceSpritesheet(0, "gfx/grid/" .. UniqueGridSpritesheetName[l:GetStage()][l:GetStageType()][grid:GetSaveState().VarData] .. ".png")
-        else
-            s:ReplaceSpritesheet(0, "gfx/grid/" .. UniqueGridSpritesheetName[l:GetStage()][l:GetStageType()] .. ".png")
-        end
-        s:LoadGraphics()
-        s:Play(GridAnimName[grid:GetVariant()])
-    end
+---@param variant GiantPropVariant | integer?
+local function updateGrid(grid, variant)
+    variant = variant or grid:GetVariant()
+    local s = grid:GetSprite()
+    s:Load("gfx/grid/giant_prop.anm2", true)
+    s:ReplaceSpritesheet(0, "gfx/grid/" .. GridSpritesheetName[variant] .. ".png")
+    s:LoadGraphics()
+    s:Play(GridAnimName[grid.VarData])
 end
 
-local function createGrid(pos, isMainSegment, varData)
+---@param pos Vector
+---@param isMainSegment boolean
+---@param variant GiantPropVariant | integer
+---@return GridEntity
+local function createGrid(pos, isMainSegment, variant)
     local grid = Isaac.GridSpawn(GridEntityType.GRID_ROCKB, 0, pos, true)
-    grid:SetVariant(isMainSegment and GridState.MAIN_FULL or GridState.BLANK)
-    if varData then
-        grid:GetSaveState().VarData = varData
+    grid.VarData = (isMainSegment and GridState.MAIN_FULL or GridState.BLANK)
+    if variant then
+        grid:SetVariant(variant)
+    else
+        local room = Game():GetRoom()
+        local newVariant = BackdropToGiantGridVariant[room:GetBackdropType()] or GiantGridVariant.POT_BASEMENT
+        grid:SetVariant(newVariant)
     end
     updateGrid(grid)
+    return grid
 end
 
 -- Spawn giant prop at a given spot.
 -- BOTTOM-RIGHT corner of the prop is the main segment.
 -- The effect, however, is taken up by the TOP-LEFT corner.
-local function createProp(pos, varData)
+---@param pos Vector | integer
+---@param variant GiantPropVariant | integer
+---@return GridEntity[]
+local function createProp(pos, variant)
     if type(pos) == "number" then
         pos = game:GetRoom():GetGridPosition(pos)
     end
-
+    local giantPropGrids = {}
     for i = 0, 3 do
         local newPos = Vector(pos.X + 40 * (i % 2), pos.Y + 40 * (i // 2))
-        createGrid(newPos, i == 3, varData)
+        table.insert(giantPropGrids, createGrid(newPos, i == 3, variant))
     end
+    return giantPropGrids
 end
-TR_Manager.createProp = createProp
+GiantPropsMod.createProp = createProp
 
 --[[
     CORE: HOW GIANT PROPS' TEXTURES, VARIANTS AND VARDATAS ARE HANDLED ON NEW ROOM
@@ -699,18 +682,27 @@ function mod:RoomUpdate()
     for _, e in pairs(Isaac.FindByType(1000, UNIQUE_GIANT_PROP_SPAWNER)) do
         local vd = nil
 
-        -- Dross and Downpour special. Choosing a variant at random
-        if (level:GetStage() == LevelStage.STAGE1_1 or level:GetStage() == LevelStage.STAGE1_2)
-        and level:GetStageType() >= StageType.STAGETYPE_REPENTANCE then
-            vd = rng:RandomInt(2)
-        end
 
-        -- Corpse special. Choosing backdrop-specific variant. Corpse backdrops are: 34, 43, 44
-        if (level:GetStage() == LevelStage.STAGE4_1 or level:GetStage() == LevelStage.STAGE4_2)
-        and level:GetStageType() >= StageType.STAGETYPE_REPENTANCE then
-            vd = math.max(room:GetBackdropType() - 42, 0)
-        end
+        if level:GetStageType() >= StageType.STAGETYPE_REPENTANCE then
+            -- Dross and Downpour special. Choosing a variant at random
+            if (level:GetStage() == LevelStage.STAGE1_1 or level:GetStage() == LevelStage.STAGE1_2) then
+                vd = rng:RandomInt(2) + (level:GetStageType() >= StageType.STAGETYPE_REPENTANCE_B and GiantGridVariant.BUCKET_DROSS or GiantGridVariant.BUCKET_DOWNPOUR)
+            end
 
+            if (level:GetStage() == LevelStage.STAGE2_1 or level:GetStage() == LevelStage.STAGE2_2) then
+                vd = level:GetStageType() >= StageType.STAGETYPE_REPENTANCE_B and GiantGridVariant.FOOLS_GOLD_ASHPIT or GiantGridVariant.FOOLS_GOLD
+            end
+
+            -- Corpse special. Choosing backdrop-specific variant. Corpse backdrops are: 34, 43, 44
+            if (level:GetStage() == LevelStage.STAGE4_1 or level:GetStage() == LevelStage.STAGE4_2) then
+                local backdrop = {
+                    [BackdropType.CORPSE2] = GiantGridVariant.CORPSE_POLYP_CYAN,
+                    [BackdropType.CORPSE3] = GiantGridVariant.CORPSE_POLYP_ROTTEN,
+                }
+                vd = backdrop[room:GetBackdropType()] or GiantGridVariant.CORPSE_POLYP_GREEN
+            end
+            
+        end
         createProp(room:GetGridIndex(e.Position), vd)
         e:Remove()
     end
@@ -718,7 +710,7 @@ function mod:RoomUpdate()
     for _, e in pairs(Isaac.FindByType(1000, UNIVERSAL_GIANT_PROP_SPAWNER)) do
         -- When spawning a universal prop, its appearance depends on the subtype of a spawner effect entity. Offset of 5 is used.
         -- See the reference to UniversalGridSubtype
-        createProp(room:GetGridIndex(e.Position), e.SubType + 5)
+        createProp(room:GetGridIndex(e.Position), e.SubType + GiantGridVariant.SHOPKEEPER)
         e:Remove()
     end
 
@@ -741,10 +733,10 @@ function mod:OnEffectUpdate(Effect)
         for _, gridEnt in pairs(findGiantPropSegments(room, false)) do
             if gridEnt.Position:Distance(Effect.Position) < trueExplosionDist then
                 rng:SetSeed(Random() + 1, 1)
-                local gridName = getPropName(game:GetLevel():GetStage(), game:GetLevel():GetStageType(), gridEnt:GetSaveState().VarData)
+                local gridName = getPropName(gridEnt:GetVariant())
 
                 -- the prop is destroyed, drop an item and turn it into rubble
-                if gridEnt:GetVariant() == GridState.MAIN_BROKEN3
+                if gridEnt.VarData == GridState.MAIN_BROKEN3
                 or gridName == "BOMBROCK" then
                     local ind = gridEnt:GetGridIndex()
                     for _, near in pairs({ind, ind - 1, ind - room:GetGridWidth(), ind - room:GetGridWidth() - 1}) do
@@ -756,20 +748,26 @@ function mod:OnEffectUpdate(Effect)
                     end
 
                     local pool = GiantPropsProperties[gridName].Pool
-                    local id = pool[rng:RandomInt(#pool) + 1]
+                    local id
+                    repeat
+                        id = pool[rng:RandomInt(#pool) + 1]
+                    until Isaac.GetItemConfig():GetCollectible(id).AchievementID == -1
+                        or not REPENTOGON
+                        -- achievement tracking is a RGON-specific feature
+                        or Isaac.GetPersistentGameData():Unlocked(Isaac.GetItemConfig():GetCollectible(id).AchievementID)
                     local newItem = Isaac.Spawn(5, 100, id, room:GetGridPosition(ind), Vector.Zero, nil)
                     newItem:GetSprite():ReplaceSpritesheet(5, "gfx/items/" .. GiantPropsProperties[gridName].AltarGfx .. ".png")
                     newItem:GetSprite():LoadGraphics()
 
                     if gridName == "BOMBROCK" then
-                        Isaac.Spawn(1000, EffectVariant.MAMA_MEGA_EXPLOSION, 0, Vector.Zero, Vector.Zero, nil)
+                        Game():GetRoom():MamaMegaExplosion(gridEnt.Position)
                     end
 
                 -- the prop isn't yet broken, break it down and drop consumables
-                elseif gridEnt:GetVariant() < GridState.MAIN_BROKEN3 then
+                elseif gridEnt.VarData < GridState.MAIN_BROKEN3 then
                     GiantPropsProperties[gridName].ConsumablesDropFunction(gridEnt)
                     upVariant(gridEnt)
-                    gridEnt:GetSprite():Play(GridAnimName[gridEnt:GetVariant()])
+                    gridEnt:GetSprite():Play(GridAnimName[gridEnt.VarData])
                 end
             end
         end
@@ -788,7 +786,7 @@ function mod:OnUpdate()
     if not room:IsClear()
     and #findGiantPropSegments(room, false) > 0 then
         local rgent = getRandomMainSegment(room)
-        local gridName = getPropName(level:GetStage(), level:GetStageType(), rgent:GetSaveState().VarData)
+        local gridName = getPropName(rgent:GetVariant())
         GiantPropsProperties[gridName].CombatAction(rgent)
     end
 
@@ -858,6 +856,21 @@ function mod:OnPickupUpdate(Pickup)
 end
 mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, mod.OnPickupUpdate, CustomPropPickups["FOOLSGOLD"].COIN_PYRITE)
 
+--StageAPI compatibility on custom stages
+function mod.OnCustomStageRoomEnter(gfx)
+    for _, gent in pairs(findGiantPropSegments(Game():GetRoom(), true)) do
+        updateGrid(gent)
+    end
+end
+if StageAPI then
+    StageAPI.UnregisterCallbacks("GiantProps")
+    StageAPI.AddCallback("GiantProps", StageAPI.Enum.Callbacks.POST_UPDATE_GRID_GFX, 0, mod.OnCustomStageRoomEnter)
+end
+
+function mod:LoadFFGfx()
+    GridSpritesheetName[GiantGridVariant.POT_CATHEDRAL] = ((FiendFolio or EvadeTaxes) and "g_pot_cathedral") or "g_pot_basement"
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.LoadFFGfx)
 
 --[[
 --------------
