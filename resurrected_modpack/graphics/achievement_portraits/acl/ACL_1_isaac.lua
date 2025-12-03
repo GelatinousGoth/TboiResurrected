@@ -13,7 +13,6 @@ ACL_1_isaac.isHidden = false
 
 ACL_1_isaac.portrait = "isaac" --uses this to find image in ("resources/gfx/portrait/"..P.portrait..".png")
 
-
 ACL_1_isaac.grid = {}
 
 ACL_1_isaac.grid[1] = {

@@ -1,6 +1,9 @@
 local ACL_34_item2 = {}
 
-local PersistentGameData = Isaac.GetPersistentGameData()
+local DATA = Isaac.GetPersistentGameData()
+local CountingNum = require("resurrected_modpack.graphics.achievement_portraits.acl.ACLcounter")
+
+--..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 10)
 
 ACL_34_item2.Pname = "MY STUFF II"
 ACL_34_item2.Description = "Finders keepers."
@@ -14,6 +17,25 @@ ACL_34_item2.isHidden = false
 ACL_34_item2.portrait = "item2" -- call your image for the portrait this!!!!
 
 ACL_34_item2.grid = {}
+
+ACL_34_item2.redo = true
+ACL_34_item2.Check = false
+
+function ACL_34_item2:Revise()
+	if MenuManager.GetActiveMenu() == MainMenuType.GAME then
+	
+		ACL_34_item2.Check = true
+		
+		ACL_34_item2:Redo()
+	
+	end
+	if MenuManager.GetActiveMenu() == MainMenuType.SAVES and ACL_34_item2.Check == true then
+		ACL_34_item2.Check = false
+	end
+end
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACL_34_item2.Revise)
+
+function ACL_34_item2:Redo()
 
 ACL_34_item2.grid[1] = {
 DisplayName = "Jumper Cables",
@@ -43,7 +65,7 @@ Tile = Sprite()
 
 ACL_34_item2.grid[3] = {
 DisplayName = "Haemolacria",
-DisplayText = "Acquire Blood Clot 10 times",
+DisplayText = "Acquire Blood Clot 10 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.BLOOD_CLOT_ITEM_AQUIRED), 10),
 TextName = [["Haemolacria" has appeared in the basement]],
 gfx = "Achievement_Haemolacria.png",
 Unlocked = false,
@@ -82,7 +104,7 @@ Tile = Sprite()
 
 ACL_34_item2.grid[6] = {
 DisplayName = "Flat Stone",
-DisplayText = "Acquire Rubber Cement 5 times",
+DisplayText = "Acquire Rubber Cement 5 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.RUBBER_CEMENT_ITEM_AQUIRED), 5),
 TextName = [["Flat Stone" has appeared in the basement]],
 gfx = "Achievement_FlatStone.png",
 Unlocked = false,
@@ -121,7 +143,7 @@ Tile = Sprite()
 
 ACL_34_item2.grid[9] = {
 DisplayName = "Lucky Toe!",
-DisplayText = "Blow up 20 Shopkeepers",
+DisplayText = "Blow up 20 Shopkeepers"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.SHOPKEEPER_KILLED), 20),
 TextName = [["Lucky Toe!" has appeared in the basement]],
 gfx = "Achievement_LuckyToe.png",
 Unlocked = false,
@@ -134,7 +156,7 @@ Tile = Sprite()
 
 ACL_34_item2.grid[10] = {
 DisplayName = "The Necronomicon",
-DisplayText = "Use XIII - Death 4 times",
+DisplayText = "Use XIII - Death 4 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.XIII_DEATH_CARD_USED), 4),
 TextName = [["The Necronomicon" has appeared in the basement]],
 gfx = "Achievement_Necronomicon.png",
 Unlocked = false,
@@ -147,7 +169,7 @@ Tile = Sprite()
 
 ACL_34_item2.grid[11] = {
 DisplayName = "Bone Heart",
-DisplayText = "It's Complicated...",
+DisplayText = "Use that shovel responsibly...",
 TextName = [["Bone Heart" has appeared in the basement]],
 gfx = "Achievement_BoneHeart.png",
 Unlocked = false,
@@ -170,5 +192,7 @@ Enum = Achievement.BLINDING_BABY,
 Near = false,
 Tile = Sprite()
 }
+
+end
 
 return ACL_34_item2

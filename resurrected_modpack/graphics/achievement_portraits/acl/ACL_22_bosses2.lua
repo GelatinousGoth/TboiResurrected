@@ -1,6 +1,8 @@
 local ACL_22_bosses2 = {}
 
-local PersistentGameData = Isaac.GetPersistentGameData()
+local DATA = Isaac.GetPersistentGameData()
+local CountingNum = require("resurrected_modpack.graphics.achievement_portraits.acl.ACLcounter")
+local Check = false
 
 ACL_22_bosses2.Pname = "THE MONSTERS II"
 ACL_22_bosses2.Description = "Study them, understand them, defeat them."
@@ -9,14 +11,35 @@ ACL_22_bosses2.dimX = 5
 ACL_22_bosses2.dimY = 6
 ACL_22_bosses2.size = 3
 
+ACL_22_bosses2.redo = true
+
 ACL_22_bosses2.isHidden = false
 
 ACL_22_bosses2.portrait = "bosses2" -- call your image for the portrait this!!!!
 
 
+function ACL_22_bosses2:Revise()
+	if MenuManager.GetActiveMenu() == MainMenuType.GAME then
+	
+		Check = true
+		
+		ACL_22_bosses2:Redo()
+	
+	end
+	if MenuManager.GetActiveMenu() == MainMenuType.SAVES and Check == true then
+		Check = false
+	end
+end
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACL_22_bosses2.Revise)
+
 ACL_22_bosses2.grid = {}
 
-ACL_22_bosses2.grid[1] = {
+
+
+
+function ACL_22_bosses2:Redo()
+
+	ACL_22_bosses2.grid[1] = {
 DisplayName = "A Cube of Meat",
 DisplayText = "Defeat Mom",
 TextName = [["A Cube of Meat" has appeared in the basement]],
@@ -44,7 +67,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[3] = {
 DisplayName = "A Quarter",
-DisplayText = "Defeat Mom's Heart 8 times",
+DisplayText = "Defeat Mom's Heart 8 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 8),
 TextName = [["A Quarter" has appeared in the basement]],
 gfx = "Achievement_AQuarter.png",
 Unlocked = false,
@@ -70,7 +93,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[5] = {
 DisplayName = "Everything is Terrible!!!",
-DisplayText = "Defeat Mom's Heart 5 times",
+DisplayText = "Defeat Mom's Heart 5 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 5),
 TextName = [[Everything is Terrible!!! The game just got harder!]],
 gfx = "Achievement_EverythingIsTerrible.png",
 Unlocked = false,
@@ -83,7 +106,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[6] = {
 DisplayName = "A Fetus in a Jar",
-DisplayText = "Defeat Mom's Heart 9 times",
+DisplayText = "Defeat Mom's Heart 9 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 9),
 TextName = [["A Fetus in a Jar" has appeared in the basement]],
 gfx = "Achievement_AFetusInAJar.png",
 Unlocked = false,
@@ -96,7 +119,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[7] = {
 DisplayName = "Something Icky!",
-DisplayText = "Defeat Isaac 10 times",
+DisplayText = "Defeat Isaac 10 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.ISAAC_KILLS), 10),
 TextName = [[You unlocked "Something Icky!" in the basement]],
 gfx = "Achievement_Triachnid.png",
 Unlocked = false,
@@ -109,7 +132,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[8] = {
 DisplayName = "Rubber Cement",
-DisplayText = "Defeat Mom's Heart 2 times",
+DisplayText = "Defeat Mom's Heart 2 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 2),
 TextName = [["Rubber Cement" has appeared in the basement]],
 gfx = "Achievement_RubberCement.png",
 Unlocked = false,
@@ -122,7 +145,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[9] = {
 DisplayName = "Blue Womb",
-DisplayText = "Defeat Mom's Heart 10 times",
+DisplayText = "Defeat Mom's Heart 10 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 10),
 TextName = [[You unlocked the Blue Womb!]],
 gfx = "Achievement_234_BlueWomb.png",
 Unlocked = false,
@@ -135,7 +158,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[10] = {
 DisplayName = "Burning Basement",
-DisplayText = "Defeat Mom's Heart 11 times",
+DisplayText = "Defeat Mom's Heart 11 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 11),
 TextName = [[The Basement is burning!]],
 gfx = "Achievement_BurningBasement.png",
 Unlocked = false,
@@ -148,7 +171,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[13] = {
 DisplayName = "Something Wicked... Again!",
-DisplayText = "Defeat ??? as 6 different Characters",
+DisplayText = "Defeat ??? as 6 different Characters"..CountingNum:UniqueBlueBabyKills(6),
 TextName = [[Something wicked this way comes+!]],
 gfx = "Achievement_SomethingWicked+.png",
 Unlocked = false,
@@ -161,7 +184,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[12] = {
 DisplayName = "Flooded Caves",
-DisplayText = "Defeat It Lives! 16 times",
+DisplayText = "Defeat It Lives! 16 times"..CountingNum:GetCounter(DATA:GetBestiaryKillCount(EntityType.ENTITY_MOMS_HEART, 1), 16),
 TextName = [[The Caves are flooded!]],
 gfx = "Achievement_FloodedCaves.png",
 Unlocked = false,
@@ -174,7 +197,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[11] = {
 DisplayName = "Dank Depths",
-DisplayText = "Defeat It Lives! 21 times",
+DisplayText = "Defeat It Lives! 21 times"..CountingNum:GetCounter(DATA:GetBestiaryKillCount(EntityType.ENTITY_MOMS_HEART, 1), 21),
 TextName = [[The Depths are dank!]],
 gfx = "Achievement_DankDepths.png",
 Unlocked = false,
@@ -187,7 +210,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[15] = {
 DisplayName = "Scarred Womb",
-DisplayText = "Defeat It Lives! 30 times",
+DisplayText = "Defeat It Lives! 30 times"..CountingNum:GetCounter(DATA:GetBestiaryKillCount(EntityType.ENTITY_MOMS_HEART, 1), 30),
 TextName = [[The Womb is scarred!]],
 gfx = "Achievement_ScarredWomb.png",
 Unlocked = false,
@@ -265,7 +288,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[20] = {
 DisplayName = "A Secret Exit",
-DisplayText = "Defeat Hush 3 times",
+DisplayText = "Defeat Hush 3 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.HUSH_KILLS), 3),
 TextName = [[You unlocked "A Secret Exit"]],
 gfx = "Achievement_SecretExit.png",
 Unlocked = false,
@@ -395,7 +418,7 @@ Tile = Sprite()
 
 ACL_22_bosses2.grid[24] = {
 DisplayName = "Experimental Treatment",
-DisplayText = "Defeat Mom's Heart 7 times",
+DisplayText = "Defeat Mom's Heart 7 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 7),
 TextName = [["Experimental Treatment" has appeared in the basement]],
 gfx = "Achievement_ExperimentalTreatment.png",
 Unlocked = false,
@@ -405,7 +428,8 @@ Enum = Achievement.EXPERIMENTAL_TREATMENT,
 Near = false,
 Tile = Sprite()
 }
-
+	
+end
 
 
 

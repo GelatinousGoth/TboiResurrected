@@ -1,5 +1,8 @@
 local ACL_35_god = {}
 
+local DATA = Isaac.GetPersistentGameData()
+
+
 ACL_35_god.Pname = "I AM..."
 ACL_35_god.Description = "Above devils and angels, you'll surpass them all!"
 ACL_35_god.Counter = 0
@@ -12,6 +15,8 @@ ACL_35_god.isHidden = false
 ACL_35_god.portrait = "god" -- call your image for the portrait this!!!!
 
 ACL_35_god.grid = {}
+
+
 
 ACL_35_god.grid[1] = {
 DisplayName = "Sin collector",

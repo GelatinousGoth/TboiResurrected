@@ -1,6 +1,6 @@
 local ACL_7_samson = {}
 
-local PersistentGameData = Isaac.GetPersistentGameData()
+local DATA = Isaac.GetPersistentGameData()
 
 ACL_7_samson.Pname = "SAMSON"
 ACL_7_samson.Description = "The strongest warrior with a nazarite vow"

@@ -1,7 +1,7 @@
 local ACL_21_bosses = {}
 
-local PersistentGameData = Isaac.GetPersistentGameData()
-
+local DATA = Isaac.GetPersistentGameData()
+local CountingNum = require("resurrected_modpack.graphics.achievement_portraits.acl.ACLcounter")
 ACL_21_bosses.Pname = "THE MONSTERS"
 ACL_21_bosses.Description = "The monsters in the basement await..."
 ACL_21_bosses.Counter = 0
@@ -11,13 +11,28 @@ ACL_21_bosses.size = 4
 
 ACL_21_bosses.isHidden = false
 
-ACL_21_bosses.isHidden = false
-
-
 ACL_21_bosses.portrait = "bosses" -- call your image for the portrait this!!!!
 
+ACL_21_bosses.redo = true
+ACL_21_bosses.Check = false
+
+function ACL_21_bosses:Revise()
+	if MenuManager.GetActiveMenu() == MainMenuType.GAME then
+	
+		ACL_21_bosses.Check = true
+		
+		ACL_21_bosses:Redo()
+	
+	end
+	if MenuManager.GetActiveMenu() == MainMenuType.SAVES and ACL_21_bosses.Check == true then
+		ACL_21_bosses.Check = false
+	end
+end
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACL_21_bosses.Revise)
 
 ACL_21_bosses.grid = {}
+
+function ACL_21_bosses:Redo()
 
 ACL_21_bosses.grid[1] = {
 DisplayName = "The Book of Sin",
@@ -70,10 +85,11 @@ Enum = Achievement.BOOK_OF_REVELATIONS,
 Near = false,
 Tile = Sprite()
 }
-
+--local CountingNum = require("ACLcounter")
+--..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 10)
 ACL_21_bosses.grid[5] = {
 DisplayName = "A Noose",
-DisplayText = "Mom's Heart 3 times",
+DisplayText = "Mom's Heart 3 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 3),
 TextName = [["A Noose" has appeared in the basement]],
 gfx = "Achievement_Transcendence.png",
 Unlocked = false,
@@ -86,7 +102,7 @@ Tile = Sprite()
 
 ACL_21_bosses.grid[6] = {
 DisplayName = "Wire Coat Hanger",
-DisplayText = "Defeat Mom's Heart 4 times",
+DisplayText = "Defeat Mom's Heart 4 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 4),
 TextName = [["Wire Coat Hanger" has appeared in the basement]],
 gfx = "Achievement_WireCoatHanger.png",
 Unlocked = false,
@@ -99,7 +115,7 @@ Tile = Sprite()
 
 ACL_21_bosses.grid[7] = {
 DisplayName = "Ipecac",
-DisplayText = "Defeat Mom's Heart 6 times",
+DisplayText = "Defeat Mom's Heart 6 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 6),
 TextName = [["Ipecac" has appeared in the basement]],
 gfx = "Achievement_Ipecac.png",
 Unlocked = false,
@@ -125,7 +141,7 @@ Tile = Sprite()
 
 ACL_21_bosses.grid[9] = {
 DisplayName = "It Lives!",
-DisplayText = "Defeat Mom's Heart 11 times",
+DisplayText = "Defeat Mom's Heart 11 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 11),
 TextName = [["It Lives!" Your futures past waits]],
 gfx = "Achievement_ItLives.png",
 Unlocked = false,
@@ -138,7 +154,7 @@ Tile = Sprite()
 
 ACL_21_bosses.grid[10] = {
 DisplayName = "Something wicked",
-DisplayText = "Defeat ??? as 3 different Characters",
+DisplayText = "Defeat ??? as 3 different Characters"..CountingNum:UniqueBlueBabyKills(3),
 TextName = [[Something wicked this way comes!]],
 gfx = "Achievement_SomethingWicked.png",
 Unlocked = false,
@@ -177,7 +193,7 @@ Tile = Sprite()
 
 ACL_21_bosses.grid[11] = {
 DisplayName = "The Negative",
-DisplayText = "Defeat Satan 5 times",
+DisplayText = "Defeat Satan 5 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.SATAN_KILLS), 5),
 TextName = [["The Negative" has appeared in the basement]],
 gfx = "Achievement_TheNegative.png",
 Unlocked = false,
@@ -190,7 +206,7 @@ Tile = Sprite()
 
 ACL_21_bosses.grid[15] = {
 DisplayName = "The Polaroid",
-DisplayText = "Defeat Isaac 5 times",
+DisplayText = "Defeat Isaac 5 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.ISAAC_KILLS), 5),
 TextName = [["The Polaroid" has appeared in the basement]],
 gfx = "Achievement_ThePolaroid.png",
 Unlocked = false,
@@ -268,7 +284,7 @@ Tile = Sprite()
 
 ACL_21_bosses.grid[20] = {
 DisplayName = "Fruity Plum",
-DisplayText = "Defeat Baby Plum 10 times",
+DisplayText = "Defeat Baby Plum 10 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.BABY_PLUM_KILLS), 10),
 TextName = [["Fruity Plum" has appeared in the basement]],
 gfx = "Achievement_FruityPlum.png",
 Unlocked = false,
@@ -345,6 +361,6 @@ Tile = Sprite()
 }
 
 
-
+end
 
 return ACL_21_bosses

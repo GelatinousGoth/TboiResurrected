@@ -1,6 +1,7 @@
 local ACL_23_item = {}
 
-local PersistentGameData = Isaac.GetPersistentGameData()
+local DATA = Isaac.GetPersistentGameData()
+local CountingNum = require("resurrected_modpack.graphics.achievement_portraits.acl.ACLcounter")
 
 ACL_23_item.Pname = "MY STUFF I"
 ACL_23_item.Description = "Why's all of this here?"
@@ -15,6 +16,25 @@ ACL_23_item.portrait = "item" -- call your image for the portrait this!!!!
 
 
 ACL_23_item.grid = {}
+
+ACL_23_item.redo = true
+ACL_23_item.Check = false
+
+function ACL_23_item:Revise()
+	if MenuManager.GetActiveMenu() == MainMenuType.GAME then
+	
+		ACL_23_item.Check = true
+		
+		ACL_23_item:Redo()
+	
+	end
+	if MenuManager.GetActiveMenu() == MainMenuType.SAVES and ACL_23_item.Check == true then
+		ACL_23_item.Check = false
+	end
+end
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACL_23_item.Revise)
+
+function ACL_23_item:Redo()
 
 ACL_23_item.grid[1] = {
 DisplayName = "The Planetarium",
@@ -89,7 +109,7 @@ gfx = "Achievement_GuppysHairball.png",
 Unlocked = false,
 PosY = 0,
 PosX = 0,
-Enum = Achievement.COUNTERFEIT_PENNY,
+Enum = Achievement.GUPPYS_HAIRBALL,
 Near = false,
 Tile = Sprite()
 }
@@ -187,7 +207,7 @@ Tile = Sprite()
 
 ACL_23_item.grid[15] = {
 DisplayName = "Ancient Recall",
-DisplayText = "Use Cards and Runes 20 times",
+DisplayText = "Use Cards and Runes 20 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.CARDS_USED), 20),
 TextName = [["Ancient Recall" has appeared in the basement]],
 gfx = "Achievement_AncientRecall.png",
 Unlocked = false,
@@ -211,6 +231,6 @@ Near = false,
 Tile = Sprite()
 }
 
-
+end
 
 return ACL_23_item

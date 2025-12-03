@@ -1,6 +1,7 @@
 local ACL_18_challenges = {}
 
-local PersistentGameData = Isaac.GetPersistentGameData()
+local DATA = Isaac.GetPersistentGameData()
+local CountingNum = require("resurrected_modpack.graphics.achievement_portraits.acl.ACLcounter")
 
 ACL_18_challenges.Pname = "CHALLENGES I"
 ACL_18_challenges.Description = "Unlock the remaining challenges."
@@ -15,6 +16,26 @@ ACL_18_challenges.portrait = "challenge" -- call your image for the portrait thi
 
 
 ACL_18_challenges.grid = {}
+
+ACL_18_challenges.redo = true
+ACL_18_challenges.Check = false
+
+function ACL_18_challenges:Revise()
+	if MenuManager.GetActiveMenu() == MainMenuType.GAME then
+	
+		ACL_18_challenges.Check = true
+		
+		ACL_18_challenges:Redo()
+	
+	end
+	if MenuManager.GetActiveMenu() == MainMenuType.SAVES and ACL_18_challenges.Check == true then
+		ACL_18_challenges.Check = false
+	end
+end
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACL_18_challenges.Revise)
+
+function ACL_18_challenges:Redo()
+
 
 ACL_18_challenges.grid[1] = {
 DisplayName = "#4: Darkness Falls",
@@ -41,10 +62,9 @@ Enum = Achievement.CHALLENGE_5_THE_TANK,
 Near = true,
 Tile = Sprite()
 }
-
 ACL_18_challenges.grid[3] = {
 DisplayName = "#6: Solar System",
-DisplayText = "Defeat Mom's Heart 3 times",
+DisplayText = "Defeat Mom's Heart 3 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 3),
 TextName = [[You unlocked Challenge #6 Solar System]],
 gfx = "Achievement_Challenge06.png",
 Unlocked = false,
@@ -57,7 +77,7 @@ Tile = Sprite()
 
 ACL_18_challenges.grid[4] = {
 DisplayName = "#7: Suicide King",
-DisplayText = "Defeat Mom's Heart 11 times and unlock Lazarus",
+DisplayText = "Defeat Mom's Heart 11 times and unlock Lazarus"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 11),
 TextName = [[You unlocked Challenge #7 Suicide King]],
 gfx = "Achievement_Challenge07.png",
 Unlocked = false,
@@ -83,7 +103,7 @@ Tile = Sprite()
 
 ACL_18_challenges.grid[6] = {
 DisplayName = "#9: Demo Man",
-DisplayText = "Defeat Mom's Heart 9 times",
+DisplayText = "Defeat Mom's Heart 9 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 9),
 TextName = [[You unlocked Challenge #9 Demo Man]],
 gfx = "Achievement_Challenge09.png",
 Unlocked = false,
@@ -174,7 +194,7 @@ Tile = Sprite()
 
 ACL_18_challenges.grid[13] = {
 DisplayName = "#23: Blue Bomber",
-DisplayText = "Destroy 10 Tinted Rocks and defeat Mom's Heart 11 times",
+DisplayText = "Destroy 10 Tinted Rocks and defeat Mom's Heart 11 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.TINTED_ROCKS_DESTROYED), 10)..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 11),
 TextName = [[You unlocked Challenge #23 Blue Bomber]],
 gfx = "Achievement_Challenge23.png",
 Unlocked = false,
@@ -187,7 +207,7 @@ Tile = Sprite()
 
 ACL_18_challenges.grid[14] = {
 DisplayName = "#24: PAY TO PLAY",
-DisplayText = "Defeat Isaac as Cain and destroy 10 Tinted Rocks ",
+DisplayText = "Defeat Isaac as Cain and destroy 10 Tinted Rocks"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.TINTED_ROCKS_DESTROYED), 10),
 TextName = [[You unlocked Challenge #24 PAY TO PLAY]],
 gfx = "Achievement_Challenge24.png",
 Unlocked = false,
@@ -226,7 +246,7 @@ Tile = Sprite()
 
 ACL_18_challenges.grid[17] = {
 DisplayName = "#27: BRAINS!",
-DisplayText = "Defeat Isaac 5 times",
+DisplayText = "Defeat Isaac 5 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.ISAAC_KILLS), 5),
 TextName = [[You unlocked Challenge #27 BRAINS!]],
 gfx = "Achievement_Challenge27.png",
 Unlocked = false,
@@ -304,7 +324,7 @@ Tile = Sprite()
 
 ACL_18_challenges.grid[23] = {
 DisplayName = "#33: Pokey Mans",
-DisplayText = "Defeat Mom's Heart 11 times",
+DisplayText = "Defeat Mom's Heart 11 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 11),
 TextName = [[You unlocked Challenge #33 Pokey mans]],
 gfx = "Achievement_Challenge33.png",
 Unlocked = false,
@@ -330,7 +350,7 @@ Tile = Sprite()
 
 ACL_18_challenges.grid[25] = {
 DisplayName = "#35: PONG",
-DisplayText = "Defeat Isaac 5 times",
+DisplayText = "Defeat Isaac 5 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.ISAAC_KILLS), 5),
 TextName = [[You unlocked Challenge #35 PONG]],
 gfx = "Achievement_Challenge35.png",
 Unlocked = false,
@@ -343,7 +363,7 @@ Tile = Sprite()
 --------------------
 ACL_18_challenges.grid[26] = {
 DisplayName = "Dedication",
-DisplayText = "Participate in 31 Daily Challenges",
+DisplayText = "Participate in 31 Daily Challenges"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.DAILYS_PLAYED), 31),
 TextName = [[Dedication]],
 gfx = "Achievement_PillHorf.png",
 Unlocked = false,
@@ -409,7 +429,7 @@ Tile = Sprite()
 
 ACL_18_challenges.grid[31] = {
 DisplayName = "#41: Pica Run",
-DisplayText = "Defeat Mom's Heart 11 times and unlock Marbles",
+DisplayText = "Defeat Mom's Heart 11 times and unlock Marbles"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 11),
 TextName = [[You unlocked Challenge #41 Pica Run]],
 gfx = "Achievement_Challenge41.png",
 Unlocked = false,
@@ -474,7 +494,7 @@ Tile = Sprite()
 
 ACL_18_challenges.grid[36] = {
 DisplayName = "Broken Modem",
-DisplayText = "Complete 7 Daily Challenges",
+DisplayText = "Complete 7 Daily Challenges"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.DAILYS_PLAYED), 7),
 TextName = [["Broken Modem" has appeared in the basement]],
 gfx = "Achievement_BrokenModem.png",
 Unlocked = false,
@@ -484,5 +504,7 @@ Enum = Achievement.BROKEN_MODEM,
 Near = false,
 Tile = Sprite()
 }
+
+end
 
 return ACL_18_challenges
