@@ -1,9 +1,9 @@
 <AnimatedActor>
-	<Info CreatedBy="possombull" CreatedOn="2024-10-21 4:11:54 PM" Version="6" Fps="30"/>
+	<Info CreatedBy="possombull" CreatedOn="12/3/2025 10:03:44 PM" Version="7" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="..\dungeon_details.png" Id="0"/>
-			<Spritesheet Path="..\..\..\..\resources-dlc3\gfx\grid\tiles_itemdungeon_gideon.png" Id="1"/>
+			<Spritesheet Path="..\..\tiles_itemdungeon_gideon.png" Id="1"/>
 			<Spritesheet Path="..\poopsprites\poop.png" Id="2"/>
 		</Spritesheets>
 		<Layers>
