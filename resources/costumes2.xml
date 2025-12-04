@@ -257,6 +257,8 @@
 	</costume>
 	<costume anm2path="122_Whore of Babylon.anm2" id="122" priority="1" type="passive" skinColor="1" overwriteColor="true">
 	</costume>
+	<costume anm2path="125_BobbyBomb.anm2" id="125" type="passive" hasOverlay="true">
+	</costume>
 	<costume anm2path="126_Razor Blade.anm2" id="126"  type="active" skinColor="3" overwriteColor="true">
 	</costume>
 	<costume anm2path="129_Bucket of Lard.anm2" id="129"  type="passive" hasSkinAlt="true" >
@@ -278,6 +280,8 @@
 	<costume anm2path="142_Scapular.anm2" id="142"  type="passive">
 	</costume>
 	<costume anm2path="143_Speed Ball.anm2" id="143"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="147_NotchedAxe.anm2" id="147"  type="passive" priority="2" hasSkinAlt="true">
 	</costume>
 	<costume anm2path="148_Infestation.anm2" id="148"  type="passive" skinColor="4" overwriteColor="true">
 	</costume>
@@ -384,7 +388,7 @@
 	<!-- 235 is an empty slot -->
 	<costume id="236" anm2path="236_ecoli.anm2" type="passive" />
 	<costume id="237" anm2path="237_deathstouch.anm2" type="passive" skinColor="5" overwriteColor="true" />
-	<costume id="240" anm2path="240_experimentaltreatment.anm2" type="passive" hasSkinAlt="true" />
+	<costume id="240" anm2path="240_experimentaltreatment.anm2" type="passive" hasOverlay="true" hasSkinAlt="true" />
 	<costume id="241" anm2path="241_contractfrombelow.anm2" type="passive" />
 	<costume id="242" anm2path="242_infamy.anm2" type="passive" />
 	<costume id="244" anm2path="244_tech05.anm2" type="passive" />
@@ -394,7 +398,7 @@
 	<costume id="249" anm2path="249_theresoptions.anm2" type="passive" />
 	<costume id="250" anm2path="250_bogobombs.anm2" type="passive" hasSkinAlt="true"  />
 	<costume id="251" anm2path="251_starterdeck.anm2" type="passive" />
-	<costume id="252" anm2path="252_littlebaggy.anm2" type="passive" />
+	<costume id="252" anm2path="252_littlebaggy.anm2" type="passive" hasSkinAlt="true" />
 	<costume id="253" anm2path="253_magicscab.anm2" type="passive" />
 	<costume id="254" anm2path="254_bloodclot.anm2" type="passive" />
 	<costume id="255" anm2path="255_screw.anm2" type="passive" />
@@ -425,6 +429,7 @@
 	<costume id="315" anm2path="315_strangeattractor.anm2" type="passive" />
 	<costume id="316" anm2path="316_cursedeye.anm2" type="passive" />
 	<costume id="317" anm2path="317_mysteriousliquid.anm2" type="passive" hasSkinAlt="true" />
+	<costume id="321" anm2path="321_samsonschains.anm2" type="passive" />
 	<!--<costume id="326" anm2path="326_breath of life.anm2" type="active"  hasSkinAlt="true" />-->
 	<costume id="327" anm2path="327_thepolaroid.anm2" type="passive" />
 	<costume id="328" anm2path="328_thenegative.anm2" type="passive" />
@@ -495,6 +500,7 @@
 	<costume id="432" anm2path="432_glitterbombs.anm2" type="passive" hasOverlay="true" />
 	<costume id="433" anm2path="433_MyShadow.anm2" type="passive" />
 	<costume id="438" anm2path="438_Binky.anm2" type="passive" />
+	<costume id="440" anm2path="440_KidneyStone.anm2" type="passive" hasSkinAlt="true" />
 	
 	<costume id="443" anm2path="443_Apple.anm2" type="passive" />
 	<costume id="444" anm2path="444_LeadPencil.anm2" type="passive" />
@@ -566,8 +572,9 @@
 	<costume id="560"  anm2path="007x_ItHurts.anm2" type="passive" hasSkinAlt="true" />
 	<costume id="561"  anm2path="008x_AlmondMilk.anm2" type="passive" hasSkinAlt="true" />
 	<costume id="562"  anm2path="009x_RockBottom.anm2" type="passive" hasSkinAlt="true" />
+	<costume id="563" anm2path="563_NancyBombs.anm2" type="passive" hasSkinAlt="true" />
 	<costume id="564" anm2path="011x_Soap.anm2" type="passive" hasSkinAlt="true" hasOverlay="true" />
-	<costume id="568"  anm2path="568_DivineIntervention.anm2" type="passive" hasOverlay="true" />
+	<costume id="568" anm2path="568_DivineIntervention.anm2" type="passive" hasOverlay="true" />
 	<costume id="570" anm2path="017x_PlaydohCookie.anm2" type="passive" hasSkinAlt="true" />
 	<costume id="571" anm2path="018x_Socks.anm2" type="passive" />
 	<costume id="572" anm2path="019x_OccultEye.anm2" type="passive" priority="10" hasSkinAlt="true" hasOverlay="true" />
@@ -607,6 +614,7 @@
 	<costume id="641" anm2path="088x_Akeldama.anm2" type="passive" hasSkinAlt="true" />
 	<costume id="643" anm2path="090x_Revelation.anm2" type="passive" isFlying="true" hasSkinAlt="true" />
 	<costume id="644" anm2path="091x_ConsolationPrize.anm2" type="passive" />
+	<costume id="646" anm2path="646_BrimstoneBombs.anm2" type="passive" hasSkinAlt="true" hasOverlay="true" />
 	<costume id="647" anm2path="094x_AssaultBattery.anm2" type="passive" hasSkinAlt="true" />
 	<costume id="654" anm2path="101x_FalsePhd.anm2" type="passive" hasSkinAlt="true" />
 	<costume id="657" anm2path="104x_Vasculitis.anm2" type="passive" hasSkinAlt="true" />
@@ -623,6 +631,7 @@
 	<costume id="672" anm2path="672_poundofflesh.anm2" type="passive" />
 	<costume id="674" anm2path="674_spiritshackles2.anm2" type="passive" priority="10" />
 	<costume id="675" anm2path="675_crackedorb.anm2" type="passive" />
+	<costume id="676" anm2path="676_EmptyHeart.anm2" type="passive" skinColor="5" overwriteColor="true" />
 	<costume id="677" anm2path="677_astralprojection.anm2" type="passive" skinColor="0" isFlying="true" priority="1" overwriteColor="true" forceHeadColor="true"/>
 	<costume id="678" anm2path="678_csection.anm2" type="passive" priority="100" hasSkinAlt="true" />
 	<costume id="680" anm2path="680_montezuma.anm2" type="passive" hasSkinAlt="true" />
@@ -649,6 +658,7 @@
 	<costume id="721" anm2path="721_TMTRAINER.anm2" type="passive" priority="10" hasSkinAlt="true" />
 	<costume id="724" anm2path="724_Hypercoagulation.anm2" type="passive" hasSkinAlt="true" />
 	<costume id="725" anm2path="725_Ibs.anm2" type="passive" />
+	<costume id="727" anm2path="727_GhostBombs.anm2" type="passive" skinColor="0" overwriteColor="true" />
 	<costume id="730" anm2path="730_glasseye.anm2" type="passive" hasSkinAlt="true" />
 	<costume id="731" anm2path="731_stye.anm2" type="passive" hasSkinAlt="true" priority="1" />
 	<costume id="732" anm2path="732_momsring.anm2" type="passive" hasSkinAlt="true" />
