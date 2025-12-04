@@ -1,6 +1,8 @@
 local TR_Manager = require("resurrected_modpack.manager")
 local HDCmod = TR_Manager:RegisterMod("Hanging Dream Catcher", 1)
 
+local game = Game()
+
 local function SpawnHanger(Pos)
 	Isaac.Spawn(1000, 245, 0, Pos, Vector(0,0), nil)
 end
