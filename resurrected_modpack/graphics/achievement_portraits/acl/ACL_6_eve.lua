@@ -1,6 +1,6 @@
 local ACL_6_eve = {}
 
-local PersistentGameData = Isaac.GetPersistentGameData()
+local DATA = Isaac.GetPersistentGameData()
 
 ACL_6_eve.Pname = "EVE"
 ACL_6_eve.Description = "She who bit the apple will plant the apple's seeds."

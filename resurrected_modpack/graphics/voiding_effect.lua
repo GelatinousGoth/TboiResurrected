@@ -1,8 +1,11 @@
 if DIVIDED_VOID then return end
 
 local TR_Manager = require("resurrected_modpack.manager")
-local mod = TR_Manager:RegisterMod("Voiding Effect", 1)
+DIVIDED_VOID_VOIDED_EFFECT = TR_Manager:RegisterMod("Voiding Effect", 1)
 ---local REPENTOGON = false
+
+local mod = DIVIDED_VOID_VOIDED_EFFECT
+local game = Game()
 
 mod.effectAnm2Path = "gfx/DV_voided items.anm2"
 mod.PredestralAnm2Path = "gfx/005.100_collectible.anm2"
@@ -91,11 +94,26 @@ function mod.EffectSpawn(pos, itemID, pickup, suckType)
     spr:Play(effectAnm2Anim, true)
     eff:Update()
 
+    local isblind
     local conf = Isaac.GetItemConfig():GetCollectible(itemID)
+    local GfxFileName = conf and conf.GfxFileName or "gfx/Items/Collectibles/questionmark.png"
+    if game:GetLevel():GetCurses() & LevelCurse.CURSE_OF_BLIND > 0 then
+        GfxFileName = "gfx/Items/Collectibles/questionmark.png"
+        isblind = true
+    end
+    
     
     if conf then
 
         if not REPENTOGON then
+
+            --[[local eff = Isaac.Spawn(EntityType.ENTITY_EFFECT, mod.EffectVariant, 0, pos, Vector.Zero, nil)
+            local spr = eff:GetSprite()
+            spr:Load(mod.effectAnm2Path, true)
+            spr:Play(effectAnm2Anim, true)
+            eff:Update()]]
+
+
             local eff2 = Isaac.Spawn(EntityType.ENTITY_EFFECT, mod.EffectVariant, 0, pos, Vector.Zero, nil)
             eff2.PositionOffset = Vector(0, -32)
             local spr = eff2:GetSprite()
@@ -114,11 +132,80 @@ function mod.EffectSpawn(pos, itemID, pickup, suckType)
                 mod.NotRGONListVoidedAltes[#mod.NotRGONListVoidedAltes+1] = EntityPtr(eff2)
             end
 
-            spr:ReplaceSpritesheet(1, conf.GfxFileName)
+            spr:ReplaceSpritesheet(1, GfxFileName)
             spr:LoadGraphics()
-        else
 
-            local offset = pickup:GetSprite():GetCurrentAnimationData():GetLayer(1):GetFrame(pickup:GetSprite():GetFrame()):GetPos().Y
+            local downpuff = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 1, pos, Vector.Zero, nil)
+            downpuff.SortingLayer = 1
+            downpuff.Color = targetColor
+            downpuff:GetSprite().Scale = Vector(0.5, 0.5)
+            
+        else
+            if pickup then
+                if pickup:IsBlind () then
+                    GfxFileName = "gfx/Items/Collectibles/questionmark.png"
+                    isblind = true
+                end
+            end
+            local trueGfxFilename = conf and conf.GfxFileName
+            
+            local pspr = pickup and pickup:GetSprite()
+            local offset = 0
+            if pspr then
+                local layer --= pspr:GetCurrentAnimationData():GetLayer(1)
+                if layer then
+                    offset = layer:GetFrame(pspr:GetFrame()):GetPos().Y
+                else
+                    for i=0, pspr:GetLayerCount()-1 do
+                        local layerSheep = pspr:GetLayer(i):GetSpritesheetPath()
+                        if GfxFileName == layerSheep then
+                            offset = pspr:GetCurrentAnimationData():GetLayer(i):GetFrame(pspr:GetFrame()):GetPos().Y
+                        elseif trueGfxFilename == layerSheep then
+                            offset = pspr:GetCurrentAnimationData():GetLayer(i):GetFrame(pspr:GetFrame()):GetPos().Y
+                            GfxFileName = trueGfxFilename
+                        end
+                    end
+                end
+
+                if pspr:GetOverlayAnimation() == 'Alternates' and pspr:GetOverlayFrame() ~= 0 then
+                    local null = pspr:GetOverlayNullFrame("ItemOffset")
+                    if null then
+                        offset = offset + null:GetPos().Y
+                    end
+
+                    spr:Load(mod.PredestralAnm2Path, true)
+                    spr:Play("Alternates", true)
+                    --spr:Stop()
+                    --spr:Update()
+                    local frame = pspr:GetOverlayFrame()
+                    spr:SetFrame(frame)
+                    spr:SetCustomShader("shaders/DIVVOID_scukEffect")
+
+                    eff.Color = Color(3,1,1,1)
+                    local effPtr = EntityPtr(eff)
+                    local r = 0
+                    Isaac.CreateTimer(function()
+                        if effPtr and effPtr.Ref then
+                            local ent = effPtr.Ref
+                            r = r + 1
+                            local col = ent:GetColor()
+                            
+                            col = Color.Lerp(Color(1,1,1,1), targetColor, math.min(1.3, math.max(0, (r+0)/ 11)))
+                            col:SetColorize((r-20)/2,0,0,0)
+                            ent.Color = col
+                            --ent.PositionOffset.Y = ent.PositionOffset.Y + math.max(0, (r+10)/50) -- r/1.5
+        
+                            local spr = ent:GetSprite()
+                            spr:SetFrame(frame)
+                            spr:GetLayer(3):SetColor(Color(1,1,1,(20-r)/20))
+                            --spr.Scale = Vector(1 + math.max(0, (r-8)/40),  1 - math.max(0, (r-10)/30) )
+                            if r > 40 then
+                                ent:Remove()
+                            end
+                        end
+                    end, 1, 60, false)
+                end
+            end
 
             local downpuff = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 1, pos, Vector.Zero, nil)
             downpuff.SortingLayer = 1
@@ -133,7 +220,7 @@ function mod.EffectSpawn(pos, itemID, pickup, suckType)
             spr:Play(mod.ItemeffectRGONAnm2Anim, true)
 
 
-            spr:ReplaceSpritesheet(1, conf.GfxFileName)
+            spr:ReplaceSpritesheet(1, GfxFileName)
             spr:LoadGraphics()
 
             spr:SetCustomShader("shaders/DIVVOID_scukEffect")
@@ -165,6 +252,26 @@ function mod.EffectSpawn(pos, itemID, pickup, suckType)
                 end
             end, 1, 62, false)
 
+            if isblind then
+                local questmark = Isaac.Spawn(EntityType.ENTITY_EFFECT, mod.EffectVariant, 0, pos, Vector.Zero, nil)
+                questmark.PositionOffset = Vector(0, (offset + 16)*Wtr)
+                questmark.DepthOffset = 10
+                local spr2 = questmark:GetSprite()
+
+                spr2:Load(mod.effectAnm2Path, true)
+                spr2:Play(mod.ItemeffectRGONAnm2Anim, true)
+                spr2:ReplaceSpritesheet(1, GfxFileName)
+                spr2:LoadGraphics()
+
+                --local trueGfxFilename = conf.GfxFileName
+                spr:ReplaceSpritesheet(1, trueGfxFilename)
+                spr:LoadGraphics()
+
+                questmark.Color = Color(1,1,1,0)
+                questmark:SetColor(Color(1,1,1,1), 10, 0, true)
+
+                eff2:SetColor(Color(1,1,1,0), 10, 0, true)
+            end
         end
     end
 
@@ -287,7 +394,7 @@ if REPENTOGON then
     mod.ListVoidedPickups = {}
     local ListVoidedPickups = mod.ListVoidedPickups
 
-    mod:AddCallback(ModCallbacks.MC_PRE_PICKUP_VOIDED, function(_, pickup, IsBlackRune)
+    mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_VOIDED, 1000, function(_, pickup, IsBlackRune)
         
         --if not IsBlackRune then
             --mod.EffectSpawn(pickup.Position + Vector(0,3), pickup.SubType)
@@ -299,7 +406,7 @@ if REPENTOGON then
             end, 1, 2, false)
         --end
     end)
-    mod:AddCallback(ModCallbacks.MC_PRE_PICKUP_VOIDED_ABYSS, function(_, pickup, IsBlackRune)
+    mod:AddPriorityCallback(ModCallbacks.MC_PRE_PICKUP_VOIDED_ABYSS, 1000, function(_, pickup, IsBlackRune)
         
         --if not IsBlackRune then
             --mod.EffectSpawn(pickup.Position + Vector(0,3), pickup.SubType)
@@ -319,7 +426,7 @@ if REPENTOGON then
             ListVoidedPickups[hash] = nil
             
             if pickup.Variant == PickupVariant.PICKUP_COLLECTIBLE then
-                mod.EffectSpawn(pickup.Position, pickup.SubType, pickup, suckType)
+                mod.EffectSpawn(pickup.Position, pickup.SubType, pickup:ToPickup(), suckType)
             else
                 mod.CartEffectSpawn(pickup.Position, pickup, suckType)
             end
@@ -362,10 +469,11 @@ else
         end
     end)
 
+    local frame_delay = REPENTANCE_PLUS and {-.5, .5} or {-7, -6}
+
     mod:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE, function(_, pickup)
-        
         local frame = mod.FrameCheckVoidSuck and mod.FrameCheckVoidSuck - Isaac.GetFrameCount()
-        if frame and (frame >= -7 and frame <= -6)
+        if frame and (frame >= frame_delay[1] and frame <= frame_delay[2])
         and pickup.Variant == PickupVariant.PICKUP_COLLECTIBLE then
             mod.EffectSpawn(pickup.Position, pickup.SubType, pickup, mod.SuckTypeIsNext)
             --mod.RemovePuffs(pickup.Position + Vector(0, 10))
@@ -374,8 +482,77 @@ else
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, function(_, ent)
-    
     if mod.HideNextPuff == Isaac.GetFrameCount() then
         ent.Color = Color(1,1,1,0)
     end
 end, EffectVariant.POOF01)
+
+
+
+
+--- время хакать
+
+mod.RecordPedestals = function ()
+    local pedestrals = {}
+    local list = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE)
+    for i=1, #list do
+        local ent = list[i]
+
+        local spr = ent:GetSprite()
+        local IsBlind = ent:ToPickup():IsBlind()
+        pedestrals[GetPtrHash(ent)] = {ItemID = ent.SubType, Pos = ent.Position, FakeEnt = {
+            GetSprite = function()
+                return spr
+            end,
+            IsBlind = function()
+                return IsBlind
+            end
+        }}
+    end
+    return pedestrals
+end
+
+mod.CheckRecordedPedestals = function(RecordList)
+    local list = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE)
+    for i=1, #list do
+        local ent = list[i]
+        if not ent:IsDead() then
+            RecordList[GetPtrHash(ent)] = nil
+        end
+    end
+
+    for i, tab in pairs(RecordList) do
+        mod.EffectSpawn(tab.Pos, tab.ItemID, tab.FakeEnt, 0)
+    end
+end
+
+
+local lastCallback = REPENTOGON and ModCallbacks.MC_POST_MODS_LOADED or ModCallbacks.MC_POST_GAME_STARTED
+
+local once = false
+mod:AddCallback(lastCallback, function()
+    if not once then
+        once = true
+
+        local list = Isaac.GetCallbacks(ModCallbacks.MC_PRE_USE_ITEM)
+        for i=1, #list do
+            local tab = list[i]
+
+            if tab then
+                if not tab.HookedByVoidindEffect and tab.Mod.Name == "Apollyon Rework" and tab.Param == CollectibleType.COLLECTIBLE_VOID then
+                    local oldFunc = tab.Function
+                    tab.Function = function(...)
+                        local recordList = mod.RecordPedestals()
+                        mod.HideNextPuff = Isaac.GetFrameCount()
+                        local returns = {oldFunc(...)}
+                        mod.CheckRecordedPedestals(recordList)
+
+                        return table.unpack(returns)
+                    end
+                    tab.HookedByVoidindEffect = true
+                    print("[Voiding Effect] Devoid: Apollyon Rework was HACKED! (hooked)")
+                end
+            end
+        end
+    end
+end)

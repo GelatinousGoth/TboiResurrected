@@ -1,6 +1,8 @@
 local ACL_8_azazel = {}
 
-local PersistentGameData = Isaac.GetPersistentGameData()
+local DATA = Isaac.GetPersistentGameData()
+
+local CountingNum = require("resurrected_modpack.graphics.achievement_portraits.acl.ACLcounter")
 
 ACL_8_azazel.Pname = "AZAZEL"
 ACL_8_azazel.Description = "A scapegoat bears sins of forbidden knowledge"
@@ -15,6 +17,25 @@ ACL_8_azazel.portrait = "azazel" --uses this to find image in ("resources/gfx/po
 
 
 ACL_8_azazel.grid = {}
+
+ACL_8_azazel.redo = true
+ACL_8_azazel.Check = false
+
+function ACL_8_azazel:Revise()
+	if MenuManager.GetActiveMenu() == MainMenuType.GAME then
+	
+		ACL_8_azazel.Check = true
+		
+		ACL_8_azazel:Redo()
+	
+	end
+	if MenuManager.GetActiveMenu() == MainMenuType.SAVES and ACL_8_azazel.Check == true then
+		ACL_8_azazel.Check = false
+	end
+end
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACL_8_azazel.Revise)
+
+function ACL_8_azazel:Redo()
 
 ACL_8_azazel.grid[1] = {
 DisplayName = "Azazel",
@@ -184,10 +205,9 @@ Enum = Achievement.THE_NAIL,
 Near = false,
 Tile = Sprite()
 }
-
 ACL_8_azazel.grid[14] = {
 DisplayName = "Krampus",
-DisplayText = "Take 20 items from Devil Rooms",
+DisplayText = "Take 20 items from Devil Rooms"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.DEVIL_DEALS_TAKEN), 20),
 TextName = [[Krampus unlocked]],
 gfx = "Achievement_Krampus.png",
 Unlocked = false,
@@ -211,6 +231,7 @@ Near = false,
 Tile = Sprite()
 }
 
+end
 
 -- ADD A SPRITE VALUE TO EACH GRID DATA, AS WELL AS A VECTOR DATA.
 

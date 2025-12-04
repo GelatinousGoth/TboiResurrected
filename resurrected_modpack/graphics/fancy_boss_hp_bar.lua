@@ -7,8 +7,20 @@ local isRepentance = REPENTANCE_PLUS or REPENTANCE
 local vectorZero = Vector.Zero
 local game = Game()
 
-local EBB
+local EBB = HPBars
 local blackListedBarStyles
+if EBB then
+	blackListedBarStyles = {
+		["Design - TheSavageHybrid"] = true,
+		["Enter The Gungeon"] = true,
+		["Flash"] = true,
+		["Hearts"] = true,
+		["Minecraft"] = true,
+		["Minimal"] = true,
+		["Planetarium"] = true,
+		["Terraria"] = true
+	}
+end
 
 FancyBossBar.bossBarsSprites = FancyBossBar.bossBarsSprites or {
 	["big"] = Sprite(),
@@ -26,20 +38,22 @@ FancyBossBar.forceBottomBossBarPosition = FancyBossBar.forceBottomBossBarPositio
 FancyBossBar.forceBossBarDisable = FancyBossBar.forceBossBarDisable or false
 
 local cleanHp = false
+local appearAnim ---@type string | nil
+local deathAnim
 
-local version = "1.6.7"
+local version = "1.6.8.2"
 
 --to-do--
 --Add MCM/Lua config support mod's options
 
 local function GetScreenSize() --thank you, kil-sana!
 	local room = game:GetRoom()
-    local pos = room:WorldToScreenPosition(vectorZero) - room:GetRenderScrollOffset() - game.ScreenShakeOffset
+	local pos = room:WorldToScreenPosition(vectorZero) - room:GetRenderScrollOffset() - game.ScreenShakeOffset
 
-    local rx = pos.X + 60 * 26 / 40
-    local ry = pos.Y + 140 * (26 / 40)
+	local rx = pos.X + 60 * 26 / 40
+	local ry = pos.Y + 140 * (26 / 40)
 
-    return Vector(rx*2 + 13*26, ry*2 + 7*26)
+	return Vector(rx * 2 + 13 * 26, ry * 2 + 7 * 26)
 end
 
 local shouldRenderBigIcon = function()
@@ -47,7 +61,8 @@ local shouldRenderBigIcon = function()
 		if EBB then return true end
 
 		local room = game:GetRoom()
-		return room:GetType() == RoomType.ROOM_BOSS or room:GetType() == RoomType.ROOM_BOSSRUSH or room:GetType() == RoomType.ROOM_CHALLENGE or game:GetLevel():GetStage() == LevelStage.STAGE8
+		return room:GetType() == RoomType.ROOM_BOSS or room:GetType() == RoomType.ROOM_BOSSRUSH or
+			room:GetType() == RoomType.ROOM_CHALLENGE or game:GetLevel():GetStage() == LevelStage.STAGE8
 	end
 
 	return true
@@ -66,21 +81,26 @@ local function GetFancyBossBar(id)
 	return FancyBossBar.bossBarsSprites[id]
 end
 
-local shouldRestrictBossCount = function ()
+local shouldRestrictBossCount = function()
 	local room = game:GetRoom()
 	if EBB then
-		return EBB:isIgnoreMegaSatanFight() or (not HPBars.Config["DisplayWithSpidermod"] and HPBars:hasSpiderMod()) or (not HPBars.Config["ShowInMotherFight"] and room:GetBossID() == 88) or (not HPBars.Config["ShowInBeastFight"] and game:GetLevel():GetStage() == 13 and room:GetType() == RoomType.ROOM_DUNGEON) or room:GetBossID() == 83
+		return EBB:isIgnoreMegaSatanFight() or (not HPBars.Config["DisplayWithSpidermod"] and HPBars:hasSpiderMod()) or
+			(not HPBars.Config["ShowInMotherFight"] and room:GetBossID() == 88) or
+			(not HPBars.Config["ShowInBeastFight"] and game:GetLevel():GetStage() == 13 and room:GetType() == RoomType.ROOM_DUNGEON) or
+			room:GetBossID() == 83
 	else
-		return room:GetBossID() == 55 or room:GetBossID() == 88 or room:GetBossID() == 83 or (game:GetLevel():GetStage() == 13 and room:GetType() == RoomType.ROOM_DUNGEON)
+		return room:GetBossID() == 55 or room:GetBossID() == 88 or room:GetBossID() == 83 or
+			(game:GetLevel():GetStage() == 13 and room:GetType() == RoomType.ROOM_DUNGEON)
 	end
 end
 
 ---@param ent Entity
-local shouldIgnoreBossEntity = function (ent)
+local shouldIgnoreBossEntity = function(ent)
 	if EBB then
 		return EBB:evaluateEntityIgnore(ent)
 	end
-	return ent:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) or ent:HasEntityFlags(EntityFlag.FLAG_DONT_COUNT_BOSS_HP) or not ent:CanShutDoors()
+	return ent:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) or ent:HasEntityFlags(EntityFlag.FLAG_DONT_COUNT_BOSS_HP) or
+		not ent:CanShutDoors()
 end
 
 ---@param npc EntityNPC
@@ -137,18 +157,31 @@ local function handleBossBarSprite()
 
 	--print(#sortedBosses, "bosses", "IsRendering:", FancyBossBar.renderBossBar, GetFancyBossBar():GetAnimation() or "wtf")
 
-	local appearAnim = ((EBB and blackListedBarStyles[EBB.Config["BarStyle"]]) or not FancyBossBar.Config["BarGlitter"]) and "AppearWithoutGlitter" or "Appear"
+	local function pickAppearAnim()
+		if not (FancyBossBar.Config["RandomDisableGlitter"] and math.random(0, 1) == 1) then
+			if EBB and not blackListedBarStyles[EBB.Config["BarStyle"]] then
+				return "Appear"
+			elseif FancyBossBar.Config["BarGlitter"] then
+				return "Appear"
+			end
+		end
+		return "AppearWithoutGlitter"
+	end
+
 	--local appearAnim = ((EBB and blackListedBarStyles[EBB.BarStyles]) or not FancyBossBar.Config["BarGlitter"]) and "AppearWithoutGlitter" or "Appear"
-	local deathAnim = FancyBossBar.Config["DisableDeathBarBlink"] and "DeathWithoutBlink" or "Death"
+	--local deathAnim = FancyBossBar.Config["DisableDeathBarBlink"] and "DeathWithoutBlink" or "Death"
 	if #sortedBosses > 0 and cleanHp then
+		if not appearAnim then
+			appearAnim = pickAppearAnim()
+		end
+
 		if not FancyBossBar.renderBossBar then
 			FancyBossBar.renderBossBar = true
 		end
 
 		if not bossBarSprite:IsPlaying(appearAnim) and not bossBarSprite:IsFinished(appearAnim) then
 			bossBarSprite:Play(appearAnim, true)
-
-			if FancyBossBar.Config["DisableBarStartAnim"] then
+			if FancyBossBar.Config.DisableBarStartAnim then
 				bossBarSprite:SetLastFrame()
 			end
 
@@ -157,17 +190,24 @@ local function handleBossBarSprite()
 			end]]
 		end
 	elseif #sortedBosses == 0 and FancyBossBar.renderBossBar then
-		bossBarSprite:Play(deathAnim)
-	end
+		if not deathAnim then
+			deathAnim = (FancyBossBar.Config["DisableDeathBarBlink"] or (FancyBossBar.Config["RandomDisableGlitter"] and math.random(0, 1) == 1)) and
+				"DeathWithoutBlink" or "Death"
+		end
 
-	if bossBarSprite:IsFinished(deathAnim) then
-		FancyBossBar.renderBossBar = false
-		FancyBossBar.forceBottomBossBarPosition = false
-		cleanHp = false
+		bossBarSprite:Play(deathAnim)
+		appearAnim = nil
+
+		if bossBarSprite:IsFinished(deathAnim) then
+			FancyBossBar.renderBossBar = false
+			FancyBossBar.forceBottomBossBarPosition = false
+			cleanHp = false
+			deathAnim = nil
+		end
 	end
 end
 
-FancyBossBar:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function ()
+FancyBossBar:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	--init sprites
 	if not FancyBossBar.bossBarsSprites then
 		Isaac.DebugString("[FancyBossBar], Init boss bar sprites")
@@ -186,7 +226,7 @@ FancyBossBar:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function ()
 end)
 
 --Handle boss bars logic
-FancyBossBar:AddCallback(ModCallbacks.MC_POST_UPDATE, function ()
+FancyBossBar:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
 	handleBossBarSprite()
 end)
 
@@ -206,21 +246,24 @@ function FancyBossBar:onRender(shadername)
 					GetFancyBossBar():Render(HPBars:getBarPosition(1) - Vector(7, 0), vectorZero, vectorZero)
 				end
 			else
-				GetFancyBossBar():Render(Vector(screenSize.X / 2, isTop and 12 * hudOffset or screenSize.Y - 12 * hudOffset) + barPosition, vectorZero, vectorZero)
+				GetFancyBossBar():Render(
+					Vector(screenSize.X / 2, isTop and 12 * hudOffset or screenSize.Y - 12 * hudOffset) + barPosition,
+					vectorZero, vectorZero)
 			end
 		end
 	end
 end
 
 if REPENTOGON then
-	FancyBossBar:AddCallback(ModCallbacks.MC_POST_HUD_RENDER, FancyBossBar.onRender )
+	FancyBossBar:AddCallback(ModCallbacks.MC_POST_HUD_RENDER, FancyBossBar.onRender)
 elseif StageAPI and StageAPI.Loaded then
-	StageAPI.AddCallback("FancyBossBar", "POST_HUD_RENDER", 1, FancyBossBar.onRender )
+	StageAPI.AddCallback("FancyBossBar", "POST_HUD_RENDER", 1, FancyBossBar.onRender)
 else
-	FancyBossBar:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, FancyBossBar.onRender )
+	FancyBossBar:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, FancyBossBar.onRender)
 end
 
-FancyBossBar:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function ()
+--experimental addition by unknown contributor
+function FancyBossBar:renderBar()
 	if FancyBossBar.renderBossBar then --dirty, very dirty fix
 		GetFancyBossBar(BossBarID.BIG):Play("Appear", true)
 		GetFancyBossBar(BossBarID.SMALL):Play("Appear", true)
@@ -232,7 +275,6 @@ FancyBossBar:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function ()
 	FancyBossBar.forceBossBarDisable = false
 	cleanHp = false
 
-
 	local bigBossSprite = GetFancyBossBar(BossBarID.BIG)
 	if REPENTOGON and (bigBossSprite:GetRenderFlags() & AnimRenderFlags.STATIC > 0) then
 		bigBossSprite:SetRenderFlags(0)
@@ -240,23 +282,44 @@ FancyBossBar:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function ()
 		bigBossSprite:ReplaceSpritesheet(8, bigBossSprite:GetLayer(8):GetDefaultSpritesheetPath())
 		bigBossSprite:ReplaceSpritesheet(9, bigBossSprite:GetLayer(9):GetDefaultSpritesheetPath(), true)
 	end
-end)
+
+	-- RandomDisableBar option logic
+	if FancyBossBar.Config["RandomDisableBar"] and math.random(0, 1) == 1 then
+		FancyBossBar.forceBossBarDisable = true
+	end
+end
+
+FancyBossBar:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, FancyBossBar.renderBar)
+
+function FancyBossBar:renderNPC(npc)
+	if npc:IsBoss() then
+		for _, entity in pairs(Isaac.GetRoomEntities()) do -- Only trigger bossbar once
+			if entity:IsBoss() and entity:GetData().bossbar_check then
+				return
+			end
+		end
+		npc:GetData().bossbar_check = true
+		FancyBossBar:renderBar()
+	end
+end
+
+FancyBossBar:AddCallback(ModCallbacks.MC_POST_NPC_INIT, FancyBossBar.renderNPC)
 
 ---@param npc EntityNPC
-FancyBossBar:AddCallback(ModCallbacks.MC_NPC_UPDATE, function (_, npc)
+FancyBossBar:AddCallback(ModCallbacks.MC_NPC_UPDATE, function(_, npc)
 	if npc.State == NpcState.STATE_SPECIAL and npc.I1 < 1 and not FancyBossBar.forceBottomBossBarPosition then
 		FancyBossBar.forceBottomBossBarPosition = true
 	end
 end, EntityType.ENTITY_THE_HAUNT)
 
 ---@param npc EntityNPC
-FancyBossBar:AddCallback(ModCallbacks.MC_NPC_UPDATE, function (_, npc)
+FancyBossBar:AddCallback(ModCallbacks.MC_NPC_UPDATE, function(_, npc)
 	FancyBossBar.forceBottomBossBarPosition = true
 end, EntityType.ENTITY_MAMA_GURDY)
 
 if isRepentance and not REPENTOGON then
 	---@param npc EntityNPC
-	FancyBossBar:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, function (_, npc)
+	FancyBossBar:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, function(_, npc)
 		local sprite = npc:GetSprite()
 		if npc.Variant == 2 and sprite:GetAnimation() == "Death" and sprite:IsEventTriggered("Shoot") then
 			FancyBossBar.forceBossBarDisable = true
@@ -266,37 +329,19 @@ end
 
 local function printDebugInfo()
 	print("[FancyBossBar] Version:", version, "Config:")
-	Isaac.DebugString("[FancyBossBar] Version: ".. version .. " " .. "Config:")
+	Isaac.DebugString("[FancyBossBar] Version: " .. version .. " " .. "Config:")
 	for key, value in pairs(FancyBossBar.Config) do
 		print(key, ":", tostring(value))
 		Isaac.DebugString(key .. ": " .. tostring(value))
 	end
 
-	print("[FancyBossBar] EBB Enabled:", not not EBB )
+	print("[FancyBossBar] EBB Enabled:", not not EBB)
 	Isaac.DebugString("[FancyBossBar] EBB Enabled: " .. tostring(not not EBB))
 end
 
-FancyBossBar:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function (_, cmd)
+FancyBossBar:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, cmd)
 	if cmd == "fbb_config" then
 		printDebugInfo()
-	end
-
-end)
-
-FancyBossBar:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, function ()
-	EBB = HPBars
-
-	if EBB then
-		blackListedBarStyles = {
-			["Design - TheSavageHybrid"] = true,
-			["Enter The Gungeon"] = true,
-			["Flash"] = true,
-			["Hearts"] = true,
-			["Minecraft"] = true,
-			["Minimal"] = true,
-			["Planetarium"] = true,
-			["Terraria"] = true
-		}
 	end
 end)
 

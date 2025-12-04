@@ -1,9 +1,9 @@
 <AnimatedActor>
-	<Info CreatedBy="possombull" CreatedOn="2024-10-17 3:52:42 PM" Version="7" Fps="30"/>
+	<Info CreatedBy="possombull" CreatedOn="12/3/2025 10:03:58 PM" Version="8" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="..\dungeon_details.png" Id="0"/>
-			<Spritesheet Path="..\..\..\..\resources-dlc3\gfx\grid\tiles_itemdungeon_gideon.png" Id="1"/>
+			<Spritesheet Path="..\..\tiles_itemdungeon_gideon.png" Id="1"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="background" Id="0" SpritesheetId="0"/>

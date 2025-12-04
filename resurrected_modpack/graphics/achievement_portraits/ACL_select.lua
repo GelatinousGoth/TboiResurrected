@@ -1,5 +1,6 @@
 local ACL_select = {}
 
+ACL_select.Check = false 
 ACLmenu = {}
 
 -- CHARACTERS (255)
@@ -73,5 +74,46 @@ ACLmenu[33] = Sprite()
 ACLmenu[34] = Sprite()
 
 ACLmenu[35] = Sprite()
+
+function ACL_select:ModCompat()
+
+		ACL_select.Check = true
+
+		-- if Epiphany then
+			-- table.insert(ACLmenu, 1)
+			-- ACLmenu[#ACLmenu] = Sprite()
+			
+			-- table.insert(ACLmenu, 1)
+			-- ACLmenu[#ACLmenu] = Sprite()
+			
+			-- table.insert(ACLmenu, 1)
+			-- ACLmenu[#ACLmenu] = Sprite()
+			
+			-- table.insert(ACLmenu, 1)
+			-- ACLmenu[#ACLmenu] = Sprite()
+			
+			-- table.insert(ACLmenu, 1)
+			-- ACLmenu[#ACLmenu] = Sprite()
+			
+			-- table.insert(ACLmenu, 1)
+			-- ACLmenu[#ACLmenu] = Sprite()
+			
+			-- table.insert(ACLmenu, 1)
+			-- ACLmenu[#ACLmenu] = Sprite()
+			
+			-- table.insert(ACLmenu, 1)
+			-- ACLmenu[#ACLmenu] = Sprite()
+			
+			-- table.insert(ACLmenu, 1)
+			-- ACLmenu[#ACLmenu] = Sprite()
+			
+			-- table.insert(ACLmenu, 1)
+			-- ACLmenu[#ACLmenu] = Sprite()
+		-- end
+		
+		
+
+end
+ACLadmin:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, ACL_select.ModCompat)
 
 return ACL_select

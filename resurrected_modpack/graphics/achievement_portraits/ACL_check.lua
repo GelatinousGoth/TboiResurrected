@@ -1,6 +1,22 @@
 local ACL_check = {}
 
+ACL_check.Check = false
 ACLbox = {}
+
+-- LIST OF EPIPHANY PORTRAITS
+
+local EPI = {}
+EPI[1] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_EPI_1_tarIsaac")
+EPI[2] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_EPI_2_tarMaggy")
+EPI[3] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_EPI_3_tarCain")
+EPI[4] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_EPI_4_tarJudas")
+EPI[5] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_EPI_5_tarBlueB")
+EPI[6] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_EPI_7_tarSamson")
+EPI[7] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_EPI_10_tarEden")
+EPI[8] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_EPI_11_tarLost")
+EPI[9] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_EPI_13_tarKeepr")
+EPI[10] = require("resurrected_modpack.graphics.achievement_portraits.acl.ACL_EPI_Z_misc")
+
 
 -- CHARACTERS (255)
 	-- REBIRTH
@@ -56,5 +72,34 @@ ACLbox[34] = "33_taintedHID" --24	(THE TAINTED VII) Lost, ???, Forgotten ///////
 -- GODHOOD (9)
 ACLbox[35] = "35_god" -- 9 Achievements related to 100% (I AM...)
 
+function ACL_check:ModCompat()
+
+		-- ACL_check.Check = true
+		
+		-- if Epiphany then
+			-- table.insert(ACLbox, "EPI_1_tarIsaac")
+			-- ACLadmin:RequireQueue(EPI[1])
+			-- table.insert(ACLbox, "EPI_2_tarMaggy")
+			-- ACLadmin:RequireQueue(EPI[2])
+			-- table.insert(ACLbox, "EPI_3_tarCain")
+			-- ACLadmin:RequireQueue(EPI[3])
+			-- table.insert(ACLbox, "EPI_4_tarJudas")
+			-- ACLadmin:RequireQueue(EPI[4])
+			-- table.insert(ACLbox, "EPI_5_tarBlueB")
+			-- ACLadmin:RequireQueue(EPI[5])
+			-- table.insert(ACLbox, "EPI_7_tarSamson")
+			-- ACLadmin:RequireQueue(EPI[6])
+			-- table.insert(ACLbox, "EPI_10_tarEden")
+			-- ACLadmin:RequireQueue(EPI[7])
+			-- table.insert(ACLbox, "EPI_11_tarLost")
+			-- ACLadmin:RequireQueue(EPI[8])
+			-- table.insert(ACLbox, "EPI_13_tarKeepr")
+			-- ACLadmin:RequireQueue(EPI[9])
+			-- table.insert(ACLbox, "EPI_Z_misc")
+			-- ACLadmin:RequireQueue(EPI[10])
+		-- end	
+
+end
+ACLadmin:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, ACL_check.ModCompat)
 
 return ACL_check

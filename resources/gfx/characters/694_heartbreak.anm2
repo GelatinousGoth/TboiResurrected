@@ -1,11 +1,11 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="06.10.2021 21:16:03" Version="106" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="26.05.2025 11:29:23" Version="107" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="costumes\costume_694_heartbreak.png" Id="0"/>
 		</Spritesheets>
 		<Layers>
-			<Layer Name="head3" Id="0" SpritesheetId="0"/>
+			<Layer Name="head1" Id="0" SpritesheetId="0"/>
 		</Layers>
 		<Nulls/>
 		<Events/>

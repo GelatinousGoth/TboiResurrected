@@ -1,9 +1,9 @@
 <AnimatedActor>
-	<Info CreatedBy="possombull" CreatedOn="2024-03-11 11:00:23 PM" Version="6" Fps="30"/>
+	<Info CreatedBy="possombull" CreatedOn="12/3/2025 10:00:34 PM" Version="7" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="rotgut_details.png" Id="0"/>
-			<Spritesheet Path="..\..\..\..\resources-dlc3\gfx\grid\tiles_rotgut.png" Id="1"/>
+			<Spritesheet Path="..\..\tiles_rotgut.png" Id="1"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="decor1" Id="0" SpritesheetId="0"/>

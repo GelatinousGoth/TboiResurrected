@@ -247,6 +247,7 @@
         <Item Name="Nyx" Weight="0.5" DecreaseBy="0.5" RemoveOn="0.1"/>
         <Item Name="Telebombs" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Spindle" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Azurite Spindown" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="D3" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Bag of Bobbies" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
         <Item Name="Bottle of Water" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -362,5 +363,18 @@
 
         <!-- ACCURATE BLOURBOS -->
 
+        <!-- JOE MAMA -->
+        <Item Name="Lil Fortune Teller" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+        <Item Name="Card Sleeve" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+
+        <!-- KREKLA -->
+        <Item Name="Dream Atlas" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+
+        <!-- DAVE -->
+        <Item Name="Pesticide" Weight="0.5" DecreaseBy="0.5" RemoveOn="0.1" />
+        <Item Name="The B6" Weight="0.5" DecreaseBy="0.5" RemoveOn="0.1" />
+
+        <!-- DANIEL -->
+        <Item Name="Amoeba" Weight="0.5" DecreaseBy="0.5" RemoveOn="0.1"/>
     </Pool>
 </ItemPools>

@@ -1,6 +1,8 @@
 local ACL_5_bluebaby = {}
 
-local PersistentGameData = Isaac.GetPersistentGameData()
+local DATA = Isaac.GetPersistentGameData()
+
+local CountingNum = require("resurrected_modpack.graphics.achievement_portraits.acl.ACLcounter")
 
 ACL_5_bluebaby.Pname = "???"
 ACL_5_bluebaby.Description = "What's in the chest?"
@@ -16,9 +18,28 @@ ACL_5_bluebaby.portrait = "bluebaby" --uses this to find image in ("resources/gf
 
 ACL_5_bluebaby.grid = {}
 
+ACL_5_bluebaby.redo = true
+ACL_5_bluebaby.Check = false
+
+function ACL_5_bluebaby:Revise()
+	if MenuManager.GetActiveMenu() == MainMenuType.GAME then
+	
+		ACL_5_bluebaby.Check = true
+		
+		ACL_5_bluebaby:Redo()
+	
+	end
+	if MenuManager.GetActiveMenu() == MainMenuType.SAVES and ACL_5_bluebaby.Check == true then
+		ACL_5_bluebaby.Check = false
+	end
+end
+ACLadmin:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, ACL_5_bluebaby.Revise)
+
+function ACL_5_bluebaby:Redo()
+
 ACL_5_bluebaby.grid[1] = {
 DisplayName = "???",
-DisplayText = "Defeat Mom's Heart 10 times",
+DisplayText = "Defeat Mom's Heart 10 times"..CountingNum:GetCounter(DATA:GetEventCounter(EventCounter.MOM_KILLS), 10),
 TextName = [[You unlocked "???"]],
 gfx = "Achievement_Bluebaby.png",
 Unlocked = false,
@@ -211,7 +232,6 @@ Near = false,
 Tile = Sprite()
 }
 
+end
+
 return ACL_5_bluebaby
-
-
-
