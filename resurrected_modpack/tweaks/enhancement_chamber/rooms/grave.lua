@@ -1,22 +1,27 @@
 --[[ Grave ]]--
 local mod = EnhancementChamber
-local config = mod.ConfigSpecial
 local game = Game()
 local sound = SFXManager()
 local music = MusicManager()
 
 -- Gravestones --
+---@param entity EntityEffect
 function mod:gravePostSlot(entity)
-    if not config["grave"] then
+
+    -- Removes gravestones if necessary
+    if not self.ConfigSpecial["grave"] then
         entity:Remove()
         return
     end
-    if entity:GetData().altar_spawn == nil then
-        entity:GetData().altar_spawn = true
+
+    -- Spawn gravestone
+    if entity:GetData().ec_gravestone_spawn == nil then
+        entity:GetData().ec_gravestone_spawn = true
         local spriteVar = entity.InitSeed % 6
         entity:GetSprite():SetFrame("Idle", spriteVar % 3)
         if spriteVar > 2 then entity:GetSprite().FlipX = true end
-        -- Flag check --
+        -- Flag check
+        ---@type integer
         local altarFlags = EntityFlag.FLAG_NO_TARGET | EntityFlag.FLAG_NO_STATUS_EFFECTS
         if entity:GetEntityFlags() ~= altarFlags then
             entity:ClearEntityFlags(entity:GetEntityFlags())
@@ -24,9 +29,11 @@ function mod:gravePostSlot(entity)
             entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_PLAYERONLY
         end
     end
-    -- Mechanic --
+
+    -- Mechanic
     if entity.GridCollisionClass == EntityGridCollisionClass.GRIDCOLL_GROUND then
         entity:Remove()
+
         -- Despawns default loot
 		for _, ent in pairs(Isaac.GetRoomEntities()) do
 			if (ent.Type == 4 or ent.Type == 5) and ent:GetSprite():IsPlaying("Appear") then
@@ -34,13 +41,14 @@ function mod:gravePostSlot(entity)
 				if distance < 25 then ent:Remove() end
 			end
 		end
+
         -- Custom loot
         local chance = entity:GetDropRNG():RandomInt(20)
         local velocity = Vector.FromAngle(math.random(360)):Resized(math.random()*2 + 3)
         if chance < 3 then -- Bony
-            Isaac.Spawn(227, 0, 0, entity.Position, Vector(0,0), entity)
+            Isaac.Spawn(227, 0, 0, entity.Position, Vector.Zero, entity)
         elseif chance < 5 then -- Lil Haunt
-            Isaac.Spawn(260, 10, 0, entity.Position, Vector(0,0), entity)
+            Isaac.Spawn(260, 10, 0, entity.Position, Vector.Zero, entity)
         elseif chance < 7 then -- Card
             Isaac.Spawn(5, 300, 0, entity.Position, velocity, entity)
         elseif chance < 9 then -- Trinket
@@ -52,25 +60,28 @@ function mod:gravePostSlot(entity)
             Isaac.Spawn(5, 10, heartSubtype, entity.Position, velocity, entity)
         end
         sound:Play(SoundEffect.SOUND_ROCK_CRUMBLE, 1, 2, false, 1, 0)
-        local dust = Isaac.Spawn(1000, 59, 0, entity.Position, Vector(0,0), entity):ToEffect()
-        dust:SetTimeout(30)
-        dust:Update()
+        local dust = Isaac.Spawn(1000, 59, 0, entity.Position, Vector.Zero, entity)
+        dust:ToEffect():SetTimeout(30)
+        dust:ToEffect():Update()
     end
 end
 mod:AddCallback(ModCallbacks.MC_POST_SLOT_UPDATE, mod.gravePostSlot, 90)
 
--- Grave Dirt --
+-- Grave Dirt
+---@param effect EntityEffect
 function mod:graveDirt(effect)
-    if not config["grave"] then return end
     local level = game:GetLevel()
+
     -- Start dirt patch
-    if effect:GetSprite():IsFinished("Idle") and not effect:GetData().dirt_dug then
-        effect:GetData().dirt_dug = true
+    if effect:GetSprite():IsFinished("Idle") and not effect:GetData().ec_dirt_dug then
+        effect:GetData().ec_dirt_dug = true
     end
+
     -- Drop old chest
-    if effect:GetSprite():IsFinished("DugUp") and effect:GetData().dirt_dug then
-        effect:GetData().dirt_dug = false
-        local pickup = Isaac.FindByType(5, -1, -1)
+    if effect:GetSprite():IsFinished("DugUp") and effect:GetData().ec_dirt_dug then
+        effect:GetData().ec_dirt_dug = false
+        ---@type EntityPickup
+        local pickup = Isaac.FindByType(5)
         for i = 1, #pickup do
             if not pickup.FrameCount then
                 local distance = effect.Position:Distance(pickup[i].Position)
@@ -81,11 +92,13 @@ function mod:graveDirt(effect)
             end
         end
     end
+
     -- Death music
-    if effect.FrameCount > 0 and level:GetStage() == LevelStage.STAGE6 and mod.checkRoom(RoomType.ROOM_DEFAULT, "Grave") then
-        if music:GetCurrentMusicID() ~= Music.MUSIC_GAME_OVER then
-            music:Play(Music.MUSIC_GAME_OVER, Options.MusicVolume)
-        end
+    if effect.FrameCount > 0
+    and level:GetStage() == LevelStage.STAGE6
+    and self.checkRoom(RoomType.ROOM_DEFAULT, "Grave")
+    and music:GetCurrentMusicID() ~= Music.MUSIC_GAME_OVER then
+        music:Play(Music.MUSIC_GAME_OVER, Options.MusicVolume)
     end
 end
 mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.graveDirt, EffectVariant.DIRT_PATCH)

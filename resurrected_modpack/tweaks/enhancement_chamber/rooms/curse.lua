@@ -1,15 +1,15 @@
 --[[ Curse ]]--
 local mod = EnhancementChamber
-local config = mod.ConfigSpecial
-local configM = mod.ConfigMisc
 local game = Game()
 local sound = SFXManager()
 
--- Cursed Door --
+-- Cursed Door
+---@param door GridEntityDoor
 function mod:curseDoorRender(door)
-    if not config["curse"] then return end
     local level = game:GetLevel()
     local room = level:GetCurrentRoom()
+
+    -- Curse Door sprite
     if (door:GetSprite():GetFilename() == "gfx/grid/Door_04_SelfSacrificeRoomDoor.anm2") and door.State == DoorState.STATE_OPEN then
         door:GetSprite():Load("gfx/curse_door.anm2", true)
         if room:GetFrameCount() == 0 then
@@ -19,54 +19,64 @@ function mod:curseDoorRender(door)
         end
     end
 
+    -- Curse Door attack animation
     if door:GetSprite():GetFilename() == "gfx/curse_door.anm2" then
-        local player = mod.getNearestVulnerablePlayer(door.Position)
+        local player = self.getNearestVulnerablePlayer(door.Position)
         if player then
-            local distance = (player.Position - door.Position):Length() -- player.SubType ~= 35
+
+            local distance = (player.Position - door.Position):Length()
             if door.State == DoorState.STATE_OPEN and distance < 28 and not door:GetSprite():IsPlaying("Attack") then
                 if not player:HasTrinket(TrinketType.TRINKET_FLAT_FILE) then door:GetSprite():Play("Attack", true) end
             end
+
+            -- Attack animation
             if door:GetSprite():IsPlaying("Attack") then
                 -- Player movement --
                 if door:GetSprite():GetFrame() < 8 or door:GetSprite():GetFrame() >= 12 then
-                    if door:GetSprite():GetFrame() < 8 then player:GetData().curse_entrance_immunity = true end
+                    if door:GetSprite():GetFrame() < 8 then player:GetData().ec_curse_entrance_immunity = true end
                     local pushX = (-1) ^ math.floor(door.Slot / 2) * ((door.Slot + 1) % 2) * -0.85
                     local pushY = (-1) ^ math.floor(door.Slot / 2) * (door.Slot % 2) * -0.85
                     player.Velocity = Vector(pushX, pushY)
                 else
-                    player.Velocity = Vector(0, 0)
+                    player.Velocity = Vector.Zero
                 end
-                -- Attack event --
+
+                -- Attack event
                 if door:GetSprite():IsEventTriggered("Attack") then
-                    player:GetData().curse_entrance_immunity = nil
+                    player:GetData().ec_curse_entrance_immunity = nil
                     sound:Play(49, 1, 2, false, 0.25, 0)
                     if not player:HasInstantDeathCurse() then
-                        local flags = DamageFlag.DAMAGE_CURSED_DOOR
                         if player:GetPlayerType() ~= PlayerType.PLAYER_THELOST and player:GetPlayerType() ~= PlayerType.PLAYER_THELOST_B then
-                            if configM["redHeartDamage"] then flags = flags | DamageFlag.DAMAGE_RED_HEARTS end
+                            local redHeartDamage = self.ConfigMisc["redHeartDamage"]
+                            if redHeartDamage then
+                                self.RedHeartDamage(player, 1, DamageFlag.DAMAGE_CURSED_DOOR, EntityRef(nil), 30)
+                            else
+                                player:TakeDamage(1, DamageFlag.DAMAGE_CURSED_DOOR, EntityRef(nil), 30)
+                            end
                         end
-                        player:TakeDamage(1, flags, EntityRef(entity), 30)
                     else
-                        player:TakeDamage(1, DamageFlag.DAMAGE_NOKILL, EntityRef(entity), 30)
+                        player:TakeDamage(1, DamageFlag.DAMAGE_NOKILL, EntityRef(nil), 30)
                     end
                 end
             end
-            -- Flat file synergy --
+
+            -- Flat file synergy
             if player:HasTrinket(TrinketType.TRINKET_FLAT_FILE) then
                 door:GetSprite():ReplaceSpritesheet(3, "gfx/grid/curse_door_nospike.png")
                 door:GetSprite():LoadGraphics()
             end
         end
+        -- Finished attack
         if door:GetSprite():IsFinished("Attack") then door:GetSprite():Play("opened", true) end
     end
 end
 mod:AddCallback(ModCallbacks.MC_POST_GRID_ENTITY_DOOR_RENDER, mod.curseDoorRender, GridEntityType.GRID_DOOR)
 
--- Cursed Door Damage Immunity --
-function mod:curseTakeDamage(entity, amount, flags, source, countdown)
-    if not config["curse"] then return end
-    -- Curse Door Entrance Immunity --
-    if entity:GetData().curse_entrance_immunity ~= nil then
+-- Cursed Door Damage Immunity
+---@param entity EntityPlayer
+function mod:curseTakeDamage(entity)
+    -- Curse Door Entrance Immunity
+    if entity:GetData().ec_curse_entrance_immunity then
         return false
     end
 end
