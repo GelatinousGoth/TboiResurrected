@@ -264,15 +264,9 @@ function ACLadmin:Check()
 					
 					elseif requireLink[i].grid[o].Enum ~= nil then
 						requireLink[i].grid[o].Unlocked = PersistentGameData:Unlocked(requireLink[i].grid[o].Enum)
-						
-						Isaac.DebugString(requireLink[i].grid[o].Enum..":"..tostring(requireLink[i].grid[o].Unlocked))
-						
 					else
 						requireLink[i].AchID = Isaac.GetAchievementIdByName(requireLink[i].grid[o].TextName)
 						requireLink[i].grid[o].Unlocked = PersistentGameData:Unlocked(requireLink[i].AchID)
-						
-						Isaac.DebugString(requireLink[i].AchID..":"..tostring(requireLink[i].grid[o].Unlocked))
-						
 					end
 					--CHECK COUNTER FOR EACH GRID
 					if requireLink[i].grid[o].Unlocked == true and requireLink[i].grid[o].Enum ~= -1 then
@@ -310,7 +304,6 @@ function ACLadmin:Check()
 			ACLmenu[i]:Load("gfx/ui/select/tileSelect.anm2", true)
 			ACLmenu[i]:ReplaceSpritesheet(5, "gfx/ui/select/"..ACLbox[i]..".png") --CHANGE THIS LATER
 			ACLmenu[i]:LoadGraphics()
-			Isaac.DebugString(#ACLmenu)
 			if requireLink[i].Counter == 0 then
 			ACLmenu[i]:ReplaceSpritesheet(5, "gfx/ui/select/unknown.png")
 			end
@@ -552,14 +545,9 @@ function ACLadmin:Check()
 						elseif requireLink[boxID].grid[o].Enum ~= nil then
 							requireLink[boxID].grid[o].Unlocked = PersistentGameData:Unlocked(requireLink[boxID].grid[o].Enum)
 							
-							Isaac.DebugString(requireLink[boxID].grid[o].Enum..":"..tostring(requireLink[boxID].grid[o].Unlocked))
-							
 						else
 							requireLink[boxID].AchID = Isaac.GetAchievementIdByName(requireLink[boxID].grid[o].TextName)
 							requireLink[boxID].grid[o].Unlocked = PersistentGameData:Unlocked(requireLink[boxID].AchID)
-							
-							Isaac.DebugString(requireLink[boxID].AchID..":"..tostring(requireLink[boxID].grid[o].Unlocked))
-							
 						end
 						--CHECK COUNTER FOR EACH GRID
 						if requireLink[boxID].grid[o].Unlocked == true then

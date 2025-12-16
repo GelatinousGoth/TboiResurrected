@@ -65,15 +65,12 @@ function ACLcounter:UniqueBlueBabyKills(Limit)
 	
 	local uniquekills = 0
 	
-	
-	Isaac.DebugString(uniquekills)
-	
 	for k, v in pairs(BB_kills) do
 		if v ~= 0 then
 			uniquekills = uniquekills + 1
 		end
 	end
-	Isaac.DebugString(uniquekills)
+
 	local Str = ""
 	
 	if uniquekills > Limit then
