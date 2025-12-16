@@ -107,10 +107,6 @@ end
 
 
 function ACLspoiler:spoilerCheck(gridID, PortID)
-
-	Isaac.DebugString(PortID)
-	Isaac.DebugString(gridID)
-
 	for i = 1, #ACLspoiler.spoiler do
 		
 		if string.match(requireLink[PortID].grid[gridID].DisplayText, ACLspoiler.spoiler[i].Name) then
