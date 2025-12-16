@@ -133,6 +133,10 @@ end
 -- Don't sapwn spikeExplosion if a player holds flatFile.
 -------------------------------------------------------------------------------------------------------------------------------------------
 function modDSR:onRockDestroy(type, variant, subtype, _, _, _, seed)
+    if type ~= EntityType.ENTITY_EFFECT or variant ~= EffectVariant.ROCK_PARTICLE then
+        return
+    end
+
     local room = game:GetLevel():GetCurrentRoom()
     local spikedRocks = getGridEntities(room, GridEntityType.GRID_ROCK_SPIKED)
 
@@ -144,8 +148,6 @@ function modDSR:onRockDestroy(type, variant, subtype, _, _, _, seed)
             end
         end
     end
-
-    return {type, variant, subtype, seed}
 end
 
 -------------------------------------------------------------------------------------------------------------------------------------------
@@ -200,7 +202,7 @@ end
 modDSR:AddCallback(ModCallbacks.MC_POST_PROJECTILE_UPDATE, modDSR.onImpact, ProjectileVariant.PROJECTILE_SPIKE)
 modDSR:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, modDSR.onImpact, TearVariant.SPIKE)
 modDSR:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, modDSR.onDamage)
-modDSR:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN, modDSR.onRockDestroy, EntityType.ENTITY_EFFECT, EffectVariant.ROCK_PARTICLE)
+modDSR:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN, modDSR.onRockDestroy)
 modDSR:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, modDSR.onRoomChange)
 modDSR:AddCallback(ModCallbacks.MC_POST_UPDATE, modDSR.onUpdate)
 -------------------------------------------------------------------------------------------------------------------------------------------
