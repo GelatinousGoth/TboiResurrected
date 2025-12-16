@@ -45,7 +45,6 @@ local roomIcon = nil
 local function ModSetup()
     -- Minimap Check
     if MinimapAPI then
-        print("[MinimapAPI] detected.")
         roomIcon = Sprite()
         roomIcon:Load("gfx/ui/room_icons.anm2", true)
     

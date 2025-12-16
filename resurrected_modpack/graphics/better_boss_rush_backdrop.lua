@@ -98,4 +98,14 @@ function mod:MC_POST_NEW_ROOM()
 	end
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,mod.MC_POST_NEW_ROOM)
+local DEFAULT_BOSS_RUSH_GRID = "gfx/grid/rocks_sheol.png"
+local BOSS_RUSH_GRID_PATH = "gfx/grid/rocks_sheol.png"
+
+local function SpriteReplace(_, layerID, pngFileName)
+    if pngFileName == DEFAULT_BOSS_RUSH_GRID and Game():GetRoom():GetType() == RoomType.ROOM_BOSSRUSH then
+        return {layerID, BOSS_RUSH_GRID_PATH}
+    end
+end
+
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.MC_POST_NEW_ROOM)
+mod:AddCallback(ModCallbacks.MC_PRE_REPLACE_SPRITESHEET, SpriteReplace)
