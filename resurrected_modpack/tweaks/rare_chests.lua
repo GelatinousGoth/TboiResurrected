@@ -228,7 +228,7 @@ function mod:chestCollision(pickup, collider, _)
 	if not collider:ToPlayer() then return end
 	local player = collider:ToPlayer()
 	local sprite = pickup:GetSprite()
-	if (pickup.Variant == CARDBOARD_CHEST and pickup.SubType == 0 then
+	if (pickup.Variant == CARDBOARD_CHEST and pickup.SubType == 0) then
 		if sprite:IsPlaying("Appear") then return false end	
 		if pickup.Variant == CARDBOARD_CHEST then mod.openCardboardChest(pickup, player) end
 	end
@@ -250,7 +250,7 @@ mod:AddCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, mod.chestCollision)
 --chest replacement and removal
 
 function mod:chestInit(pickup)
-	if (pickup.Variant == CARDBOARD_CHEST and pickup.SubType == 1 and not pickup:GetData()["IsInRoom"] then
+	if (pickup.Variant == CARDBOARD_CHEST and pickup.SubType == 1 and not pickup:GetData()["IsInRoom"]) then
 		pickup:Remove()
 	end
 	if pickup.Variant == SLOT_CHEST and pickup.SubType > 0 then
@@ -278,7 +278,7 @@ function mod:chestUpdate(pickup)
 		if pickup.Variant == 360 and math.random(100) <= 10 then pickup:Morph(5, DEVIL_CHEST, 0, true, true, false) SFXManager():Play(21, 1, 2, false, 1, 0) end
 		if pickup.Variant == 60 and math.random(100) <= 10 then
 			local rng = math.random(100)
-			if rng => 75 then pickup:Morph(5, SLOT_CHEST, 0, true, true, false)
+			if rng >= 75 then pickup:Morph(5, SLOT_CHEST, 0, true, true, false)
 			end 
 			SFXManager():Play(21, 1, 2, false, 1, 0)
 		end
