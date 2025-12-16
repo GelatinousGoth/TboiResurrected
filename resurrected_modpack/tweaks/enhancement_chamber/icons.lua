@@ -42,31 +42,36 @@ end
 -- Icon Data
 local roomIcon = nil
 
--- Minimap Check
-if MinimapAPI then
-
-    roomIcon = Sprite()
-    roomIcon:Load("gfx/ui/room_icons.anm2", true)
-
-    MinimapAPI:AddIcon("sacrifice_closed_icon", roomIcon, "IconSacrificeClosed", 0)
-    MinimapAPI:AddIcon("double_trouble_icon", roomIcon, "IconDoubleTrouble", 0)
-    MinimapAPI:AddIcon("grave_icon", roomIcon, "IconGrave", 0)
-    MinimapAPI:AddIcon("dice_triggered_icon", roomIcon, "IconDiceTriggered", 0)
-
-    function mod:iconStart()
-        self:roomIconUpdate()
+local function ModSetup()
+    -- Minimap Check
+    if MinimapAPI then
+        print("[MinimapAPI] detected.")
+        roomIcon = Sprite()
+        roomIcon:Load("gfx/ui/room_icons.anm2", true)
+    
+        MinimapAPI:AddIcon("sacrifice_closed_icon", roomIcon, "IconSacrificeClosed", 0)
+        MinimapAPI:AddIcon("double_trouble_icon", roomIcon, "IconDoubleTrouble", 0)
+        MinimapAPI:AddIcon("grave_icon", roomIcon, "IconGrave", 0)
+        MinimapAPI:AddIcon("dice_triggered_icon", roomIcon, "IconDiceTriggered", 0)
+    
+        function mod:iconStart()
+            self:roomIconUpdate()
+        end
+        mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.iconStart)
+    
+        function mod:iconRoom()
+            local level = game:GetLevel()
+            local room = level:GetCurrentRoom()
+            if room:IsFirstVisit() then self:roomIconUpdate() end
+        end
+        mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.iconRoom)
+    
+        function mod:iconLevel()
+            self:roomIconUpdate()
+        end
+        mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.iconLevel)
     end
-    mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.iconStart)
-
-    function mod:iconRoom()
-        local level = game:GetLevel()
-        local room = level:GetCurrentRoom()
-        if room:IsFirstVisit() then self:roomIconUpdate() end
-    end
-    mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.iconRoom)
-
-    function mod:iconLevel()
-        self:roomIconUpdate()
-    end
-    mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.iconLevel)
 end
+
+
+mod:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, ModSetup)

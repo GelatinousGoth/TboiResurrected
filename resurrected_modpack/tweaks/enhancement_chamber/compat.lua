@@ -6,23 +6,18 @@ if not REPENTOGON then
 	mod:Log("Repentogon not found!")
 end
 
--- External Item Descriptions
-if EID and mod.ConfigSpecial["sacrifice"] then
-	EID.Config["DisplaySacrificeInfo"] = nil
-end
+local function ModSetup()
+	-- External Item Descriptions
+	if EID and mod.ConfigSpecial["sacrifice"] then
+		EID.Config["DisplaySacrificeInfo"] = nil
+	end
 
--- Mod Config Menu
-if ModConfigMenu then
+	-- Mod Config Menu
+	if ModConfigMenu then
+		local csOrder = {"ambush", "blackmarket", "boss", "bossrush", "curse",
+						 "dice", "error", "grave", "library", "sacrifice", "shop"}
 
-	local csOrder = {"ambush", "blackmarket", "boss", "bossrush", "curse",
-					 "dice", "error", "grave", "library", "sacrifice", "shop"}
-
-	local cmOrder = {"itemSound", "redHeartDamage"}
-
-	local hasSetupMCM = false
-	local function setupModConfig()
-		if hasSetupMCM then return end
-		hasSetupMCM = true
+		local cmOrder = {"itemSound", "redHeartDamage"}
 
 		-- Special Rooms
 		ModConfigMenu.AddSpace(mod.Name, "Rooms")
@@ -80,6 +75,6 @@ if ModConfigMenu then
 			})
 		end
 	end
-
-	mod:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, setupModConfig)
 end
+
+mod:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, ModSetup)
