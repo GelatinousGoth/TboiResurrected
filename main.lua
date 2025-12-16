@@ -60,6 +60,7 @@ TR_Manager:LoadMod("resurrected_modpack.graphics.sheol_trapdoor")
 TR_Manager:LoadMod("resurrected_modpack.graphics.necromancer_costume")
 TR_Manager:LoadMod("resurrected_modpack.graphics.animated_pickup_counter")
 TR_Manager:LoadMod("resurrected_modpack.graphics.mystery_egg_stages")
+TR_Manager:LoadMod("resurrected_modpack.graphics.super_greed_coin_tears")
 
 TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.chests_before_mother")

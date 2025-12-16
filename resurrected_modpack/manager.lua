@@ -473,7 +473,7 @@ end
 ---@param modName string
 ---@param version integer? # Unused
 ---@param hasToggle boolean?
----@return table
+---@return table | ModReference
 function TR_Manager:RegisterMod(modName, version, hasToggle)
     ---@type TR_Mod
     local mod = {
