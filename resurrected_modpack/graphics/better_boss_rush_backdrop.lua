@@ -99,7 +99,7 @@ function mod:MC_POST_NEW_ROOM()
 end
 
 local DEFAULT_BOSS_RUSH_GRID = "gfx/grid/rocks_sheol.png"
-local BOSS_RUSH_GRID_PATH = "gfx/grid/rocks_sheol.png"
+local BOSS_RUSH_GRID_PATH = "gfx/grid/rocks_bossrush.png"
 
 local function SpriteReplace(_, layerID, pngFileName)
     if pngFileName == DEFAULT_BOSS_RUSH_GRID and Game():GetRoom():GetType() == RoomType.ROOM_BOSSRUSH then
