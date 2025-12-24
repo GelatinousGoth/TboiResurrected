@@ -1,8 +1,8 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="11/5/2022 13:38:48" Version="108" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="12/25/2025 1:44:27 AM" Version="109" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="bosses\classic\boss_059_daddylonglegs.png" Id="0"/>
+			<Spritesheet Path="bosses\classic\longlegitem.png" Id="0"/>
 			<Spritesheet Path="shadow.png" Id="1"/>
 		</Spritesheets>
 		<Layers>

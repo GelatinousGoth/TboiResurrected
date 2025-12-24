@@ -179,7 +179,6 @@ local function OnPostModLoad()
 
         ["gfx/062.001_scolex.anm2"] = {anm2 = false},
         ["gfx/265.001_sistersvis.anm2"] = {anm2 = false},
-        ["gfx/270.000_megafred.anm2"] = {anm2 = false},
 
         ["gfx/052.000_pride.anm2"] = {anm2 = false},
         ["gfx/052.001_super pride.anm2"] = {anm2 = false}
