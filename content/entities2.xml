@@ -143,5 +143,8 @@
 	
 	<entity anm2path="" id="1000" variant="40" name="Dummy Effect Giga Bombs Synergies" />
 	<entity anm2path="book_dead_soul.anm2" id="1000" variant="4245" name="Book of The Dead Soul" />
+	
+	<entity anm2path="glow.anm2" name="Gello Costumes Glow Helper" id="1000" variant="7529" subtype="8215"/>
+		
 </entities>
 <!-- OLD ENTRY <entity anm2path="dream_catcher_entity.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" id="960" name="Hanging Dream Catcher" numGridCollisionPoints="0" shadowSize="13" stageHP="0" variant="245" shutdoors="false"/> -->	
