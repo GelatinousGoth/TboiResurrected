@@ -18,8 +18,8 @@ function Mod:InitConfig()
     HUDColorMod = {
       R = 1,
       G = 0, 
-      B = 0.05,
-      A = 0.25
+      B = 0,
+      A = 0.2
     },
     Enabled = true,
     DSS = {}
@@ -28,7 +28,7 @@ end
 
 Mod:InitConfig()
 
-local DefaultColor = Color(1,0,0.05,0.25)
+local DefaultColor = Color(1,0,0,0.2)
 
 local json = require("json")
 
@@ -332,6 +332,7 @@ DeadSeaScrollsMenu.AddMenu(ModID, {
 
 
 function Mod:PostUpdate()
+  
   for _,player in pairs(Isaac.FindByType(1,-1,-1)) do
     player = player:ToPlayer()
     local effectivehealth = player:GetSoulHearts() + player:GetHearts() + player:GetEternalHearts() + player:GetBoneHearts()
@@ -344,9 +345,9 @@ function Mod:PostUpdate()
         Mod.Damage = Mod.Damage - 0.1
       end
       
-       Mod.critical = math.max((math.sin(Isaac.GetFrameCount() / 100) + 1.5) / 4,Mod.Damage)
+      Mod.critical = math.max((math.sin(Isaac.GetFrameCount() / 100) + 1.5) / 4,Mod.Damage)
       
-    elseif (effectivehealth <= 1 and player:GetPlayerType() ~= PlayerType.PLAYER_THELOST) and (not player:IsDead()) then
+    elseif (effectivehealth == 1) and (player:GetPlayerType() ~= PlayerType.PLAYER_THELOST) and (player:GetPlayerType() ~= PlayerType.PLAYER_THELOST_B) and (not player:IsDead()) and (not Game():GetRoom():IsClear()) then
       if Mod.Damage > 0 then
         Mod.Damage = Mod.Damage - 0.1
       end
