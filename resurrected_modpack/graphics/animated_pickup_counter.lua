@@ -25,8 +25,8 @@ end
 
 mod.PickupHUDFileReplace = "gfx/ui/hudpickups_clockreplace.anm2"
 mod.PickupHUDFileReplaceGfx = "gfx/ui/hudpickups_clockreplace.png"
-mod.GoldenBombPickupAnim = "goldbomb_сменачётототамхзкакназвать"
-mod.GoldenKeyPickupAnim = "goldkey_сменачётототамхзкакназвать"
+mod.GoldenBombPickupAnim = "goldbomb_russiansmash"
+mod.GoldenKeyPickupAnim = "goldkey_russiansmash"
 mod.sprs = {
     Coin = GenSprite("clockPickup_shaders/hudpickups_anim.anm2", "coin_idle"),
     Bomb = GenSprite("clockPickup_shaders/hudpickups_anim.anm2", "bomb_idle"),
@@ -206,7 +206,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 end)
 ]]
 
-local defaultPath = "/resources/gfx/ui/hudpickups.png"
+local defaultPath = "resources/clockPickup_shaders/hudpickups_anim.anm2"
 local defaultPathAnm2 = "/resources/gfx/ui/hudpickups.anm2"
 for i = 0, XMLData.GetNumEntries(XMLNode.MOD) do
     local modnode = XMLData.GetEntryById(XMLNode.MOD, i)
@@ -214,7 +214,7 @@ for i = 0, XMLData.GetNumEntries(XMLNode.MOD) do
         if modnode.enabled == "true" then
             local directory = modnode.fulldirectory --or modnode.realdirectory or modnode.directory
             directory = directory:gsub("\\Repentogon", "")
-            local pathToPickupGfx = directory .. defaultPath
+            local pathToPickupGfx = defaultPath
             local result,msg = pcall(Renderer.LoadImage, pathToPickupGfx)
 
             if result then
