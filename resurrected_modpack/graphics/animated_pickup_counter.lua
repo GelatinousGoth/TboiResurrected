@@ -25,8 +25,8 @@ end
 
 mod.PickupHUDFileReplace = "gfx/ui/hudpickups_clockreplace.anm2"
 mod.PickupHUDFileReplaceGfx = "gfx/ui/hudpickups_clockreplace.png"
-mod.GoldenBombPickupAnim = "goldbomb_russiansmash"
-mod.GoldenKeyPickupAnim = "goldkey_russiansmash"
+mod.GoldenBombPickupAnim = "goldbomb_transition"
+mod.GoldenKeyPickupAnim = "goldkey_transition"
 mod.sprs = {
     Coin = GenSprite("clockPickup_shaders/hudpickups_anim.anm2", "coin_idle"),
     Bomb = GenSprite("clockPickup_shaders/hudpickups_anim.anm2", "bomb_idle"),
