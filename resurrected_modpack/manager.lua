@@ -764,4 +764,6 @@ function TR_Manager:GetModIdByName(name)
     end
 end
 
+TR_Manager.ModRef = TboiRekindled
+
 return TR_Manager
