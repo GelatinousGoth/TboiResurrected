@@ -629,7 +629,7 @@ end
 local function updateGrid(grid, variant)
     variant = variant or grid:GetVariant()
     local s = grid:GetSprite()
-    s:Load("gfx/grid/giant_prop.anm2", true)
+    s:Load("gfx/grid/giant_prop.anm2", false)
     s:ReplaceSpritesheet(0, "gfx/grid/" .. GridSpritesheetName[variant] .. ".png")
     s:LoadGraphics()
     s:Play(GridAnimName[grid.VarData])
@@ -718,7 +718,7 @@ function mod:RoomUpdate()
         updateGrid(gent)
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.RoomUpdate)
+mod:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, 1, mod.RoomUpdate)
 
 --[[
     CORE: HOW GIANT PROPS' MAIN SEGMENTS(!) REACT TO NEARBY EXPLOSIONS
@@ -862,6 +862,7 @@ function mod.OnCustomStageRoomEnter(gfx)
         updateGrid(gent)
     end
 end
+
 if StageAPI then
     StageAPI.UnregisterCallbacks("GiantProps")
     StageAPI.AddCallback("GiantProps", StageAPI.Enum.Callbacks.POST_UPDATE_GRID_GFX, 0, mod.OnCustomStageRoomEnter)

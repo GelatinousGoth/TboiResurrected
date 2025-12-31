@@ -77,27 +77,6 @@ local arena = {
     }
 }
 
-if StageAPI then
-    local arenaBackdrop = StageAPI.BackdropHelper({
-        NFloors = {"nfloor"},
-        LFloors = {"lfloor"},
-        Walls = {"1", "2", "3", "4", "5", "6"}
-    }, "gfx/backdrop/custom/arena_", ".png")
-
-    arena = StageAPI.RoomGfx(arenaBackdrop, nil)
-
-    function changeBackdrop(backdrop)
-        StageAPI.ChangeRoomGfx(backdrop)
-    end
-end
-
-function mod:MC_POST_NEW_ROOM()
-	-- boss rush backdrop change code
-	if Game():GetRoom():GetType() == RoomType.ROOM_BOSSRUSH then
-	    changeBackdrop(arena)
-	end
-end
-
 local DEFAULT_BOSS_RUSH_GRID = "gfx/grid/rocks_sheol.png"
 local BOSS_RUSH_GRID_PATH = "gfx/grid/rocks_bossrush.png"
 
@@ -107,5 +86,48 @@ local function SpriteReplace(_, layerID, pngFileName)
     end
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.MC_POST_NEW_ROOM)
-mod:AddCallback(ModCallbacks.MC_PRE_REPLACE_SPRITESHEET, SpriteReplace)
+function mod:MC_POST_NEW_ROOM()
+    -- boss rush backdrop change code
+    if Game():GetRoom():GetType() == RoomType.ROOM_BOSSRUSH then
+        changeBackdrop(arena)
+    end
+end
+
+if not StageAPI then
+    mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.MC_POST_NEW_ROOM)
+    mod:AddCallback(ModCallbacks.MC_PRE_REPLACE_SPRITESHEET, SpriteReplace)
+end
+
+if StageAPI then
+    local arenaBackdrop = StageAPI.BackdropHelper({
+        NFloors = {"nfloor"},
+        LFloors = {"lfloor"},
+        Walls = {"1", "2", "3", "4", "5", "6"}
+    }, "gfx/backdrop/custom/arena_", ".png")
+
+    arena = StageAPI.RoomGfx(arenaBackdrop, nil)
+
+    -- backdrop needs to be set early but grids need to be set late
+    function ChangeBackdrop()
+        if Game():GetRoom():GetType() == RoomType.ROOM_BOSSRUSH then
+            StageAPI.ChangeRoomGfx(arena)
+        end
+    end
+
+    mod:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, -1, ChangeBackdrop)
+
+    local arenaGrids = StageAPI.GridGfx()
+    arenaGrids:SetPits(BOSS_RUSH_GRID_PATH, nil, false)
+    arenaGrids:SetRocks(BOSS_RUSH_GRID_PATH)
+    arenaGrids:SetGrid(BOSS_RUSH_GRID_PATH, GridEntityType.GRID_SPIKES)
+    arenaGrids:SetGrid(BOSS_RUSH_GRID_PATH, GridEntityType.GRID_SPIKES_ONOFF)
+
+    -- grids need to be set late otherwise they can be overridden
+    local function InitGrids()
+        if Game():GetRoom():GetType() == RoomType.ROOM_BOSSRUSH then
+            StageAPI.ChangeGrids(arenaGrids)
+        end
+    end
+
+    mod:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, 1, InitGrids)
+end
