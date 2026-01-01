@@ -68,6 +68,7 @@ local shouldRenderBigIcon = function()
 	return true
 end
 
+
 ---@enum BossBarID
 local BossBarID = {
 	BIG = "big",
@@ -86,11 +87,11 @@ local shouldRestrictBossCount = function()
 	if EBB then
 		return EBB:isIgnoreMegaSatanFight() or (not HPBars.Config["DisplayWithSpidermod"] and HPBars:hasSpiderMod()) or
 			(not HPBars.Config["ShowInMotherFight"] and room:GetBossID() == 88) or
-			(not HPBars.Config["ShowInBeastFight"] and game:GetLevel():GetStage() == 13 and room:GetType() == RoomType.ROOM_DUNGEON) or
+			(not HPBars.Config["ShowInBeastFight"] and game:GetLevel():GetStage() == 13) or
 			room:GetBossID() == 83
 	else
 		return room:GetBossID() == 55 or room:GetBossID() == 88 or room:GetBossID() == 83 or
-			(game:GetLevel():GetStage() == 13 and room:GetType() == RoomType.ROOM_DUNGEON)
+			(game:GetLevel():GetStage() == 13)
 	end
 end
 
@@ -118,21 +119,26 @@ local bosses = {} ---@type table<integer, Entity>
 local function handleBossBarSprite()
 	local bossBarSprite = GetFancyBossBar()
 
---	if not shouldRestrictBossCount() and (isRepentance and game:GetHUD():IsVisible()) then
---		for _, ent in pairs(Isaac.GetRoomEntities()) do
---			if ent:IsBoss() and not shouldIgnoreBossEntity(ent) and not bosses[ent.Index] then
---				if REPENTOGON and ent.Type == EntityType.ENTITY_DOGMA then
---					bossBarSprite:SetRenderFlags(AnimRenderFlags.STATIC)
-----
---					bossBarSprite:ReplaceSpritesheet(8, "gfx/ui/ui_bosshealthbarskull_dogma.png")
---					bossBarSprite:ReplaceSpritesheet(9, "gfx/ui/ui_bosshealthbarskull_dogma.png", true)
---					bossBarSprite:ReplaceSpritesheet(2, "gfx/ui/ui_bosshealthbarskull_dogma.png", true)
---				end
---				--print("adding " .. ent.Type, ent.Index)
---				bosses[ent.Index] = ent
---			end
---		end
---	end
+	if not shouldRestrictBossCount() and (isRepentance and game:GetHUD():IsVisible()) then
+		for _, ent in pairs(Isaac.GetRoomEntities()) do
+			if ent:IsBoss() and not shouldIgnoreBossEntity(ent) and not bosses[ent.Index] then
+				if REPENTOGON and ent.Type == EntityType.ENTITY_DOGMA then
+					bossBarSprite:SetRenderFlags(AnimRenderFlags.STATIC)
+					bossBarSprite:ReplaceSpritesheet(1, "gfx/ui/nothing.png")
+					bossBarSprite:ReplaceSpritesheet(2, "gfx/ui/nothing.png")
+					bossBarSprite:ReplaceSpritesheet(3, "gfx/ui/nothing.png")
+					bossBarSprite:ReplaceSpritesheet(4, "gfx/ui/nothing.png")
+					bossBarSprite:ReplaceSpritesheet(5, "gfx/ui/nothing.png")
+					bossBarSprite:ReplaceSpritesheet(6, "gfx/ui/nothing.png")
+					bossBarSprite:ReplaceSpritesheet(7, "gfx/ui/nothing.png")
+					bossBarSprite:ReplaceSpritesheet(8, "gfx/ui/nothing.png")
+					bossBarSprite:ReplaceSpritesheet(9, "gfx/ui/nothing.png")
+				end
+				--print("adding " .. ent.Type, ent.Index)
+				bosses[ent.Index] = ent
+			end
+		end
+	end
 
 	local sortedBosses = {} ---@type table<integer, Entity>
 	for i, ent in pairs(bosses) do

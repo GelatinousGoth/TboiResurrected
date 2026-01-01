@@ -44,8 +44,10 @@ function mod:pedestal(pickup)
 			end
 		elseif room:GetType() == RoomType.ROOM_TREASURE then
 			altarType = "treasure"
-		elseif room:GetType() == RoomType.ROOM_CHALLENGE or room:GetType() == RoomType.ROOM_BOSSRUSH then
+		elseif room:GetType() == RoomType.ROOM_CHALLENGE then
 			altarType = "ambush"
+		elseif room:GetType() == RoomType.ROOM_BOSSRUSH then
+			altarType = "bossrush"
 		end
 
 		-- Pedestal Change --

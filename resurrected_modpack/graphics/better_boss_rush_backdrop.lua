@@ -79,6 +79,7 @@ local arena = {
 
 local DEFAULT_BOSS_RUSH_GRID = "gfx/grid/rocks_sheol.png"
 local BOSS_RUSH_GRID_PATH = "gfx/grid/rocks_bossrush.png"
+local SPIKES_BOSS_RUSH = "gfx/grid/grid_spikes.png"
 
 local function SpriteReplace(_, layerID, pngFileName)
     if pngFileName == DEFAULT_BOSS_RUSH_GRID and Game():GetRoom():GetType() == RoomType.ROOM_BOSSRUSH then
@@ -119,8 +120,8 @@ if StageAPI then
     local arenaGrids = StageAPI.GridGfx()
     arenaGrids:SetPits(BOSS_RUSH_GRID_PATH, nil, false)
     arenaGrids:SetRocks(BOSS_RUSH_GRID_PATH)
-    arenaGrids:SetGrid(BOSS_RUSH_GRID_PATH, GridEntityType.GRID_SPIKES)
-    arenaGrids:SetGrid(BOSS_RUSH_GRID_PATH, GridEntityType.GRID_SPIKES_ONOFF)
+    arenaGrids:SetGrid(SPIKES_BOSS_RUSH, GridEntityType.GRID_SPIKES)
+    arenaGrids:SetGrid(SPIKES_BOSS_RUSH, GridEntityType.GRID_SPIKES_ONOFF)
 
     -- grids need to be set late otherwise they can be overridden
     local function InitGrids()
