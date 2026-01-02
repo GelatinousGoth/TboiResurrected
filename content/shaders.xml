@@ -284,44 +284,37 @@
         ]]></vertex>
         <fragment><![CDATA[
             varying vec4 Color0;
-varying vec2 TexCoord0;
-varying lowp vec4 RenderData0;
-varying lowp float Amount0;
-varying lowp float RMod0;
-varying lowp float GMod0;
-varying lowp float BMod0;
-varying lowp float AMod0;
-uniform sampler2D Texture0;
+            varying vec2 TexCoord0;
+            varying lowp vec4 RenderData0;
+            varying lowp float Amount0;
+            varying lowp float RMod0;
+            varying lowp float GMod0;
+            varying lowp float BMod0;
+            varying lowp float AMod0;
+            uniform sampler2D Texture0;
 
-#define T texture2D(Texture0,.5+(p.xy*=.992))
-uniform vec3 resolution;
+            #define T texture2D(Texture0,.5+(p.xy*=.992))
+            uniform vec3 resolution;
 
-void main(void)
-{
-  vec2 texcoord = TexCoord0;
-  vec2 center = vec2(RenderData0.x / 2.0, RenderData0.y / 2.0);
-  vec2 path = vec2(center.x - gl_FragCoord.x,center.y - gl_FragCoord.y);
-  float dist = length(path) / 2000.0 * Amount0+(RMod0+GMod0+BMod0+AMod0)*0.0;
-	
-	if (Amount0 > 0.0 && TexCoord0.x > 0.0)
-  {
-    
-    vec3 rgb = Color0 * texture2D(Texture0, TexCoord0);
-      
-        rgb = rgb + vec3(dist*RMod0*AMod0,dist*GMod0*AMod0,dist*BMod0*AMod0);
-        gl_FragColor = vec4(rgb, 1.0);
-      
-        
-
-  }
-  else 
-  {
-    vec4 Color = Color0 * texture2D(Texture0, TexCoord0);       
-     gl_FragColor = Color;
-  }
-  
-	
-}
+            void main(void)
+            {
+                vec2 texcoord = TexCoord0;
+                vec2 center = vec2(RenderData0.x / 2.0, RenderData0.y / 2.0);
+                vec2 path = vec2(center.x - gl_FragCoord.x,center.y - gl_FragCoord.y);
+                float dist = length(path) / 2000.0 * Amount0+(RMod0+GMod0+BMod0+AMod0)*0.0;
+                    
+                if (Amount0 > 0.0 && TexCoord0.x > 0.0)
+                {
+                    vec3 rgb = (Color0 * texture2D(Texture0, TexCoord0)).rgb;
+                    rgb = rgb + vec3(dist*RMod0*AMod0,dist*GMod0*AMod0,dist*BMod0*AMod0);
+                    gl_FragColor = vec4(rgb, 1.0);
+                }
+                else 
+                {
+                    vec4 Color = Color0 * texture2D(Texture0, TexCoord0);       
+                    gl_FragColor = Color;
+                }
+            }
         ]]></fragment>
     </shader>
 </shaders>
