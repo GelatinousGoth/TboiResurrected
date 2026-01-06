@@ -1,9 +1,9 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="12/25/2025 2:00:31 AM" Version="105" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="1/6/2026 12:08:55 PM" Version="106" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="monsters\afterbirthplus\crispy_body.png" Id="0"/>
-			<Spritesheet Path="Monsters/Afterbirth/010.002_FlamingGaper.png" Id="1"/>
+			<Spritesheet Path="monsters\afterbirth\010.002_flaminggaper_modcompat.png" Id="1"/>
 			<Spritesheet Path="monsters\afterbirth\enemy_fire.png" Id="2"/>
 		</Spritesheets>
 		<Layers>

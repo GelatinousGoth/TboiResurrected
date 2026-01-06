@@ -18,15 +18,6 @@ local function sacrificeCondition(verify)
         for i = 0, level:GetRooms().Size - 1 do
             local roomDesc = level:GetRooms():Get(i)
             -- Counts normal and miniboss rooms
-            if (roomDesc.Data.Type == RoomType.ROOM_DEFAULT and roomDesc.Data.Subtype == 0)
-            or roomDesc.Data.Type == RoomType.ROOM_MINIBOSS then
-                roomCount = roomCount + 1
-                 if roomDesc.Clear then
-                    local value = 1
-                    if level:HasMirrorDimension() then value = 2 end
-                    clearedRoomCount = clearedRoomCount + value
-                end
-            end
             if roomDesc.Data.Type == RoomType.ROOM_SACRIFICE then
                 hasSacrificeRoom = true
             end
@@ -84,8 +75,16 @@ mod:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_RENDER, mod.sacrificeDoorRe
 mod:AddCallback(ModCallbacks.MC_POST_GRID_ENTITY_DOOR_RENDER, mod.sacrificeDoorRender, GridEntityType.GRID_DOOR)
 
 -- Sacrifice Condition
-function mod:sacrificeRoomClear()
+function mod:sacrificeRoomClear(gridIndex, roomShape)
     local level = game:GetLevel()
-    if not level:GetStateFlag(LevelStateFlag.STATE_GREED_MONSTRO_SPAWNED) then sacrificeCondition(true) end
+    local neighbor = level:GetCurrentRoomDesc():GetNeighboringRooms(level:GetNeighboringRooms(level:GetCurrentRoomIndex(), game:GetRoom():GetRoomShape()))
+    for doorSlot, neighborDesc in pairs(neighbor) do
+        --print("for works")
+        local roomType = neighborDesc.Data.Type
+        if roomType == RoomType.ROOM_BOSS then
+        --print("for works 2")
+            return sacrificeCondition(true)
+    end
+end
 end
 mod:AddCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, mod.sacrificeRoomClear)

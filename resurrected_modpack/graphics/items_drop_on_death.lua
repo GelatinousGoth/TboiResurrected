@@ -20,6 +20,7 @@ local GRAVITY = 0.8
 local AIR_DRAG = 0.92
 local GROUND_DRAG = 0.96
 local ITEM_LIFETIME = 300
+local TIME_TO_FADE = 60
 
 local function getPlayerCollectibles(player)
     local items = {}
@@ -177,8 +178,8 @@ function mod:onRender()
             end
 
             item.frame = item.frame + 1
-            if item.frame >= 270 then
-                item.fade = 1 - math.min((item.frame - 270) / 30, 1)
+            if item.frame >= TIME_TO_FADE then
+                item.fade = 1 - math.min((item.frame - TIME_TO_FADE) / 60, 1)
             else
                 item.fade = 1
             end
@@ -290,11 +291,11 @@ function mod:onRender()
         local frameCount = game:GetFrameCount()
         local uniqueOffset = item.uniqueOffset or 0
         local angle = (frameCount * 4 + uniqueOffset) % 360
-        local scaleX = math.cos(math.rad(angle))
+        local scaleX = 1
         local offset = math.sin(math.rad(angle * 2)) * 2
         item.sprite.Scale = Vector(math.abs(scaleX), 1)
         item.sprite.Offset = Vector(0, offset)
-        item.sprite.FlipX = scaleX < 0
+        item.sprite.FlipX = scaleX
         item.sprite.Rotation = 0
         pcall(function()
             item.sprite:Update()
