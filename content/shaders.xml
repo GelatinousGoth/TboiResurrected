@@ -132,6 +132,12 @@
                     TexCoord0 = TexCoord;
                     gl_Position = Transform * vec4(Position.xyz, 1.0);
 
+					// Always initialize out vars
+					EnabledOut = 0.0;
+					TimeOut = 0.0;
+					BlackPositionOut = vec3(0.0);
+					YWarping = 1.0;
+
                     if (Enabled > 0.0) {
                         
                         EnabledOut = Enabled;                                                               // Passing data to fragment shader
@@ -139,13 +145,16 @@
                         
                         vec4 TargetPos;
 
-                        TargetPos.xy = (BlackPosition.xy / RenderData.zw) * Scale;
-                        TargetPos.zw =  (BlackPosition.zy / RenderData.zw) * Scale;
+						// Don't know if it can be 0, but just in case
+						vec2 safeRD = max(RenderData.zw, vec2(0.0001));
+                        TargetPos.xy = (BlackPosition.xy / safeRD) * Scale;
+                        TargetPos.zw =  (BlackPosition.zy / safeRD) * Scale;
                         BlackPositionOut = vec3(TargetPos.xy, distance(TargetPos.xy, TargetPos.zw));        // Passing data to fragment shader
                         
-                        vec2 WarpChecker = (WarpCheck.xy / RenderData.zw) * Scale;
+                        vec2 WarpChecker = (WarpCheck.xy / safeRD) * Scale;
                         float xDistance = distance(vec2(WarpChecker.x, TargetPos.y), TargetPos.xy);
                         float yDistance = distance(vec2(TargetPos.x, WarpChecker.y), TargetPos.xy);
+						yDistance = max(yDistance, 0.0001);
                         YWarping = xDistance / yDistance;                                                   // Passing data to fragment shader
                     }
                 }
