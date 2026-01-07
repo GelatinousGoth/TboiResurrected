@@ -1,6 +1,9 @@
 local TR_Manager = require("resurrected_modpack.manager")
 local ModID = "Critical Health"
 local Mod = TR_Manager:RegisterMod(ModID, 1)
+local game = Game()
+local level = game:GetLevel()
+local ALPHA_VALUE = 0.5
 
 Mod.critical = 0
 Mod.Damage = 0
@@ -19,7 +22,7 @@ function Mod:InitConfig()
       R = 1,
       G = 0, 
       B = 0,
-      A = 0.2
+      A = ALPHA_VALUE
     },
     Enabled = true,
     DSS = {}
@@ -28,7 +31,7 @@ end
 
 Mod:InitConfig()
 
-local DefaultColor = Color(1,0,0,0.2)
+local DefaultColor = Color(1,0,0,ALPHA_VALUE)
 
 local json = require("json")
 
@@ -390,8 +393,10 @@ Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mod.OnDamage, EntityType.ENTITY
 function Mod:OnRender(shadername)
   local Time
   local Amount
-
-  if Game():GetHUD():IsVisible() and not Game():IsPaused() and Mod.critical > 0 and Mod.effectivehealth <= 1 and (Mod.Config.Enabled or false) == true then
+  local condition1 = (level:GetStage() > 6) and (Mod.critical > 0 and Mod.effectivehealth <= 2)
+  local condition2 = (level:GetStage() <= 6) and (Mod.critical > 0 and Mod.effectivehealth <= 1)
+  local fullCondition = condition1 or condition2
+  if Game():GetHUD():IsVisible() and not Game():IsPaused() and fullCondition and (Mod.Config.Enabled or false) == true then
     Mod.Bip.Color = Color(1,1,1,math.max(Mod.critical,0.8 )) * (Mod.Config.ColorMod or DefaultColor)
     Mod.Bip:Play("Idle",true)
     Mod.Bip:SetFrame( math.floor(Isaac.GetFrameCount() / 1.5)%120 )
