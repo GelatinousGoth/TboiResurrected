@@ -3,7 +3,7 @@ local ModID = "Critical Health"
 local Mod = TR_Manager:RegisterMod(ModID, 1)
 local game = Game()
 local level = game:GetLevel()
-local ALPHA_VALUE = 0.5
+local ALPHA_VALUE = 0.25
 
 Mod.critical = 0
 Mod.Damage = 0
@@ -21,7 +21,7 @@ function Mod:InitConfig()
     HUDColorMod = {
       R = 1,
       G = 0, 
-      B = 0,
+      B = 0.05,
       A = ALPHA_VALUE
     },
     Enabled = true,

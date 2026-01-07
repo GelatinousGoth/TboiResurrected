@@ -77,11 +77,12 @@ mod:AddCallback(ModCallbacks.MC_POST_GRID_ENTITY_DOOR_RENDER, mod.sacrificeDoorR
 -- Sacrifice Condition
 function mod:sacrificeRoomClear(gridIndex, roomShape)
     local level = game:GetLevel()
+    local room = game:GetRoom()
     local neighbor = level:GetCurrentRoomDesc():GetNeighboringRooms(level:GetNeighboringRooms(level:GetCurrentRoomIndex(), game:GetRoom():GetRoomShape()))
     for doorSlot, neighborDesc in pairs(neighbor) do
         --print("for works")
         local roomType = neighborDesc.Data.Type
-        if roomType == RoomType.ROOM_BOSS then
+        if (roomType == RoomType.ROOM_BOSS) or (room:GetType() == RoomType.ROOM_BOSS) then
         --print("for works 2")
             return sacrificeCondition(true)
     end
