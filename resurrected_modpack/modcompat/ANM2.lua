@@ -39,6 +39,8 @@ local validSpritesSheets = {
     ["gfx/bosses/classic/miniboss_09_pride.png"] = true,
     ["gfx/bosses/classic/miniboss_10_superpride.png"] = true,
     ["gfx/bosses/rebirth/megafred.png"] = true,
+	["gfx/monsters/rebirth/monster_230_camillojr.png"] = true,
+	["gfx/monsters/rebirth/monster_230_camillojr_champion.png"] = true,
 	["gfx/monsters/afterbirth/278.000_blackglobin.png"] = true,
 	["gfx/monsters/afterbirth/278.000_blackglobin_champion.png"] = true,
 	["gfx/monsters/afterbirth/010.002_flaminggaper.png"] = true,
@@ -185,7 +187,8 @@ local function OnPostModLoad()
         ["gfx/052.000_pride.anm2"] = {anm2 = false},
         ["gfx/052.001_super pride.anm2"] = {anm2 = false},
 		
-		["gfx/010.002_flaminggaper.anm2"] = {anm2 = false}
+		["gfx/010.002_flaminggaper.anm2"] = {anm2 = false},
+		["gfx/230.000_camillojr.anm2"] = {anm2 = false}
     }
 
     if not ReworkedFoes then
