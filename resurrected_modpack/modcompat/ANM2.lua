@@ -29,6 +29,7 @@ local validSpritesSheets = {
     ["gfx/bosses/afterbirthplus/deliriumforms/classic/boss_070_ItLives.png"] = true,
     ["gfx/bosses/afterbirthplus/deliriumforms/classic/miniboss_09_pride.png"] = true,
     ["gfx/bosses/afterbirthplus/deliriumforms/classic/miniboss_10_superpride.png"] = true,
+	["gfx/bosses/afterbirthplus/deliriumforms/classic/boss_057_maskofinfamy.png"] = true,
     ["gfx/bosses/classic/boss_035_chad.png"] = true,
     ["gfx/bosses/classic/boss_051_gish.png"] = true,
     ["gfx/bosses/classic/boss_067_triachnid.png"] = true,
@@ -36,6 +37,9 @@ local validSpritesSheets = {
 	["gfx/bosses/classic/boss_021_gurdyjr.png"] = true,
 	["gfx/bosses/classic/boss_021_gurdyjr_blue.png"] = true,
 	["gfx/bosses/classic/boss_021_gurdyjr_yellow.png"] = true,
+	["gfx/bosses/classic/boss_057_maskofinfamy.png"] = true,	
+	["gfx/bosses/classic/boss_057_maskofinfamy_black.png"] = true,
+	["gfx/bosses/classic/boss_057_maskofinfamy_yellow.png"] = true,
     ["gfx/bosses/classic/miniboss_09_pride.png"] = true,
     ["gfx/bosses/classic/miniboss_10_superpride.png"] = true,
     ["gfx/bosses/rebirth/megafred.png"] = true,
@@ -179,7 +183,7 @@ local function OnPostModLoad()
         ["gfx/102.002_ (alt).anm2"] = {anm2 = true},
         ["gfx/401.000_thestain.anm2"] = {anm2 = true},
         ["gfx/403.000_theforsaken.anm"] = {anm2 = true},
-		
+		["gfx/097.000_mask of infamy.anm"] = {anm2 = true},
 
         ["gfx/062.001_scolex.anm2"] = {anm2 = false},
         ["gfx/265.001_sistersvis.anm2"] = {anm2 = false},
