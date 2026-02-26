@@ -118,3 +118,5 @@ TR_Manager:LoadMod("resurrected_modpack.sounds.character_hit_sounds")
 TR_Manager:LoadMod("resurrected_modpack.sounds.rag_mega_sounds_like_rag_man")
 
 TR_Manager:LoadMod("resurrected_modpack.music.unique_mega_satan_music")
+
+Isaac.DebugString("[TBOI Rekindled] [INFO] Mod successfully loaded!")

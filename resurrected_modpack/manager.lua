@@ -349,7 +349,7 @@ function TR_Manager:SaveModData(mod, data)
     end
 end
 
-local loadedData = false
+local s_loadedData = false
 
 local function apply_mod_save_data(modSaveData)
     if type(modSaveData) ~= "table" then
@@ -377,7 +377,7 @@ local function apply_mod_save_data(modSaveData)
 end
 
 function TR_Manager:LoadData()
-    loadedData = true;
+    s_loadedData = true;
 
     if not TboiRekindled:HasData() then
         return;
@@ -396,7 +396,7 @@ end
 ---@param mod TR_Mod
 ---@return string?
 function TR_Manager:LoadModData(mod)
-    if not loadedData then
+    if not s_loadedData then
         TR_Manager:LoadData()
     end
 
@@ -406,7 +406,7 @@ end
 ---@param mod TR_Mod
 ---@return boolean
 function TR_Manager:HasModData(mod)
-    if not loadedData then
+    if not s_loadedData then
         TR_Manager:LoadData()
     end
 
@@ -414,7 +414,7 @@ function TR_Manager:HasModData(mod)
 end
 
 function TR_Manager:RemoveModData(mod)
-    if not loadedData then
+    if not s_loadedData then
         TR_Manager:LoadData()
     end
 
@@ -500,6 +500,7 @@ function TR_Manager:RegisterMod(modName, version, hasToggle)
     }
 
     self.ModData[mod.TR_ID] = modData
+    s_loadedData = false
 
     table.insert(self.InitializingModsList, mod.TR_ID)
 
@@ -627,8 +628,12 @@ function TR_Manager:LoadMod(path)
         for i = #self.InitializingModsList, 1, -1 do
             delete_mod(self.InitializingModsList[i])
         end
+        Isaac.DebugString("[TBOI Rekindled] [ERROR] Failed to Load Mod: " .. tostring(path))
+        return
     end
+
     self.InitializingModsList = {}
+    Isaac.DebugString("[TBOI Rekindled] [INFO] Successfully Loaded Mod: " .. tostring(path))
 end
 
 ---@param shaderName string
