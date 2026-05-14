@@ -3,6 +3,8 @@ local mod = EnhancementChamber
 local game = Game()
 local sound = SFXManager()
 local music = MusicManager()
+local didRunThisFloor = false
+
 
 -- Checks when sacrifice room requirement is done
 ---@param verify boolean
@@ -74,18 +76,29 @@ end
 mod:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_RENDER, mod.sacrificeDoorRender, GridEntityType.GRID_DOOR)
 mod:AddCallback(ModCallbacks.MC_POST_GRID_ENTITY_DOOR_RENDER, mod.sacrificeDoorRender, GridEntityType.GRID_DOOR)
 
+mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function()
+    didRunThisFloor = false
+    print("did run is post new level")
+end)
+
 -- Sacrifice Condition
 function mod:sacrificeRoomClear(gridIndex, roomShape)
     local level = game:GetLevel()
     local room = game:GetRoom()
-    local neighbor = level:GetCurrentRoomDesc():GetNeighboringRooms(level:GetNeighboringRooms(level:GetCurrentRoomIndex(), game:GetRoom():GetRoomShape()))
+    local neighbor = level:GetCurrentRoomDesc():GetNeighboringRooms()
     for doorSlot, neighborDesc in pairs(neighbor) do
         --print("for works")
         local roomType = neighborDesc.Data.Type
         if (roomType == RoomType.ROOM_BOSS) or (room:GetType() == RoomType.ROOM_BOSS) then
-        --print("for works 2")
-            return sacrificeCondition(true)
-    end
+        if didRunThisFloor == false then 
+        didRunThisFloor = true
+        print(didRunThisFloor)
+        return sacrificeCondition(true) 
+        end
+        elseif didRunThisFloor == true then
+
+            return sacrificeCondition(false)
+        end
 end
 end
 mod:AddCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, mod.sacrificeRoomClear)
