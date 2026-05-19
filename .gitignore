@@ -1,7 +1,6 @@
 # Main
 
 disable.it
-metadata.xml
 thumb.png
 
 # Other
@@ -12,3 +11,4 @@ thumb.png
 *.pdn
 *.aseprite
 *.ini
+*.code-workspace
