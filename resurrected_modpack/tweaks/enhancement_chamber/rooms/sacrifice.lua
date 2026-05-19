@@ -78,7 +78,7 @@ mod:AddCallback(ModCallbacks.MC_POST_GRID_ENTITY_DOOR_RENDER, mod.sacrificeDoorR
 
 mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function()
     didRunThisFloor = false
-    print("did run is post new level")
+    --print("did run is post new level")
 end)
 
 -- Sacrifice Condition
@@ -92,7 +92,7 @@ function mod:sacrificeRoomClear(gridIndex, roomShape)
         if (roomType == RoomType.ROOM_BOSS) or (room:GetType() == RoomType.ROOM_BOSS) then
         if didRunThisFloor == false then 
         didRunThisFloor = true
-        print(didRunThisFloor)
+        --print(didRunThisFloor)
         return sacrificeCondition(true) 
         end
         elseif didRunThisFloor == true then
