@@ -79,6 +79,7 @@ local arena = {
 
 local DEFAULT_BOSS_RUSH_GRID = "gfx/grid/rocks_sheol.png"
 local BOSS_RUSH_GRID_PATH = "gfx/grid/rocks_bossrush.png"
+local BOSS_RUSH_PITS_PATH = "gfx/grid/grid_pit_bossrush.png"
 local SPIKES_BOSS_RUSH = "gfx/grid/grid_spikes.png"
 
 local function SpriteReplace(_, layerID, pngFileName)
@@ -118,7 +119,7 @@ if StageAPI then
     mod:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, -1, ChangeBackdrop)
 
     local arenaGrids = StageAPI.GridGfx()
-    arenaGrids:SetPits(BOSS_RUSH_GRID_PATH, nil, false)
+    arenaGrids:SetPits(BOSS_RUSH_PITS_PATH, nil, false)
     arenaGrids:SetRocks(BOSS_RUSH_GRID_PATH)
     arenaGrids:SetGrid(SPIKES_BOSS_RUSH, GridEntityType.GRID_SPIKES)
     arenaGrids:SetGrid(SPIKES_BOSS_RUSH, GridEntityType.GRID_SPIKES_ONOFF)
