@@ -21,7 +21,7 @@ local fullAnim = "BarFull"
     -- for one use active items
     if maxCharge < 1 then return end
     if charge == maxCharge then
-        print("charge: " .. charge .. " maxCharge: " .. maxCharge .. " slot: " .. slot)
+        --print("charge: " .. charge .. " maxCharge: " .. maxCharge .. " slot: " .. slot)
 
         --this renders the charge
         if batteryCharge == maxCharge then
@@ -37,7 +37,7 @@ local fullAnim = "BarFull"
 
         -- this renders the overlay
         if batteryCharge == maxCharge then
-            print(batteryCharge)
+            --print(batteryCharge)
             local color = Color(1, 1, 1, 1, 0, 0, 0)
             color:SetColorize(1, 1, 1, 0)
             chargeBarSprite.Color = color
