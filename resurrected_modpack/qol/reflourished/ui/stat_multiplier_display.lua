@@ -307,7 +307,7 @@ mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, player)
             playersDamageMult[player:GetPlayerIndex()] = stats.DamageMult
             playersTearsMult[player:GetPlayerIndex()] = stats.TearsMult
         end
-        pendingMultiplierUpdate[player] = false
+        pendingMultiplierUpdate[index] = false
     end
 end)
 

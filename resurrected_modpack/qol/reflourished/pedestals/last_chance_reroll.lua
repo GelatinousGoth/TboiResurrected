@@ -89,11 +89,14 @@ t.COLLECTIBLE_REROLL_FN[CollectibleType.COLLECTIBLE_D6] = function (rng)
     if not pool or pool == ItemPoolType.POOL_NULL then
         pool = (Game():IsGreedMode() and ItemPoolType.POOL_GREED_TREASURE) or ItemPoolType.POOL_TREASURE
     end
-    return LastChanceReroll.Enum.Obj.Game:GetItemPool():GetCollectible(
+    local itemPool = Game():GetItemPool()
+    local item = itemPool:GetCollectible(
         pool,
         nil,
         seed
     )
+    itemPool:RemoveCollectible(item)
+    return item
 end
 
 t.COLLECTIBLE_REROLL_FN[CollectibleType.COLLECTIBLE_D100] = t.COLLECTIBLE_REROLL_FN[CollectibleType.COLLECTIBLE_D6]

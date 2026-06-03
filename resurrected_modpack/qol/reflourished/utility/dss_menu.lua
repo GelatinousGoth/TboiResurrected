@@ -21,7 +21,7 @@ IsaacReflourished.RFSettingsDefaults = {
     -- accursed trapdoors
     AccursedFirstFloor              = 2,
     AccursedSameAltCurse            = 1,
-    AccursedGuppysEye               = 2,
+    AccursedGuppysEye               = 1,
 
     -- instant poops + fires
     OneHitRedFires                  = 1,
@@ -38,7 +38,7 @@ IsaacReflourished.RFSettingsDefaults = {
     -- better room pools
     BetterPoolsArcade               = 2,
     BetterPoolsDarkRoom             = 2,
-    BetterPoolsSacRoom              = 2,
+    BetterPoolsSacRoom              = 1,
 
     -- run logger
     RunLoggerMaxRuns                = 2, -- 100

@@ -7,8 +7,9 @@ local mod = IsaacReflourished
 local ignoreNext = false
 local function changePool(poolType, decrease, seed)
     ignoreNext = true
-    local item = Game():GetItemPool():GetCollectible(poolType, decrease, seed)
+    local item = Game():GetItemPool():GetCollectible(poolType, decrease, seed, CollectibleType.COLLECTIBLE_BREAKFAST)
     ignoreNext = false
+    if item == CollectibleType.COLLECTIBLE_BREAKFAST then return end
     return item
 end
 
@@ -56,6 +57,13 @@ function RoomPools:GetItem(poolType, decrease, seed)
 
 end
 mod:AddCallback(ModCallbacks.MC_PRE_GET_COLLECTIBLE, RoomPools.GetItem)
+
+-- ---@param projectile EntityProjectile
+-- mod:AddCallback(ModCallbacks.MC_POST_PROJECTILE_RENDER, function(_, projectile, offset)
+--     local sprite = projectile:GetSprite()
+--     projectile:GetSprite().Offset = Vector(projectile:GetSprite().Offset.X, -(projectile.Height/2))
+-- end)
+
 
 end
 return BetterRoomPoolsEnabler

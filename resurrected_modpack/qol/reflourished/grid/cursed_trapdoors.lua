@@ -8,6 +8,12 @@ CursedTrapdoorsMod = {}
 --
 -- By default this should be true btw
 
+local excludedChallenges = {
+    [Challenge.CHALLENGE_PITCH_BLACK] = true,
+    [Challenge.CHALLENGE_CURSED] = true,
+    [Challenge.CHALLENGE_ULTRA_HARD] = true,
+}
+
 function CursedTrapdoorsMod:SpawnCursesFirstFloor()
     return IsaacReflourished:GetSettingsValue("AccursedFirstFloor") == 2
 end
@@ -353,7 +359,7 @@ function CursedTrapdoorsMod:FiendFolioCompat()
             CallbackPriority.EARLY,
             function ()
                 if PlayerManager.AnyoneHasCollectible(FiendFolio.ITEM.COLLECTIBLE.BLACK_LANTERN) then
-                    return 100
+                    return true
                 end
             end
         )
@@ -426,7 +432,7 @@ function CursedTrapdoorsMod:CurseOfMortalityCompat()
             CallbackPriority.EARLY,
             function (_, stage)
                 if stage == LevelStage.STAGE7 then
-                    return 100
+                    return true
                 end
             end
         )
@@ -552,7 +558,7 @@ local function OnCurseEval(_, curses)
 end
 IsaacReflourished:AddPriorityCallback(
     ModCallbacks.MC_POST_CURSE_EVAL,
-    CallbackPriority.IMPORTANT,
+    1, --slightly late so it overrides modded curse logic to run its own logic so the trapdoors match
     OnCurseEval
 )
 
@@ -691,7 +697,7 @@ IsaacReflourished:AddCallback(
 ---@param basePos Vector
 local function RenderCurseIcon(curse, frame, basePos)
     if not CursedTrapdoorsMod:ShouldShowIcon() then return end
-    if Game().Challenge == Challenge.CHALLENGE_ULTRA_HARD then return end
+    if excludedChallenges[Game().Challenge] then return end
     local alpha = frame * 0.05
     alpha = math.min(alpha, 1)
 

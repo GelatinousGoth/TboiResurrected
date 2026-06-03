@@ -770,6 +770,12 @@ function RunLogger:RenderRightPanel(run, renderPos)
 
     local titlePos = renderPos + config.RightPageOffset
 
+    if not (cursorSprite and cursorSprite:IsLoaded()) then
+        cursorSprite = Sprite()
+        cursorSprite:Load("gfx/ui/main menu/cursor.anm2", true)
+    end
+
+
     cursorSprite:SetFrame("icons", 0)
     if run.lostRun then
         cursorSprite:SetFrame("icons", 1)

@@ -95,8 +95,10 @@ function RegretPedestals:ItemTouched(pickup, collider, low)
             local shouldShowGhost = false
             if isInSameOptionsGroup then shouldShowGhost = true end
             if game:GetLevel():GetCurrentRoomIndex() == GridRooms.ROOM_GENESIS_IDX then shouldShowGhost = true end
-            if player:GetPlayerType() == PlayerType.PLAYER_THELOST or player:GetPlayerType() == PlayerType.PLAYER_THELOST_B or player:GetEffects():HasNullEffect(NullItemID.ID_LOST_CURSE)
-            and pickup.Price < 0 and item.Price < 0 then shouldShowGhost = true end
+            if (player:GetPlayerType() == PlayerType.PLAYER_THELOST or player:GetPlayerType() == PlayerType.PLAYER_THELOST_B or player:GetEffects():HasNullEffect(NullItemID.ID_LOST_CURSE))
+            and pickup.Price < 0 and item.Price < 0 then
+                shouldShowGhost = true
+            end
             if isSamePedestal then shouldShowGhost = false end
 
             if shouldShowGhost then

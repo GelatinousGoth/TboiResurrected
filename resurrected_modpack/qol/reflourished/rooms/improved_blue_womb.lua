@@ -27,6 +27,10 @@ local function SetRedirectBlueWomb()
             goto continue
         end
 
+        if door:IsRoomType(RoomType.ROOM_BOSS) then
+            goto continue
+        end
+
         local targetIdx = door.TargetRoomIndex
         local roomDesc = g_Level:GetRoomByIdx(targetIdx, -1)
         roomDesc.Flags = roomDesc.Flags | RoomDescriptor.FLAG_BLUE_REDIRECT

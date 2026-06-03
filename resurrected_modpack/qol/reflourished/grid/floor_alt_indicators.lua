@@ -203,6 +203,7 @@ function FloorAltIndicators:GetNextAltPathStage()
     end
 
     local nextStageNumber = math.max(1, currentStage + stageOffset)
+
     local nextStageType = FloorAltIndicators:CalculateStageTypeRepentance(nextStageNumber)
     local secretRoomDescriptor = FloorAltIndicators:GetExitRoomDescriptor()
 
@@ -224,7 +225,7 @@ function FloorAltIndicators:GetNextAltPathStage()
         end
     end
 
-    return FloorAltIndicators:GetAltStageID(nextStage, nextStageType)
+    return FloorAltIndicators:GetAltStageID(nextStageNumber, nextStageType)
 end
 
 ---@param npc EntityNPC

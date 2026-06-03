@@ -153,11 +153,15 @@ IsaacReflourished:AddCallback(
 -----------------------------
 
 ---@param stage LevelStage
----@return number
+---@return number | true
 function CurseLogic:EvaluateCurseChance(stage)
     local preReturn = Isaac.RunCallback(CursedTrapdoorsMod.Enums.CustomCallback.PRE_GET_CURSE_CHANCE, stage)
     if type(preReturn) == "number" then
         return preReturn
+    elseif preReturn == true then
+        return true
+    elseif preReturn == false then
+        return 0
     end
 
     local gameData = Isaac.GetPersistentGameData()
@@ -215,8 +219,6 @@ function CurseLogic:AreCursesBlocked(stage)
     if game:GetLevel():IsAscent() then
         return true
     end
-
-    -- We'll move the black candle check to the curse chance calculation
 
     -- Black Candle
     -- if PlayerManager.AnyoneHasCollectible(CollectibleType.COLLECTIBLE_BLACK_CANDLE) then
@@ -406,7 +408,9 @@ function CurseLogic:GetNextCurse(rng, isVoid)
     local curses = 0
     local chance = CurseLogic:EvaluateCurseChance(nextStage)
 
-    if chance > 0 and not CurseLogic:AreCursesBlocked(nextStage) then
+    if chance == true then
+        curses = curses | CurseLogic:PickCurse(rng, nextStage)
+    elseif chance > 0 and not CurseLogic:AreCursesBlocked(nextStage) then
         if rng:RandomInt(chance) == 0 then
             curses = curses | CurseLogic:PickCurse(rng, nextStage)
         end
