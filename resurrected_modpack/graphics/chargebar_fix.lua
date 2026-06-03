@@ -25,21 +25,18 @@ local fullAnim = "BarFull"
 
         --this renders the charge
         if batteryCharge == maxCharge then
-            -- believe or not this is not the way the game does it but it looks fine so 
-            local color = Color(1, 1, 1, 1, 0, 0, 0)
-            color:SetColorize(1, 0.8, 0, 1)
+            local color = Color(1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0)
             chargeBarSprite.Color = color
         end
         chargeBarSprite:SetFrame(fullAnim, 0)        
         chargeBarSprite:Update()
-        chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29))
+        chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29)) -- last vector crops the bottom so only the tippy top is shown
 
 
         -- this renders the overlay
         if batteryCharge == maxCharge then
             --print(batteryCharge)
             local color = Color(1, 1, 1, 1, 0, 0, 0)
-            color:SetColorize(1, 1, 1, 0)
             chargeBarSprite.Color = color
         end
         chargeBarSprite:SetFrame(overlayAnim, 0)        
