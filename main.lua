@@ -18,6 +18,8 @@ require("resurrected_modpack.modcompat.boss_icons")
 -- require("resurrected_modpack.tools.global_functions")
 -- require("resurrected_modpack.tools.console_commands")
 
+TR_Manager:LoadMod("resurrected_modpack.graphics.chargebar_fix")
+
 TR_Manager:LoadMod("resurrected_modpack.graphics.swaggy_mushrooms")
 TR_Manager:LoadMod("resurrected_modpack.graphics.unique_gurgling_sprite")
 TR_Manager:LoadMod("resurrected_modpack.graphics.red_ending_chest")
