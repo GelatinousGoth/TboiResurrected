@@ -30,6 +30,26 @@ FancyBossBar.bossBarsSprites = FancyBossBar.bossBarsSprites or {
 FancyBossBar.bossBarsSprites["big"]:Load("gfx/ui/hp_bosshealthbar.anm2", true)
 FancyBossBar.bossBarsSprites["small"]:Load("gfx/ui/hp_bosshealthbarMini.anm2", true)
 
+local function ApplyGreedModeSpritesheet()
+	if game:IsGreedMode() then
+		FancyBossBar.bossBarsSprites["big"]:ReplaceSpritesheet(0, "gfx/ui/ui_bosshealthbar_greed.png")
+		FancyBossBar.bossBarsSprites["small"]:ReplaceSpritesheet(0, "gfx/ui/ui_bosshealthbar_mini_greed.png")
+		FancyBossBar.bossBarsSprites["big"]:ReplaceSpritesheet(1, "gfx/ui/ui_bosshealthbar_greed.png")
+		FancyBossBar.bossBarsSprites["small"]:ReplaceSpritesheet(1, "gfx/ui/ui_bosshealthbar_mini_greed.png")
+		FancyBossBar.bossBarsSprites["big"]:ReplaceSpritesheet(2, "gfx/ui/ui_bosshealthbarskull_greed.png")
+		FancyBossBar.bossBarsSprites["small"]:ReplaceSpritesheet(2, "gfx/ui/ui_bosshealthbarskull_mini_greed.png")
+		FancyBossBar.bossBarsSprites["big"]:ReplaceSpritesheet(3, "gfx/ui/ui_bosshealthbar_greed.png")
+		FancyBossBar.bossBarsSprites["small"]:ReplaceSpritesheet(3, "gfx/ui/ui_bosshealthbar_mini_greed.png")
+		for i = 4, 10 do
+			FancyBossBar.bossBarsSprites["big"]:ReplaceSpritesheet(i, "gfx/ui/ui_bosshealthbarskull_greed.png")
+			FancyBossBar.bossBarsSprites["small"]:ReplaceSpritesheet(i, "gfx/ui/ui_bosshealthbarskull_mini_greed.png")
+		end
+		FancyBossBar.bossBarsSprites["big"]:LoadGraphics()
+		FancyBossBar.bossBarsSprites["small"]:LoadGraphics()
+	end
+
+end
+
 FancyBossBar.bossBarsSprites["big"].PlaybackSpeed = FancyBossBar.Config["BarAnimationSpeed"] or 1.0
 FancyBossBar.bossBarsSprites["small"].PlaybackSpeed = FancyBossBar.Config["BarAnimationSpeed"] or 1.0
 
@@ -226,6 +246,8 @@ FancyBossBar:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 		GetFancyBossBar(BossBarID.BIG):Load("gfx/ui/hp_bosshealthbar.anm2", true)
 		GetFancyBossBar(BossBarID.SMALL):Load("gfx/ui/hp_bosshealthbarMini.anm2", true)
 	end
+
+	ApplyGreedModeSpritesheet()
 
 	FancyBossBar.renderBossBar = FancyBossBar.renderBossBar or false
 	FancyBossBar.forceBottomBossBarPosition = false
