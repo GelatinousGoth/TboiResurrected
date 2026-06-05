@@ -144,15 +144,9 @@ local function handleBossBarSprite()
 			if ent:IsBoss() and not shouldIgnoreBossEntity(ent) and not bosses[ent.Index] then
 				if REPENTOGON and ent.Type == EntityType.ENTITY_DOGMA then
 					bossBarSprite:SetRenderFlags(AnimRenderFlags.STATIC)
-					bossBarSprite:ReplaceSpritesheet(1, "gfx/ui/nothing.png")
-					bossBarSprite:ReplaceSpritesheet(2, "gfx/ui/nothing.png")
-					bossBarSprite:ReplaceSpritesheet(3, "gfx/ui/nothing.png")
-					bossBarSprite:ReplaceSpritesheet(4, "gfx/ui/nothing.png")
-					bossBarSprite:ReplaceSpritesheet(5, "gfx/ui/nothing.png")
-					bossBarSprite:ReplaceSpritesheet(6, "gfx/ui/nothing.png")
-					bossBarSprite:ReplaceSpritesheet(7, "gfx/ui/nothing.png")
-					bossBarSprite:ReplaceSpritesheet(8, "gfx/ui/nothing.png")
-					bossBarSprite:ReplaceSpritesheet(9, "gfx/ui/nothing.png")
+					for i = 1, 9 do
+					bossBarSprite:ReplaceSpritesheet(i, "gfx/ui/nothing.png")
+					end
 				end
 				--print("adding " .. ent.Type, ent.Index)
 				bosses[ent.Index] = ent
