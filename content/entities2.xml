@@ -175,5 +175,14 @@
     <entity name="RF Spike Poof" anm2path="RF_spike_poof.anm2" id="1000" variant="12" subtype="346" friction="1" />
 
     <entity name="RF Suck Effect" anm2path="effects/suck_effect.anm2" id="1000" variant="346" subtype ="11" friction="1" />
+
+    <!--Gauntler Room-->
+    <entity id="1000" variant="2051" subtype="0" name="TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus" anm2path="1000.203_spawn pentagram.anm2"/>
+	<entity id="1000" variant="2052" subtype="0" name="TheGauntlet Zeus Lightning Bolt" anm2path="1000.043_poop explosion.anm2"/>
+	<entity id="1000" variant="2053" subtype="0" name="TheGauntlet Athena Aegis" anm2path="gauntlet/effects/aegis.anm2"/>
+
+	<entity id="3" variant="2049" subtype="0" name="TheGauntlet Apollo Baby" anm2path="gauntlet/familiars/apollo baby.anm2"
+			shadowSize="8" numGridCollisionPoints="12" collisionMass="3" collisionRadius="13" friction="1"
+			tags="cansacrifice" customtags="" />
 </entities>
 <!-- OLD ENTRY <entity anm2path="dream_catcher_entity.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" id="960" name="Hanging Dream Catcher" numGridCollisionPoints="0" shadowSize="13" stageHP="0" variant="245" shutdoors="false"/> -->	

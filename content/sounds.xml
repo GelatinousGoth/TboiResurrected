@@ -184,4 +184,32 @@
     <sound name="deadseascrolls_whoosh">
         <sample weight="1" path="deadseascrolls/whoosh.wav"/>
     </sound>
+
+	<!--Gauntlet Sounds-->	
+	<sound name="TheGauntlet Shadow Spell">
+		<sample weight="1" path="gauntlet/shadow spell.wav" /> <!-- https://freesound.org/people/EminYILDIRIM/sounds/559088/ -->
+	</sound>
+	<sound name="TheGauntlet Thunder Zap">
+		<sample weight="1" path="gauntlet/thunder zap 1.wav" /> <!-- https://www.weloveindies.com/en/sounds-for-games -->
+		<sample weight="1" path="gauntlet/thunder zap 2.wav" />
+	</sound>
+	<sound name="TheGauntlet Metal Hit">
+		<sample weight="1" path="gauntlet/metal hit 1.wav" /> <!-- https://freesound.org/people/Artninja/sounds/717721/ -->
+		<sample weight="1" path="gauntlet/metal hit 2.wav" />
+		<sample weight="1" path="gauntlet/metal hit 3.wav" />
+		<sample weight="1" path="gauntlet/metal hit 4.wav" />
+	</sound>
+	<sound name="TheGauntlet Harp">
+		<sample weight="1" path="gauntlet/harp.wav"/> <!-- https://freesound.org/people/Cunningar0807/sounds/436129/ -->
+	</sound>
+	<sound name="TheGauntlet Custom Water Flow">
+		<sample weight="1" path="gauntlet/water_flow_large.wav" />
+	</sound>
+
+	<sound name="deadseascrolls_pop">
+        <sample weight="1" path="deadseascrolls/pop.wav" />
+    </sound>
+    <sound name="deadseascrolls_whoosh">
+        <sample weight="1" path="deadseascrolls/whoosh.wav" />
+    </sound>
 </sounds>

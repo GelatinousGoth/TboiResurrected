@@ -1,0 +1,80 @@
+TheGauntlet.Items.Aphrodite = {}
+
+TheGauntlet.Items.Aphrodite.Constants = {
+    BOSS_CHARM_DURATION_FRAMES = 4 * 30,
+}
+
+
+
+local sfxManager = SFXManager()
+
+TheGauntlet.Items.Aphrodite.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Aphrodite")
+
+---@param entity Entity
+---@param damage number
+---@param damageFlags DamageFlag
+---@param source EntityRef
+---@param damageCooldown integer
+---@param extraSource EntityRef
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown, extraSource)
+    if entity.Type ~= EntityType.ENTITY_PLAYER then return end
+    ---@type EntityPlayer
+    ---@diagnostic disable-next-line assign-type-mismatch
+    local player = entity:ToPlayer()
+
+    if not player:HasCollectible(TheGauntlet.Items.Aphrodite.COLLECTIBLE_TYPE) then return end
+
+    if source.Entity == nil then return end
+    local enemyToCharm = nil
+    if source.Entity:IsActiveEnemy() then
+        enemyToCharm = source.Entity
+    else
+        --Allow projectiles and other non-NPC entities to charm the enemy (hopefully this doesn't have major flaws..)
+        if source.Entity.SpawnerEntity ~= nil and source.Entity.SpawnerEntity:IsActiveEnemy() then
+            enemyToCharm = source.Entity.SpawnerEntity
+        elseif source.Entity.Parent ~= nil and source.Entity.Parent:IsActiveEnemy() then
+            enemyToCharm = source.Entity.Parent
+        end
+    end
+    if enemyToCharm == nil then return end
+
+    if enemyToCharm:IsBoss() then
+        if enemyToCharm:GetBossStatusEffectCooldown() > 0 then
+            return
+        end
+
+        enemyToCharm:AddCharmed(EntityRef(player), TheGauntlet.Items.Aphrodite.Constants.BOSS_CHARM_DURATION_FRAMES)
+    else
+        enemyToCharm:AddCharmed(EntityRef(player), -1)
+    end
+
+    local POOF_COLOR = Color
+    (
+        0, 0, 0, 1,
+        1, 0.66, 1
+    )
+
+    local POOF_SPRITE_SIZE = 144
+    local poofFinalSpriteScale = Vector.One * (0.5 + enemyToCharm.Size / POOF_SPRITE_SIZE) --Hopefully a good enough scaling equation
+
+    local poofFront = TheGauntlet.Utility.SpawnEffect
+    (
+        EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 1,
+        enemyToCharm.Position, Vector.Zero,
+        nil
+    )
+    poofFront.SpriteScale = poofFinalSpriteScale
+    poofFront:GetSprite().Color = POOF_COLOR
+
+    local poofBack = TheGauntlet.Utility.SpawnEffect
+    (
+        EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 2,
+        enemyToCharm.Position, Vector.Zero,
+        nil
+    )
+    poofBack.SpriteScale = poofFinalSpriteScale
+    poofBack:GetSprite().Color = POOF_COLOR
+
+    sfxManager:Play(SoundEffect.SOUND_KISS_LIPS1)
+    sfxManager:Play(SoundEffect.SOUND_BLACK_POOF, 0.75)
+end)
