@@ -9,7 +9,7 @@ function TheGauntlet.Items.Zeus.RegisterBoltAmountForItem(collectibleType, numbe
     activeItemBoltAmountSpecialCases[collectibleType] = number
 end
 
-local boltAmountDefaultCase = include("resurrected_modpack.rooms.gauntlet.items.zeus.cases.default")
+local boltAmountDefaultCase = include("resurrected_modpack.tweaks.gauntlet.items.zeus.cases.default")
 
 TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.DefaultSaveKeys.PLAYER, {
     Zeus = {

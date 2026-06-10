@@ -1,4 +1,4 @@
-local deadSeaScrollsCore = include("resurrected_modpack.rooms.gauntlet.library.dead_sea_scrolls_core")
+local deadSeaScrollsCore = include("resurrected_modpack.tweaks.gauntlet.library.dead_sea_scrolls_core")
 
 local modName = "Dead Sea Scrolls (The Gauntlet)"
 

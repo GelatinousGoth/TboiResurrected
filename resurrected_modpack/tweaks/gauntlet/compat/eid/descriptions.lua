@@ -385,4 +385,4 @@ end
 
 
 
-RegisterLanguageKeys("en_us", include("resurrected_modpack.rooms.gauntlet.compat.eid.descriptions.en_us"))
+RegisterLanguageKeys("en_us", include("resurrected_modpack.tweaks.gauntlet.compat.eid.descriptions.en_us"))

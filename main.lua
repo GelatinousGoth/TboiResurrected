@@ -18,7 +18,6 @@ require("resurrected_modpack.modcompat.boss_icons")
 -- require("resurrected_modpack.tools.global_functions")
 -- require("resurrected_modpack.tools.console_commands")
 
-TR_Manager:LoadMod("resurrected_modpack.rooms.gauntlet")
 
 TR_Manager:LoadMod("resurrected_modpack.graphics.chargebar_fix")
 TR_Manager:LoadMod("resurrected_modpack.graphics.swaggy_mushrooms")
@@ -69,6 +68,7 @@ TR_Manager:LoadMod("resurrected_modpack.graphics.super_greed_coin_tears")
 TR_Manager:LoadMod("resurrected_modpack.graphics.gellos_dressup")
 TR_Manager:LoadMod("resurrected_modpack.graphics.stairway_trapdoor")
 
+TR_Manager:LoadMod("resurrected_modpack.tweaks.gauntlet")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.chests_before_mother")
 -- TR_Manager:LoadMod("resurrected_modpack.tweaks.rare_chests")
