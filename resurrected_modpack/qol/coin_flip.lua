@@ -1,6 +1,6 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-CoinFlipper = TR_Manager:RegisterMod("Coin Flip", 1)
+CoinFlipper = TR_Manager:RegisterMod("Coin Flip", 1, true)
 
 local json = require("json");
 
