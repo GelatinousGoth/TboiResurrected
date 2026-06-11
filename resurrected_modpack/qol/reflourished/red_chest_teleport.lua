@@ -115,6 +115,7 @@ function RedChestTeleport:TouchRedChest(pickup, collider)
             local level = Game():GetLevel()
             level:InitializeDevilAngelRoom(isAngel, not isAngel)
             Game():StartRoomTransition(GridRooms.ROOM_DEVIL_IDX, -1, RoomTransitionAnim.PORTAL_TELEPORT, player, -1)
+            Game():Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pickup.Position, Vector(0, 0), nil, Card.CARD_CRACKED_KEY, pickup:GetDropRNG():GetSeed())
         end
         player:UseCard(Card.CARD_JOKER, UseFlag.USE_NOANIM | UseFlag.USE_NOANNOUNCER)
     end
