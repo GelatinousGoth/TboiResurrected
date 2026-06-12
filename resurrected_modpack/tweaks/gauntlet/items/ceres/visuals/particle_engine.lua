@@ -93,6 +93,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ROOM_RENDER_ENTITIES, function (_)
     for i = #particleInstances, 1, -1 do
         local instance = particleInstances[i]
         if not isPaused then
+
             particleUpdateRoutines[instance.Type](instance)
 
             instance.TimeLeft = instance.TimeLeft - 1
@@ -100,7 +101,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ROOM_RENDER_ENTITIES, function (_)
                 table.remove(particleInstances, i)
             end
         end
-        
         particleRenderRoutines[instance.Type](instance, renderOffset)
     end
 end)
