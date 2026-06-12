@@ -1,10 +1,10 @@
-TheGauntlet.Items.Hephaestus = {}
+TheGauntlet.Items.Vulcan = {}
 
 
 
 local game = Game()
 
-TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Hephaestus")
+TheGauntlet.Items.Vulcan.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Vulcan")
 
 local possibleGoldenPickups = {
     {
@@ -45,12 +45,12 @@ local possibleGoldenPickups = {
     },
 }
 
----Registers a golden pickup to be selected by Hephaestus.
+---Registers a golden pickup to be selected by Vulcan.
 ---@param type EntityType
 ---@param variant integer
 ---@param subtype integer
 ---@param condition fun(): boolean The condition under which the pickup can spawn (for achievement-locked pickups). If it shouldn't have a condition, simply use a function that always returns true.
-function TheGauntlet.Items.Hephaestus.AddGoldenPickup(type, variant, subtype, condition)
+function TheGauntlet.Items.Vulcan.AddGoldenPickup(type, variant, subtype, condition)
     table.insert(possibleGoldenPickups, {
         Type = type,
         Variant = variant,
@@ -85,16 +85,16 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, colle
             true
         )
     end
-end, TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE)
+end, TheGauntlet.Items.Vulcan.COLLECTIBLE_TYPE)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE) then return end
+    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Vulcan.COLLECTIBLE_TYPE) then return end
     
     local room = game:GetRoom()
 
-    local rng = Isaac.GetPlayer():GetCollectibleRNG(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE)
+    local rng = Isaac.GetPlayer():GetCollectibleRNG(TheGauntlet.Items.Vulcan.COLLECTIBLE_TYPE)
 
-    for i = 1, PlayerManager.GetNumCollectibles(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE) do
+    for i = 1, PlayerManager.GetNumCollectibles(TheGauntlet.Items.Vulcan.COLLECTIBLE_TYPE) do
         local spawnPosition = room:FindFreePickupSpawnPosition(room:GetCenterPos(), nil, true)
 
 

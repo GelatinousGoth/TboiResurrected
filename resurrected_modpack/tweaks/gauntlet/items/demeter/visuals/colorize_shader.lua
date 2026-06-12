@@ -9,16 +9,16 @@ local targetColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
 local colorUpdateCounter = 0
 
 ---Reset the current season shader to match the current season.  
-function TheGauntlet.Items.Demeter.RefreshSeasonVisuals()
-    local season = TheGauntlet.Items.Demeter.GetSeason()
+function TheGauntlet.Items.Ceres.RefreshSeasonVisuals()
+    local season = TheGauntlet.Items.Ceres.GetSeason()
 
-    if season == TheGauntlet.Items.Demeter.Season.WINTER then
+    if season == TheGauntlet.Items.Ceres.Season.WINTER then
         targetColor = TheGauntlet.Utility.CopyTableShallow(WINTER_COLOR)
-    elseif season == TheGauntlet.Items.Demeter.Season.SPRING then
+    elseif season == TheGauntlet.Items.Ceres.Season.SPRING then
         targetColor = TheGauntlet.Utility.CopyTableShallow(SPRING_COLOR)
-    elseif season == TheGauntlet.Items.Demeter.Season.SUMMER then
+    elseif season == TheGauntlet.Items.Ceres.Season.SUMMER then
         targetColor = TheGauntlet.Utility.CopyTableShallow(SUMMER_COLOR)
-    elseif season == TheGauntlet.Items.Demeter.Season.AUTUMN then
+    elseif season == TheGauntlet.Items.Ceres.Season.AUTUMN then
         targetColor = TheGauntlet.Utility.CopyTableShallow(AUTUMN_COLOR)
     else
         targetColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
@@ -32,7 +32,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, isContin
     currentColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
     targetColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
 
-    TheGauntlet.Items.Demeter.RefreshSeasonVisuals()
+    TheGauntlet.Items.Ceres.RefreshSeasonVisuals()
 end)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderName)
@@ -49,7 +49,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderNa
 
     if shaderName ~= "TheGauntlet ScreenColorize" then return end
 
-    if not TheGauntlet.Settings.EnableDemeterTint() then
+    if not TheGauntlet.Settings.EnableCeresTint() then
         return {
             ColorToChangeTo = NO_COLOR
         }

@@ -4,7 +4,7 @@ return function (topLeft, bottomRight)
     local startTimer = snowflakeGeneralRng:RandomInt(60 * 4, 60 * 6)
         
     return {
-        Type = TheGauntlet.Items.Demeter.GetSeason(),
+        Type = TheGauntlet.Items.Ceres.GetSeason(),
         Variant = 0,
 
         Position = Vector

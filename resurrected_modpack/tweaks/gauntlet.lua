@@ -48,19 +48,19 @@ include("resurrected_modpack.tweaks.gauntlet.items.aphrodite")
 include("resurrected_modpack.tweaks.gauntlet.items.ares")
 include("resurrected_modpack.tweaks.gauntlet.items.artemis")
 include("resurrected_modpack.tweaks.gauntlet.items.athena")
-TheGauntlet.Items.Demeter = {}
-include("resurrected_modpack.tweaks.gauntlet.items.demeter.item")
-include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.colorize_shader")
-include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.heatwave_shader")
-include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.particle_engine")
+TheGauntlet.Items.Ceres = {}
+include("resurrected_modpack.tweaks.gauntlet.items.ceres.item")
+include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.colorize_shader")
+include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.heatwave_shader")
+include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.particle_engine")
 TheGauntlet.Items.Dionysus = {}
 include("resurrected_modpack.tweaks.gauntlet.items.dionysus.item")
 include("resurrected_modpack.tweaks.gauntlet.items.dionysus.shader")
 TheGauntlet.Items.Hades = {}
 include("resurrected_modpack.tweaks.gauntlet.items.hades.item")
 include("resurrected_modpack.tweaks.gauntlet.items.hades.status_effect")
-include("resurrected_modpack.tweaks.gauntlet.items.hephaestus")
-include("resurrected_modpack.tweaks.gauntlet.items.hera")
+include("resurrected_modpack.tweaks.gauntlet.items.vulcan")
+include("resurrected_modpack.tweaks.gauntlet.items.juno")
 include("resurrected_modpack.tweaks.gauntlet.items.poseidon")
 TheGauntlet.Items.Zeus = {}
 TheGauntlet.Items.Zeus.Constants = {}
@@ -76,7 +76,7 @@ include("resurrected_modpack.tweaks.gauntlet.items.zeus.cases.notched_axe")
 include("resurrected_modpack.tweaks.gauntlet.items.zeus.cases.pandoras_box")
 include("resurrected_modpack.tweaks.gauntlet.items.zeus.cases.spin_to_win")
 
-include("resurrected_modpack.tweaks.gauntlet.items.locusts.demeter")
+include("resurrected_modpack.tweaks.gauntlet.items.locusts.ceres")
 include("resurrected_modpack.tweaks.gauntlet.items.locusts.dionysus")
 include("resurrected_modpack.tweaks.gauntlet.items.locusts.hades")
 include("resurrected_modpack.tweaks.gauntlet.items.locusts.poseidon")

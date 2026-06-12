@@ -31,14 +31,14 @@ return {
         "{{Timer}} Shields go on a [2] second cooldown after deflecting",
     ["item.athena.description.duplicate"] = "Grants an additional shield",
 
-    ["item.demeter.name"] = "Demeter",
-    ["item.demeter.description"] =
+    ["item.ceres.name"] = "Ceres",
+    ["item.ceres.description"] =
         "Causes a room-wide effect that cycles after clearing a room:#"..
-        "{{GauntletDemeterWinter}} Enemies are frozen on death#"..
-        "{{GauntletDemeterSpring}} [1]% chance to shoot a sticky booger#"..
-        "{{GauntletDemeterSummer}} Enemies constantly burn#"..
-        "{{GauntletDemeterAutumn}} Enemies are permanently slowed down",
-	["item.demeter.description.greed"] = "{{GreedMode}} Effect also cycles after every wave",
+        "{{GauntletCeresWinter}} Enemies are frozen on death#"..
+        "{{GauntletCeresSpring}} [1]% chance to shoot a sticky booger#"..
+        "{{GauntletCeresSummer}} Enemies constantly burn#"..
+        "{{GauntletCeresAutumn}} Enemies are permanently slowed down",
+	["item.ceres.description.greed"] = "{{GreedMode}} Effect also cycles after every wave",
 
     ["item.dionysus.name"] = "Dionysus",
     ["item.dionysus.description"] =
@@ -57,20 +57,20 @@ return {
         "{{GauntletHadesStatusEffect}} [1]% chance to shoot a bone tear that inflicts Calcified#"..
         "{{Friendly}} Killing a Calcified enemy spawns a friendly Bony",
 
-    ["item.hephaestus.name"] = "Hephaestus",
-    ["item.hephaestus.description"] =
+    ["item.vulcan.name"] = "Vulcan",
+    ["item.vulcan.description"] =
         "{{Trinket}} Spawns 1 random golden trinket#"..
         "Entering a new floor spawns a random golden pickup",
-    ["item.hephaestus.description.without_golden_trinket"] =
+    ["item.vulcan.description.without_golden_trinket"] =
         "{{Trinket}} Spawns 1 random trinket#"..
         "Entering a new floor spawns a random golden pickup",
-    ["item.hephaestus.description.duplicate"] = "Entering a new floor spawns an additional golden pickup",
+    ["item.vulcan.description.duplicate"] = "Entering a new floor spawns an additional golden pickup",
 
-    ["item.hera.name"] = "Hera",
-    ["item.hera.description"] =
-        "{{GauntletHeraStatusEffect}} Entering a room inflicts Pregnant on [1] enemies#"..
+    ["item.juno.name"] = "Juno",
+    ["item.juno.description"] =
+        "{{GauntletJunoStatusEffect}} Entering a room inflicts Pregnant on [1] enemies#"..
         "{{Timer}} Killing a Pregnant enemy spawns [2]-[3] Minisaac for the room",
-    ["item.hera.description.duplicate"] = "Inflicts Pregnant on an additional enemy",
+    ["item.juno.description.duplicate"] = "Inflicts Pregnant on an additional enemy",
 
     ["item.poseidon.name"] = "Poseidon",
     ["item.poseidon.description"] =
@@ -99,7 +99,7 @@ return {
     ["item.abyss.locust_effect.hades"] = "calcifying",
 
     --Locust flags formatting
-    ["item.abyss.locust_effect.demeter"] = "{{Collectible"..CollectibleType.COLLECTIBLE_SINUS_INFECTION.."}} Attaches a booger tear when dealing damage",
+    ["item.abyss.locust_effect.ceres"] = "{{Collectible"..CollectibleType.COLLECTIBLE_SINUS_INFECTION.."}} Attaches a booger tear when dealing damage",
     ["item.abyss.locust_effect.poseidon"] = "{{Collectible"..Isaac.GetItemIdByName("Poseidon").."}} Pushes nearby enemies in its direction when charging",
     ["item.abyss.locust_effect.zeus"] = "{{Collectible"..Isaac.GetItemIdByName("Zeus").."}} Spawns a lightning bolt when dealing damage",
 }

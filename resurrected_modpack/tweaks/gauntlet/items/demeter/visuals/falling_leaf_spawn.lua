@@ -3,11 +3,11 @@ local leafGeneralRng = RNG()
 return function (topLeft, bottomRight)
     local startTimer = leafGeneralRng:RandomInt(60 * 3, 60 * 4)
 
-    local season = TheGauntlet.Items.Demeter.GetSeason()
+    local season = TheGauntlet.Items.Ceres.GetSeason()
     local spawnOffset = 60
     local speedDirection = -1
 
-    if season == TheGauntlet.Items.Demeter.Season.SPRING then
+    if season == TheGauntlet.Items.Ceres.Season.SPRING then
         spawnOffset = -60
         speedDirection = 1
     end

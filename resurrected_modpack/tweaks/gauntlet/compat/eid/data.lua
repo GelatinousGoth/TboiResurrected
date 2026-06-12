@@ -23,11 +23,11 @@ local locustIds = {
     TheGauntlet.Items.Ares.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Athena.COLLECTIBLE_TYPE,
-    TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Ceres.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Hades.COLLECTIBLE_TYPE,
-    TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE,
-    TheGauntlet.Items.Hera.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Vulcan.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Juno.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE_ACTIVE,
@@ -81,8 +81,8 @@ for _, itemId in ipairs(locustIds) do
     EID.XMLLocusts[itemId] = { amount, scale, speed, locustFlags1, locustFlags2, locustFlags3, tearFlags1, tearFlags2, tearFlags3, procChance1, procChance2, procChance3, damageMultiplier1, damageMultiplier2 }
 end
 
-EID.XMLLocusts[TheGauntlet.Items.Hera.COLLECTIBLE_TYPE][1] = 3
-EID.XMLLocusts[TheGauntlet.Items.Hera.COLLECTIBLE_TYPE][2] = 1
+EID.XMLLocusts[TheGauntlet.Items.Juno.COLLECTIBLE_TYPE][1] = 3
+EID.XMLLocusts[TheGauntlet.Items.Juno.COLLECTIBLE_TYPE][2] = 1
 
 --Surely this is a terrible way to do this
 EID.XMLLocusts[TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE][5] = { "Gauntlet Zeus Bolt" }
@@ -96,6 +96,6 @@ EID.XMLLocusts[TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE][4] = { "Gauntlet Pos
 EID.XMLLocusts[TheGauntlet.Items.Hades.COLLECTIBLE_TYPE][4] = { "Gauntlet Hades Status" }
 EID.XMLLocusts[TheGauntlet.Items.Hades.COLLECTIBLE_TYPE][10] = TheGauntlet.Items.Hades.Constants.LOCUST_CHANCE_TO_APPLY_STATUS_EFFECT
 
-EID.XMLLocusts[TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE][4] = { "Gauntlet Demeter Booger" }
+EID.XMLLocusts[TheGauntlet.Items.Ceres.COLLECTIBLE_TYPE][4] = { "Gauntlet Ceres Booger" }
 
 EID.XMLLocusts[TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE][7] = { 10 } --lol.

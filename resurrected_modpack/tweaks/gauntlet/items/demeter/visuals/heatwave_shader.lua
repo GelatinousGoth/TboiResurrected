@@ -8,7 +8,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, isContin
 end)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderName)
-    if TheGauntlet.Items.Demeter.GetSeason() == TheGauntlet.Items.Demeter.Season.SUMMER then
+    if TheGauntlet.Items.Ceres.GetSeason() == TheGauntlet.Items.Ceres.Season.SUMMER then
         summerFadeTimer = summerFadeTimer + 0.02
         if summerFadeTimer > 1 then
             summerFadeTimer = 1

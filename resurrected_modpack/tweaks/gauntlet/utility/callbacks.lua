@@ -89,7 +89,7 @@ TheGauntlet.Utility.Callbacks = {
     --- - [integer](lua://integer) - the dimension the room was placed in;
     POST_PLACE_GAUNTLET_ROOM = "TheGauntlet POST_PLACE_GAUNTLET_ROOM",
 
-    ---Called when Hera checks if an enemy can be impregnated. Can be used to force an enemy not to be impregnatable.
+    ---Called when Juno checks if an enemy can be impregnated. Can be used to force an enemy not to be impregnatable.
     ---
     ---Parameters:
     --- - [Entity](lua://Entity) - the entity to check;

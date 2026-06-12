@@ -10,13 +10,13 @@ EID:addIcon("GauntletGauntletRoomMap",          "GauntletRoom", 1, 9, 9, 0, 3, e
 EID:addIcon("GauntletGauntletRoomStatSmall",    "GauntletRoom", 2, 9, 9, 0, 1, eidIcons)
 EID:addIcon("GauntletGauntletRoomPool",         "GauntletRoom", 3, 9, 9, 0, 0, eidIcons)
 
-EID:addIcon("GauntletDemeterWinter", "Demeter", 0, 9, 9, 0, 0, eidIcons)
-EID:addIcon("GauntletDemeterSpring", "Demeter", 1, 7, 9, 0, 0, eidIcons)
-EID:addIcon("GauntletDemeterSummer", "Demeter", 2, 9, 9, 0, 0, eidIcons)
-EID:addIcon("GauntletDemeterAutumn", "Demeter", 3, 7, 9, 0, 0, eidIcons)
+EID:addIcon("GauntletCeresWinter", "Ceres", 0, 9, 9, 0, 0, eidIcons)
+EID:addIcon("GauntletCeresSpring", "Ceres", 1, 7, 9, 0, 0, eidIcons)
+EID:addIcon("GauntletCeresSummer", "Ceres", 2, 9, 9, 0, 0, eidIcons)
+EID:addIcon("GauntletCeresAutumn", "Ceres", 3, 7, 9, 0, 0, eidIcons)
 
 EID:addIcon("GauntletHadesStatusEffect",    "StatusEffects", 0, 9, 9, 0, 0, eidIcons)
-EID:addIcon("GauntletHeraStatusEffect",     "StatusEffects", 1, 8, 8, 0, 0, eidIcons)
+EID:addIcon("GauntletJunoStatusEffect",     "StatusEffects", 1, 8, 8, 0, 0, eidIcons)
 
 
 

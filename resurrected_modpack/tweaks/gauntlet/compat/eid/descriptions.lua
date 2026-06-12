@@ -4,10 +4,10 @@ if EID == nil then return end
 
 
 
-EID:AddConditional(TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE, EID.IsGreedMode, "Gauntlet Demeter Greed")
-EID:AddConditional(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE, function ()
+EID:AddConditional(TheGauntlet.Items.Ceres.COLLECTIBLE_TYPE, EID.IsGreedMode, "Gauntlet Ceres Greed")
+EID:AddConditional(TheGauntlet.Items.Vulcan.COLLECTIBLE_TYPE, function ()
     return not Isaac.GetPersistentGameData():Unlocked(Achievement.GOLDEN_TRINKET)
-end, "Gauntlet Hephaestus if no Golden then only Trinket")
+end, "Gauntlet Vulcan if no Golden then only Trinket")
 
 EID:addDescriptionModifier("Gauntlet Zeus Active is Zeus Passive", function (descObj)
     if descObj.ObjType ~= EntityType.ENTITY_PICKUP then return false end
@@ -177,7 +177,7 @@ EID:AddSelfConditional({
     TheGauntlet.Items.Aphrodite.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Ares.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE,
-    TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Ceres.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Hades.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE
 }, "No Effect (Copies)")
@@ -244,7 +244,7 @@ local dionysusLuck = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").luck
 local dionysusCoin = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").coins
 local dionysusDrunkTimeSeconds = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Dionysus.Constants.DRUNK_DURATION_ON_HIT_FRAMES / 30)
 
-local demeterBoogerChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Demeter.Constants.SPRING_BOOGER_CHANCE * 100)
+local ceresBoogerChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Ceres.Constants.SPRING_BOOGER_CHANCE * 100)
 
 local hadesSkullChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Hades.Constants.CHANCE_TO_APPLY_SKULL * 100)
 
@@ -276,8 +276,8 @@ local function RegisterLanguageKeys(language, localizationItems)
             { TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT, athenaShieldTimeDisableSeconds }
         },
         {
-            TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE, "demeter",
-            { demeterBoogerChance }
+            TheGauntlet.Items.Ceres.COLLECTIBLE_TYPE, "ceres",
+            { ceresBoogerChance }
         },
         {
             TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE, "dionysus",
@@ -288,12 +288,12 @@ local function RegisterLanguageKeys(language, localizationItems)
             { hadesSkullChance }
         },
         {
-            TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE, "hephaestus",
+            TheGauntlet.Items.Vulcan.COLLECTIBLE_TYPE, "vulcan",
             { }
         },
         {
-            TheGauntlet.Items.Hera.COLLECTIBLE_TYPE, "hera",
-            { TheGauntlet.Items.Hera.Constants.AMOUNT_OF_ENEMIES_TO_IMPREGNATE, TheGauntlet.Items.Hera.Constants.SPAWNED_MINISAAC_MINIMUM_AMOUNT, TheGauntlet.Items.Hera.Constants.SPAWNED_MINISAAC_MAXIMUM_AMOUNT }
+            TheGauntlet.Items.Juno.COLLECTIBLE_TYPE, "juno",
+            { TheGauntlet.Items.Juno.Constants.AMOUNT_OF_ENEMIES_TO_IMPREGNATE, TheGauntlet.Items.Juno.Constants.SPAWNED_MINISAAC_MINIMUM_AMOUNT, TheGauntlet.Items.Juno.Constants.SPAWNED_MINISAAC_MAXIMUM_AMOUNT }
         },
         {
             TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE, "poseidon",
@@ -321,12 +321,12 @@ local function RegisterLanguageKeys(language, localizationItems)
     end
 
     EID:addSelfCondition(TheGauntlet.Items.Athena.COLLECTIBLE_TYPE, localizationItems["item.athena.description.duplicate"], language)
-    EID:addSelfCondition(TheGauntlet.Items.Hera.COLLECTIBLE_TYPE, localizationItems["item.hera.description.duplicate"], language)
-    EID:addSelfCondition(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE, localizationItems["item.hephaestus.description.duplicate"], language)
+    EID:addSelfCondition(TheGauntlet.Items.Juno.COLLECTIBLE_TYPE, localizationItems["item.juno.description.duplicate"], language)
+    EID:addSelfCondition(TheGauntlet.Items.Vulcan.COLLECTIBLE_TYPE, localizationItems["item.vulcan.description.duplicate"], language)
     EID:addSelfCondition(TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE, localizationItems["item.poseidon.description.duplicate"], language)
 
-    EID.descriptions[language].ConditionalDescs["Gauntlet Demeter Greed"] = localizationItems["item.demeter.description.greed"]
-    EID.descriptions[language].ConditionalDescs["Gauntlet Hephaestus if no Golden then only Trinket"] = { localizationItems["item.hephaestus.description.without_golden_trinket"] }
+    EID.descriptions[language].ConditionalDescs["Gauntlet Ceres Greed"] = localizationItems["item.ceres.description.greed"]
+    EID.descriptions[language].ConditionalDescs["Gauntlet Vulcan if no Golden then only Trinket"] = { localizationItems["item.vulcan.description.without_golden_trinket"] }
     
     EID:addSynergyCondition(CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES, TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE, localizationItems["item.zeus.description.book_of_virtues"] , nil, language)
     EID:addBookOfBelialBuffsCondition(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE, localizationItems["item.zeus.description.judas_birthright"] , nil, nil, language)
@@ -375,7 +375,7 @@ local function RegisterLanguageKeys(language, localizationItems)
         TheGauntlet.Compat.EID.RegisterZeusDescription(collectibleType, language, description)
     end
 
-    EID.descriptions[language].AbyssLocustEffects["Gauntlet Demeter Booger"] = localizationItems["item.abyss.locust_effect.demeter"]
+    EID.descriptions[language].AbyssLocustEffects["Gauntlet Ceres Booger"] = localizationItems["item.abyss.locust_effect.ceres"]
     EID.descriptions[language].AbyssLocustEffects["Gauntlet Hades Status"] = localizationItems["item.abyss.locust_effect.hades"]
     EID.descriptions[language].AbyssLocustEffects["Gauntlet Poseidon Push"] = localizationItems["item.abyss.locust_effect.poseidon"]
     EID.descriptions[language].AbyssLocustEffects["Gauntlet Zeus Bolt"] = localizationItems["item.abyss.locust_effect.zeus"]

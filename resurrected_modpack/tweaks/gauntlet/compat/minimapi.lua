@@ -2,10 +2,10 @@ TheGauntlet.Compat.MinimapAPI = {}
 
 TheGauntlet.Compat.MinimapAPI.GAUNTLET_ROOM_MAP_ICON = "TheGauntlet GauntletRoom"
 
-TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_WINTER = "TheGauntlet Demeter Winter"
-TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_SPRING = "TheGauntlet Demeter Spring"
-TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_SUMMER = "TheGauntlet Demeter Summer"
-TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_AUTUMN = "TheGauntlet Demeter Autumn"
+TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_WINTER = "TheGauntlet Ceres Winter"
+TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_SPRING = "TheGauntlet Ceres Spring"
+TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_SUMMER = "TheGauntlet Ceres Summer"
+TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_AUTUMN = "TheGauntlet Ceres Autumn"
 
 
 
@@ -14,14 +14,14 @@ local game = Game()
 local gauntletMinimapSprite = Sprite("gfx/gauntlet/ui/gauntlet_minimap_icon.anm2", true)
 gauntletMinimapSprite:SetFrame("Idle", 0)
 
-local demeterWinterSprite = Sprite("gfx/gauntlet/ui/demeter_season.anm2", true)
-demeterWinterSprite:SetFrame("Idle", 0)
-local demeterSpringSprite = Sprite("gfx/gauntlet/ui/demeter_season.anm2", true)
-demeterSpringSprite:SetFrame("Idle", 1)
-local demeterSummerSprite = Sprite("gfx/gauntlet/ui/demeter_season.anm2", true)
-demeterSummerSprite:SetFrame("Idle", 2)
-local demeterAutumnSprite = Sprite("gfx/gauntlet/ui/demeter_season.anm2", true)
-demeterAutumnSprite:SetFrame("Idle", 3)
+local ceresWinterSprite = Sprite("gfx/gauntlet/ui/ceres_season.anm2", true)
+ceresWinterSprite:SetFrame("Idle", 0)
+local ceresSpringSprite = Sprite("gfx/gauntlet/ui/ceres_season.anm2", true)
+ceresSpringSprite:SetFrame("Idle", 1)
+local ceresSummerSprite = Sprite("gfx/gauntlet/ui/ceres_season.anm2", true)
+ceresSummerSprite:SetFrame("Idle", 2)
+local ceresAutumnSprite = Sprite("gfx/gauntlet/ui/ceres_season.anm2", true)
+ceresAutumnSprite:SetFrame("Idle", 3)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, function ()
     if MinimapAPI == nil then return end
@@ -30,17 +30,17 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, function ()
 
 
     MinimapAPI:AddMapFlag(TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_WINTER, function ()
-        return TheGauntlet.Items.Demeter.GetSeason() == TheGauntlet.Items.Demeter.Season.WINTER
-    end, demeterWinterSprite, "Idle", 0)
+        return TheGauntlet.Items.Ceres.GetSeason() == TheGauntlet.Items.Ceres.Season.WINTER
+    end, ceresWinterSprite, "Idle", 0)
     MinimapAPI:AddMapFlag(TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_SPRING, function ()
-        return TheGauntlet.Items.Demeter.GetSeason() == TheGauntlet.Items.Demeter.Season.SPRING
-    end, demeterSpringSprite, "Idle", 1)
+        return TheGauntlet.Items.Ceres.GetSeason() == TheGauntlet.Items.Ceres.Season.SPRING
+    end, ceresSpringSprite, "Idle", 1)
     MinimapAPI:AddMapFlag(TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_SUMMER, function ()
-        return TheGauntlet.Items.Demeter.GetSeason() == TheGauntlet.Items.Demeter.Season.SUMMER
-    end, demeterSummerSprite, "Idle", 2)
+        return TheGauntlet.Items.Ceres.GetSeason() == TheGauntlet.Items.Ceres.Season.SUMMER
+    end, ceresSummerSprite, "Idle", 2)
     MinimapAPI:AddMapFlag(TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_AUTUMN, function ()
-        return TheGauntlet.Items.Demeter.GetSeason() == TheGauntlet.Items.Demeter.Season.AUTUMN
-    end, demeterAutumnSprite, "Idle", 3)
+        return TheGauntlet.Items.Ceres.GetSeason() == TheGauntlet.Items.Ceres.Season.AUTUMN
+    end, ceresAutumnSprite, "Idle", 3)
 end)
 
 ---@param dimension Dimension

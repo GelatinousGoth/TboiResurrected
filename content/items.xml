@@ -22,8 +22,8 @@
 	/>
 	
 	<passive id="2" 
-		name="Hera" description="Revenge of mother"
-		gfx="hera.png"
+		name="Juno" description="Revenge of mother"
+		gfx="juno.png"
 		quality="3"
 		tags="summonable offensive nogreed"
 	/>
@@ -43,8 +43,8 @@
 	/>
 	
 	<passive id="5" 
-		name="Demeter" description="Time waits for none"
-		gfx="demeter.png"
+		name="Ceres" description="Time waits for none"
+		gfx="ceres.png"
 		quality="3"
 		tags="summonable offensive lazarussharedglobal"
 	/>
@@ -73,8 +73,8 @@
 	/>
 	
 	<passive id="9" 
-		name="Hephaestus" description="Go for gold"
-		gfx="hephaestus.png"
+		name="Vulcan" description="Go for gold"
+		gfx="vulcan.png"
 		quality="3" craftquality="4"
 		tags="offensive lazarussharedglobal"
 	/>

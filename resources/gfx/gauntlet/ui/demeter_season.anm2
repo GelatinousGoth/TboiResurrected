@@ -2,7 +2,7 @@
     <Info CreatedBy="Unknown" CreatedOn="6/7/2022 6:37:42 PM" Fps="30" Version="17"/>
     <Content>
         <Spritesheets>
-            <Spritesheet Id="0" Path="demeter_season_map.png"/>
+            <Spritesheet Id="0" Path="ceres_season_map.png"/>
         </Spritesheets>
         <Layers>
             <Layer Id="0" Name="" SpritesheetId="0"/>

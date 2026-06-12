@@ -14,7 +14,7 @@ DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.0",
 - Added Gauntlet Rooms
 
 - Added the Olympian Items
-{CLR3(Zeus, Hera, Poseidon, Hades, Demeter,}
-{CLR3Athena, Ares, Aphrodite, Hephaestus,}
+{CLR3(Zeus, Juno, Poseidon, Hades, Ceres,}
+{CLR3Athena, Ares, Aphrodite, Vulcan,}
 {CLR3Apollo, Artemis, Dionysus)}}
 ]])

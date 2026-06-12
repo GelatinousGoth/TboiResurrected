@@ -141,27 +141,27 @@ local menu = {
             { str = "", fsize=1, nosel=true },
 
             {
-                str = "demeter visuals", fsize = 2,
+                str = "ceres visuals", fsize = 2,
                 choices = { "all enabled", "only tint", "only particles", "disabled" },
                 setting = 1,
-                variable = "TheGauntlet_DemeterVisuals",
-                tooltip = {strset = {"configures", "visuals for", "demeter"}},
+                variable = "TheGauntlet_CeresVisuals",
+                tooltip = {strset = {"configures", "visuals for", "ceres"}},
 
                 load = function ()
                     local value = 4
 
-                    if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint ~= false then
+                    if TheGauntlet.SaveManager.GetSettingsSave().EnableCeresTint ~= false then
                         value = value - 2
                     end
-                    if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles ~= false then
+                    if TheGauntlet.SaveManager.GetSettingsSave().EnableCeresParticles ~= false then
                         value = value - 1
                     end
 
                     return value
                 end,
                 store = function (value)
-                    TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint = value <= 2
-                    TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles = value % 2 == 1
+                    TheGauntlet.SaveManager.GetSettingsSave().EnableCeresTint = value <= 2
+                    TheGauntlet.SaveManager.GetSettingsSave().EnableCeresParticles = value % 2 == 1
                 end
             },
             {
@@ -272,23 +272,23 @@ local menu = {
 }
 
 TheGauntlet.Settings = {
-    EnableDemeterTint = function ()
+    EnableCeresTint = function ()
         if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
             return true
         end
-        if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint == nil then
+        if TheGauntlet.SaveManager.GetSettingsSave().EnableCeresTint == nil then
             return true
         end
-        return TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint
+        return TheGauntlet.SaveManager.GetSettingsSave().EnableCeresTint
     end,
-    EnableDemeterParticles = function ()
+    EnableCeresParticles = function ()
         if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
             return true
         end
-        if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles == nil then
+        if TheGauntlet.SaveManager.GetSettingsSave().EnableCeresParticles == nil then
             return true
         end
-        return TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles
+        return TheGauntlet.SaveManager.GetSettingsSave().EnableCeresParticles
     end,
 
     RemoveDionysus = function ()

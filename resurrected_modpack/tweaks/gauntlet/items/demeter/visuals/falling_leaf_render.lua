@@ -15,7 +15,7 @@ return function (instance, offset)
     local alpha = fadeIn * fadeOut
 
     fallingLeafSprite.Rotation = instance.Speed:GetAngleDegrees() + 90
-    if instance.Type == TheGauntlet.Items.Demeter.Season.SPRING then
+    if instance.Type == TheGauntlet.Items.Ceres.Season.SPRING then
         fallingLeafSprite.Color = SPRING_LEAF_COLOR
     else
         fallingLeafSprite.Color = AUTUMN_LEAF_COLOR[instance.Variant // 2 + 1]

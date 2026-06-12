@@ -13,21 +13,21 @@ local game = Game()
 ---@field StartingTime integer
 
 local particleSpawnRoutines = {
-    [TheGauntlet.Items.Demeter.Season.WINTER] = include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.snowflake_spawn"),
-    [TheGauntlet.Items.Demeter.Season.SPRING] = include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.falling_leaf_spawn"),
-    [TheGauntlet.Items.Demeter.Season.AUTUMN] = include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.falling_leaf_spawn"),
+    [TheGauntlet.Items.Ceres.Season.WINTER] = include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.snowflake_spawn"),
+    [TheGauntlet.Items.Ceres.Season.SPRING] = include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.falling_leaf_spawn"),
+    [TheGauntlet.Items.Ceres.Season.AUTUMN] = include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.falling_leaf_spawn"),
 }
 
 local particleUpdateRoutines = {
-    [TheGauntlet.Items.Demeter.Season.WINTER] = include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.snowflake_update"),
-    [TheGauntlet.Items.Demeter.Season.SPRING] = include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.falling_leaf_update"),
-    [TheGauntlet.Items.Demeter.Season.AUTUMN] = include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.falling_leaf_update"),
+    [TheGauntlet.Items.Ceres.Season.WINTER] = include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.snowflake_update"),
+    [TheGauntlet.Items.Ceres.Season.SPRING] = include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.falling_leaf_update"),
+    [TheGauntlet.Items.Ceres.Season.AUTUMN] = include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.falling_leaf_update"),
 }
 
 local particleRenderRoutines = {
-    [TheGauntlet.Items.Demeter.Season.WINTER] = include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.snowflake_render"),
-    [TheGauntlet.Items.Demeter.Season.SPRING] = include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.falling_leaf_render"),
-    [TheGauntlet.Items.Demeter.Season.AUTUMN] = include("resurrected_modpack.tweaks.gauntlet.items.demeter.visuals.falling_leaf_render"),
+    [TheGauntlet.Items.Ceres.Season.WINTER] = include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.snowflake_render"),
+    [TheGauntlet.Items.Ceres.Season.SPRING] = include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.falling_leaf_render"),
+    [TheGauntlet.Items.Ceres.Season.AUTUMN] = include("resurrected_modpack.tweaks.gauntlet.items.ceres.visuals.falling_leaf_render"),
 }
 
 local thinRoomShapes = {
@@ -56,12 +56,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 end)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_ROOM_RENDER_ENTITIES, function (_)
-    local season = TheGauntlet.Items.Demeter.GetSeason()
+    local season = TheGauntlet.Items.Ceres.GetSeason()
 
-    if season == TheGauntlet.Items.Demeter.Season.NO_SEASON then return end
-    if season == TheGauntlet.Items.Demeter.Season.SUMMER then return end
+    if season == TheGauntlet.Items.Ceres.Season.NO_SEASON then return end
+    if season == TheGauntlet.Items.Ceres.Season.SUMMER then return end
 
-    if TheGauntlet.Settings.EnableDemeterParticles() == false then
+    if TheGauntlet.Settings.EnableCeresParticles() == false then
         particleInstances = {}
         return
     end
