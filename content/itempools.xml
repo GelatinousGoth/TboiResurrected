@@ -392,6 +392,9 @@
     <!--New TR items-->
 		<Item Name="Gaia" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Kronos" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Hera" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Demeter" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Hephaestus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
   <Pool Name="planetarium">
     <!--Renamed items. Hephaestus, Demeter and Hera respectively-->

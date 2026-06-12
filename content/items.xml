@@ -131,5 +131,23 @@
 		quality="3"
 		tags=""
 	/>
+	<passive id="17" 
+		name="Hera" description="wip"
+		gfx="hera.png"
+		quality="3"
+		tags=""
+	/>
+	<passive id="18" 
+		name="Demeter" description="wip"
+		gfx="demeter.png"
+		quality="3"
+		tags=""
+	/>
+	<passive id="19" 
+		name="Hephaestus" description="wip"
+		gfx="hephaestus.png"
+		quality="3"
+		tags=""
+	/>
 	
 </items>
