@@ -21,6 +21,7 @@
 		tags="noeden" hidden="true"
 	/>
 	
+	<!--Renamed from Hera-->
 	<passive id="2" 
 		name="Juno" description="Revenge of mother"
 		gfx="juno.png"
@@ -42,6 +43,7 @@
 		tags="summonable offensive"
 	/>
 	
+	<!--Renamed from Demeter-->
 	<passive id="5" 
 		name="Ceres" description="Time waits for none"
 		gfx="ceres.png"
@@ -72,6 +74,7 @@
 		tags="summonable nolostbr"
 	/>
 	
+	<!--Renamed from Hephaestus-->
 	<passive id="9" 
 		name="Vulcan" description="Go for gold"
 		gfx="vulcan.png"
@@ -103,6 +106,30 @@
 		bombs="1" keys="1" coins="1"
 		quality="3"
 		tags="summonable offensive tearsup"
+	/>
+	<passive id="13" 
+		name="Gaia" description="wip"
+		gfx="gaia.png"
+		quality="3"
+		tags=""
+	/>
+	<passive id="14" 
+		name="Kronos" description="wip"
+		gfx="kronos.png"
+		quality="3"
+		tags=""
+	/>
+	<passive id="15" 
+		name="Minerva" description="wip"
+		gfx="minerva.png"
+		quality="3"
+		tags=""
+	/>
+	<passive id="16" 
+		name="Bacchus" description="wip"
+		gfx="bacchus.png"
+		quality="3"
+		tags=""
 	/>
 	
 </items>
