@@ -385,7 +385,6 @@
 		<Item Name="Artemis" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Athena" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dionysus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Juno" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Hades" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Poseidon" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Zeus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
