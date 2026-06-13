@@ -1,3 +1,4 @@
+local TR_Manager = require("resurrected_modpack.manager")
 local musicManager = MusicManager()
 
 local currentDrunkAmount = 0
@@ -13,8 +14,8 @@ function TheGauntlet.Items.Dionysus.ForceDrunkShader()
     shouldGetDrunk = true
 end
 
-TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderName)
-    if shaderName ~= "TheGauntlet Drunk Distortion" then return end
+function TheGauntlet:DrunkShader()
+
 
     local pitchDifferenceTarget = TheGauntlet.Utility.Lerp(0, 0.1, currentDrunkAmount)
     if Isaac.GetFrameCount() % 30 == 0 then
@@ -46,7 +47,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderNa
         Timers = { drunkTimerOne, drunkTimerTwo + 41, drunkTimerThree + 12, 0 },
         WaveContributionWeights = { 0.4, 0.4, 0.2, 0 }
     }
-end)
+end
+TR_Manager:RegisterShaderFunction(TheGauntlet, "TheGauntlet Drunk Distortion", TheGauntlet.DrunkShader)
 
 ---@param isContinued boolean
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, isContinued)

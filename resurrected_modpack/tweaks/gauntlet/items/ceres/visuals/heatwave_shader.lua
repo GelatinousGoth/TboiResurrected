@@ -1,3 +1,5 @@
+local TR_Manager = require("resurrected_modpack.manager")
+
 local summerFadeTimer = 0
 
 local waveTimer = 0
@@ -7,7 +9,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, isContin
     summerFadeTimer = 0
 end)
 
-TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderName)
+function TheGauntlet:HeatWaveShader()
     if TheGauntlet.Items.Ceres.GetSeason() == TheGauntlet.Items.Ceres.Season.SUMMER then
         summerFadeTimer = summerFadeTimer + 0.02
         if summerFadeTimer > 1 then
@@ -28,11 +30,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderNa
     local waveSpeed = TheGauntlet.Utility.Lerp(0, 0.01, summerFadeTimer)
     waveTimer = waveTimer + waveSpeed
 
-    if shaderName ~= "TheGauntlet Heat Wave" then return end
+
 
     return {
         Timer = waveTimer,
         Amplitude = waveAmplitude,
         Frequency = waveFrequency
     }
-end)
+end
+TR_Manager:RegisterShaderFunction(TheGauntlet, "TheGauntlet Heat Wave", TheGauntlet.HeatWaveShader)

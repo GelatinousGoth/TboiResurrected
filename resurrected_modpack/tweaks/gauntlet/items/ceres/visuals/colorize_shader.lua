@@ -1,3 +1,5 @@
+local TR_Manager = require("resurrected_modpack.manager")
+
 local NO_COLOR     = { 0.0, 0.0, 0.0, 0.0 }
 local WINTER_COLOR = { 0.8, 1.2, 1.5, 0.3 }
 local SPRING_COLOR = { 0.0, 1.5, 0.5, 0.1 }
@@ -35,7 +37,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, isContin
     TheGauntlet.Items.Ceres.RefreshSeasonVisuals()
 end)
 
-TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderName)
+function TheGauntlet:SeasonShader()
     if colorUpdateCounter > 0 then
         currentColor[1] = TheGauntlet.Utility.Lerp(currentColor[1], targetColor[1], 0.05)
         currentColor[2] = TheGauntlet.Utility.Lerp(currentColor[2], targetColor[2], 0.05)
@@ -47,7 +49,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderNa
         currentColor = TheGauntlet.Utility.CopyTableShallow(targetColor)
     end
 
-    if shaderName ~= "TheGauntlet ScreenColorize" then return end
+
 
     if not TheGauntlet.Settings.EnableCeresTint() then
         return {
@@ -58,4 +60,5 @@ TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderNa
     return {
         ColorToChangeTo = currentColor
     }
-end)
+end
+TR_Manager:RegisterShaderFunction(TheGauntlet, "TheGauntlet ScreenColorize", TheGauntlet.SeasonShader)
