@@ -193,10 +193,10 @@ directory.toggles = {
         {
             str = "instant poops + fires",
             choices = {"disabled", "enabled"},
-            setting = 2,
+            setting = 1,
             variable = "instantPoopsAndFiresEnabled",
             load = function ()
-                return getSaveData().Toggles.InstantPoopsAndFiresEnabled or 2
+                return getSaveData().Toggles.InstantPoopsAndFiresEnabled or 1
             end,
             store = function (var)
                 getSaveData().Toggles.InstantPoopsAndFiresEnabled = var
