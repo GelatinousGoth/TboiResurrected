@@ -270,6 +270,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PLAYER_GRID_COLLISION, function (_, play
     if player:GetHealthType() ~= HealthType.NO_HEALTH then
         local cooldown = (player:GetTrinketMultiplier(TrinketType.TRINKET_BLIND_RAGE) + 1) * 60
         tookDamage = player:TakeDamage(2, DamageFlag.DAMAGE_NO_PENALTIES | DamageFlag.DAMAGE_NO_MODIFIERS, EntityRef(nil), cooldown)
+        sfxManager:Play(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY)
+        player:AddMaxHearts(-2)
+        player:AddGoldenHearts(1)
     else
         tookDamage = true
     end
