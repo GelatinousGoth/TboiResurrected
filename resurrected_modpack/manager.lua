@@ -592,13 +592,10 @@ local function delete_mod(modId)
     local modData = TR_Manager.ModData[modId]
 
     for _, callback in ipairs(modData.Callbacks) do
----@diagnostic disable-next-line: param-type-mismatch
-        TboiRekindled:RemoveCallback(callback.Callback, callback.Function)
-    end
-
-    for _, callback in ipairs(modData.Callbacks) do
----@diagnostic disable-next-line: param-type-mismatch
-        TboiRekindled:RemoveCallback(callback.Callback, callback.Function)
+        if callback.Function and callback.Callback then
+            ---@diagnostic disable-next-line: param-type-mismatch
+            TboiRekindled:RemoveCallback(callback.Callback, callback.Function)
+        end
     end
 
     if modData.HasToggle then
