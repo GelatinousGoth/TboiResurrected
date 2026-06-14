@@ -222,7 +222,9 @@ function mod:IBackdropsEnterRoom()
 				IBackdropsCustomBG("curse", "corner_extras")
 				IBackdropsCustomBG("curse", "corner_extras_curse", true)
 
-			elseif config.uchallenge == true and (rtype == RoomType.ROOM_CHALLENGE or rtype == RoomType.ROOM_BOSSRUSH) and mod:CheckForRev() == false and not FiendFolio then
+			elseif config.uchallenge == true and (rtype == RoomType.ROOM_CHALLENGE or rtype == RoomType.ROOM_BOSSRUSH)
+			and mod:CheckForRev() == false and not FiendFolio
+			and (TheGauntlet or not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom()) then
 				if stage % 2 == 0 then
 					IBackdropsChangeBG(bg, true, true)
 				end
