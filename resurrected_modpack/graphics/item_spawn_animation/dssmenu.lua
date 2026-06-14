@@ -76,7 +76,7 @@ local IGTRADirectory = {
                 max = 60,
                 increment = 1,
                 suf = ' frames',
-                setting = 3,
+                setting = 0,
                 variable = "START_DELAY",
                 load = function()
                     return mod.GetSaveData().START_DELAY or 3
