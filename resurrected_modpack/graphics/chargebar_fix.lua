@@ -5,13 +5,11 @@ local mod = TR_Manager:RegisterMod("Chargebar GFX Fix", 1)
 local chargeBarSprite = Sprite()
 chargeBarSprite:Load("gfx/ui/ui_chargebar.anm2", true)
 
----@param player EntityPlayer
----@param slot ActiveSlot
----@param offset Vector
----@param alpha number
----@param scale number
----@param chargeBarOffset Vector
-function mod:chargeBarFix(player, slot, offset, alpha, scale, chargeBarOffset)
+local sparklesSprite = Sprite()
+sparklesSprite:Load("gfx/ui/chargebar_sparkles.anm2", true)
+
+--this fixes the top of the charge bar not being rendered
+local function chargeBarFix(player, slot, offset, alpha, scale, chargeBarOffset)
 local charge = player:GetActiveCharge(slot)
 local batteryCharge = player:GetBatteryCharge(slot)
 local maxCharge = player:GetActiveMaxCharge(slot)
@@ -53,4 +51,37 @@ local fullAnim = "BarFull"
     end
     
 end
-mod:AddCallback(ModCallbacks.MC_POST_PLAYERHUD_RENDER_ACTIVE_ITEM, mod.chargeBarFix)
+
+local sparklesIsPlaying = false
+
+--this makes little sparkles appear when you have your item charged woohoo
+local function readyToFireUp2(player, slot, offset, alpha, scale, chargeBarOffset)
+local charge = player:GetActiveCharge(slot)
+local batteryCharge = player:GetBatteryCharge(slot)
+local maxCharge = player:GetActiveMaxCharge(slot)
+    if player:GetActiveItem(slot) == CollectibleType.COLLECTIBLE_NULL then return end
+
+    if charge == maxCharge and not (maxCharge > 12) and not (maxCharge < 1) then
+        if not sparklesIsPlaying then 
+        sparklesSprite:SetFrame("Idle", 0)
+        sparklesSprite:Play("Idle", false)
+        sparklesIsPlaying = true
+        end
+        sparklesSprite:Update()
+        sparklesSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0))
+    else
+        sparklesIsPlaying = false
+    end
+end
+
+---@param player EntityPlayer
+---@param slot ActiveSlot
+---@param offset Vector
+---@param alpha number
+---@param scale number
+---@param chargeBarOffset Vector
+function mod:chargeBarEdits(player, slot, offset, alpha, scale, chargeBarOffset)
+    chargeBarFix(player, slot, offset, alpha, scale, chargeBarOffset)
+    readyToFireUp2(player, slot, offset, alpha, scale, chargeBarOffset)
+end
+mod:AddCallback(ModCallbacks.MC_POST_PLAYERHUD_RENDER_ACTIVE_ITEM, mod.chargeBarEdits)
