@@ -26,7 +26,6 @@ function Mod:InitConfig()
     Enabled = true,
     DSS = {}
   }
-  print("Init " .. Mod.Config.HUDColorMod.R, Mod.Config.HUDColorMod.G, Mod.Config.HUDColorMod.B, Mod.Config.HUDColorMod.A)
 end
 
 Mod:InitConfig()
