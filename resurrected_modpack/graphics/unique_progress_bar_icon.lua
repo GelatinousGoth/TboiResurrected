@@ -36,6 +36,8 @@ local repDirection = ICON_DIRECTION.STILL
 local useRepDirection = false
 local UNKNOWN_STAGE_FRAME = 17
 
+local ISAAC_INDICATOR_LAYER = 0
+
 ---@class IsaacIcon
 ---@field PlayerType PlayerType
 ---@field Icon Sprite
@@ -239,8 +241,7 @@ function UniqueProgressBarIcon.CreateIcon(player)
 		Offset = Vector.Zero,
 		RenderLayer = 0,
 		StopRender = false,
-		ControllerIndex =
-			type(player) == "number" and 0 or player.ControllerIndex
+		ControllerIndex = type(player) == "number" and 0 or player.ControllerIndex
 	}
 	local anm2ToLoad = "gfx/ui/coop menu.anm2"
 	local animToPlay = "Main"
@@ -310,13 +311,13 @@ function UniqueProgressBarIcon.CreateIcon(player)
 end
 
 function mod:LoadIsaacIcons()
+	Isaac.RunCallback(UniqueProgressBarIcon.Callbacks.PRE_ICONS_INIT)
 	---@type IsaacIcon[]
 	local iconList = {}
 	for _, player in ipairs(PlayerManager.GetPlayers()) do
 		if not shouldIconBeCreated(player) then goto continue end
 		local iconData = UniqueProgressBarIcon.CreateIcon(player)
-		Isaac.RunCallback(UniqueProgressBarIcon.Callbacks.POST_CREATE_ICON, iconData, player)
-		--iconData.Icon.Color = Color(0,0,0,0.5)
+		Isaac.RunCallbackWithParam(UniqueProgressBarIcon.Callbacks.POST_CREATE_ICON, player:GetPlayerType(), iconData, player)
 		table.insert(iconList, iconData)
 		::continue::
 	end
@@ -344,6 +345,9 @@ function mod:LoadIsaacIcons()
 		iconList[3],
 		iconList[4]
 	}
+
+	shadowLocations:SetFrame(tostring(#isaacIcons), 0)
+	Isaac.RunCallback(UniqueProgressBarIcon.Callbacks.POST_ICONS_INIT)
 end
 
 --shadowLocations.Color = Color(1,1,1,1,1,1,1)
@@ -386,7 +390,8 @@ end
 ---@return AnimationFrame | nil, AnimationFrame | nil
 local function getIconFrameData(spr)
 	local animData1 = spr:GetCurrentAnimationData()
-	local layerData1 = animData1:GetLayer(0)
+	if not animData1 then return end
+	local layerData1 = animData1:GetLayer(ISAAC_INDICATOR_LAYER)
 	if not layerData1 then return end
 	local frameData1 = layerData1:GetFrame(spr:GetFrame())
 	if not frameData1 then return end
@@ -409,16 +414,13 @@ local function adjustIconColorForStageAPI(icon)
 end
 
 ---@param renderPos Vector
-function mod:RenderIsaacIcons(renderPos, isStageAPI)
-	local iconSprite = NightmareScene.GetProgressBarSprite()
-	if isStageAPI then
-		iconSprite = StageAPI.TransitionAnimationData.Sprites.IsaacIndicator
-	end
+function mod:RenderIsaacIcons(renderPos, iconSprite)
 	local iconFrameData, shadowFrameData = getIconFrameData(iconSprite)
 	if not iconFrameData or not shadowFrameData then return end
 	local iconScale = iconFrameData:GetScale()
 	local iconOffset = iconFrameData:GetPos()
 	local shadowScale = shadowFrameData:GetScale()
+	local state = StageAPI and StageAPI.TransitionAnimationData.State
 
 	for playerNum, iconData in ipairs(isaacIcons) do
 		if iconData.TwinData then
@@ -426,7 +428,7 @@ function mod:RenderIsaacIcons(renderPos, isStageAPI)
 			local sprite = iconData.TwinData.Icon
 			sprite.Offset = iconOffset
 			sprite.Scale = iconScale
-			if isStageAPI then
+			if state and state == 2 then
 				adjustIconColorForStageAPI(sprite)
 			end
 			renderIsaacIcon(iconData.TwinData, Vector(renderPos.X + 2, renderPos.Y), playerNum)
@@ -435,7 +437,7 @@ function mod:RenderIsaacIcons(renderPos, isStageAPI)
 		local sprite = iconData.Icon
 		sprite.Offset = iconOffset
 		sprite.Scale = iconScale
-		if isStageAPI then
+		if state and state == 2 then
 			adjustIconColorForStageAPI(sprite)
 		end
 		renderIsaacIcon(iconData, renderPos, playerNum)
@@ -448,11 +450,12 @@ function mod:OnNightmareRender()
 	local renderPos = Vector((Isaac.GetScreenWidth() / 2) - firstIconPos + iconMapOffset + movingPos, 20)
 
 	if currentNightmareFrame == 0 then
-		Isaac.RunCallback(UniqueProgressBarIcon.Callbacks.PRE_ICONS_INIT)
 		NightmareScene.GetProgressBarSprite():GetLayer(1):SetVisible(false)
+		if communityRemix and NightmareScene.GetProgressBarSprite():GetLayer(2) then
+			ISAAC_INDICATOR_LAYER = 2
+			NightmareScene.GetProgressBarSprite():GetLayer(ISAAC_INDICATOR_LAYER):SetVisible(false)
+		end
 		mod:LoadIsaacIcons()
-		shadowLocations:SetFrame(tostring(#isaacIcons), 0)
-		Isaac.RunCallback(UniqueProgressBarIcon.Callbacks.POST_ICONS_INIT, isaacIcons, shadowLocations)
 	end
 
 	currentNightmareFrame = currentNightmareFrame + 1
@@ -463,7 +466,7 @@ function mod:OnNightmareRender()
 			movingPos = movingPos - ICON_SPEED
 		end
 	end
-	mod:RenderIsaacIcons(renderPos)
+	mod:RenderIsaacIcons(renderPos, NightmareScene.GetProgressBarSprite())
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_NIGHTMARE_SCENE_RENDER, mod.OnNightmareRender)
@@ -503,20 +506,16 @@ function mod:RenderForStageAPI(name)
 	if not renderPos or stageAnimData.State ~= 2 then return end
 	renderPos = Vector(renderPos.X, renderPos.Y - 3)
 	if stageAnimData.State == 2 and stageAnimData.Frame > 150 and not loadedIconForStageAPI then
-		Isaac.RunCallback(UniqueProgressBarIcon.Callbacks.PRE_ICONS_INIT)
 		stageAPIIcon:GetLayer(0):SetVisible(false)
 		stageAPIIcon:GetLayer(1):SetVisible(false)
 		mod:LoadIsaacIcons()
 		loadedIconForStageAPI = true
-		shadowLocations:SetFrame(tostring(#isaacIcons), 0)
-		Isaac.RunCallback(UniqueProgressBarIcon.Callbacks.POST_ICONS_INIT, isaacIcons, shadowLocations)
 	end
 
-	mod:RenderIsaacIcons(renderPos, true)
+	mod:RenderIsaacIcons(renderPos, StageAPI.TransitionAnimationData.Sprites.IsaacIndicator)
 end
 
 TR_Manager:AddSafeShaderCallback(mod, CallbackPriority.DEFAULT, mod.RenderForStageAPI)
 
 --#endregion
 
-return mod
