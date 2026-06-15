@@ -8,6 +8,9 @@ chargeBarSprite:Load("gfx/ui/ui_chargebar.anm2", true)
 local sparklesSprite = Sprite()
 sparklesSprite:Load("gfx/ui/chargebar_sparkles.anm2", true)
 
+local overchargeSprite = Sprite()
+overchargeSprite:Load("gfx/ui/chargebar_overcharge.anm2", true)
+
 --this fixes the top of the charge bar not being rendered
 local function chargeBarFix(player, slot, offset, alpha, scale, chargeBarOffset)
 local charge = player:GetActiveCharge(slot)
@@ -53,15 +56,22 @@ local fullAnim = "BarFull"
 end
 
 local sparklesIsPlaying = false
+local overchargeIsPlaying = false
 
 --this makes little sparkles appear when you have your item charged woohoo
 local function readyToFireUp2(player, slot, offset, alpha, scale, chargeBarOffset)
 local charge = player:GetActiveCharge(slot)
-local batteryCharge = player:GetBatteryCharge(slot)
 local maxCharge = player:GetActiveMaxCharge(slot)
+local batteryCharge = player:GetBatteryCharge(slot)
+local ALPHA_CHANNEL = 0.3
+
     if player:GetActiveItem(slot) == CollectibleType.COLLECTIBLE_NULL then return end
 
     if charge == maxCharge and not (maxCharge > 12) and not (maxCharge < 1) then
+        if batteryCharge >= 1 then
+            local color = Color(1, 1, 1, ALPHA_CHANNEL)
+            sparklesSprite.Color = color
+        end
         if not sparklesIsPlaying then 
         sparklesSprite:SetFrame("Idle", 0)
         sparklesSprite:Play("Idle", false)
@@ -74,6 +84,23 @@ local maxCharge = player:GetActiveMaxCharge(slot)
     end
 end
 
+local function readyToFireUpOvercharge(player, slot, offset, alpha, scale, chargeBarOffset)
+local batteryCharge = player:GetBatteryCharge(slot)
+    if player:GetActiveItem(slot) == CollectibleType.COLLECTIBLE_NULL then return end
+        if batteryCharge >= 1 then
+        if not overchargeIsPlaying then
+        overchargeSprite:SetFrame("Idle", 0)     
+        overchargeSprite:Play("Idle", false)
+        overchargeIsPlaying = true
+        end
+        overchargeSprite:Update()
+        overchargeSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0))
+        else
+            overchargeIsPlaying = false
+        end
+end
+
+
 ---@param player EntityPlayer
 ---@param slot ActiveSlot
 ---@param offset Vector
@@ -83,5 +110,6 @@ end
 function mod:chargeBarEdits(player, slot, offset, alpha, scale, chargeBarOffset)
     chargeBarFix(player, slot, offset, alpha, scale, chargeBarOffset)
     readyToFireUp2(player, slot, offset, alpha, scale, chargeBarOffset)
+    readyToFireUpOvercharge(player, slot, offset, alpha, scale, chargeBarOffset)
 end
 mod:AddCallback(ModCallbacks.MC_POST_PLAYERHUD_RENDER_ACTIVE_ITEM, mod.chargeBarEdits)
