@@ -28,10 +28,21 @@ local fullAnim = "BarFull"
         if batteryCharge == maxCharge then
             local color = Color(1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0)
             chargeBarSprite.Color = color
+        else
+            local color = Color(1, 1, 1, 1, 0, 0, 0)
+            chargeBarSprite.Color = color
         end
         chargeBarSprite:SetFrame(fullAnim, 0)        
         chargeBarSprite:Update()
         chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29)) -- last vector crops the bottom so only the tippy top is shown
+
+        --for items that recharge with time
+        if maxCharge > 12 then
+            chargeBarSprite:SetFrame("BarOverlay1", 0)        
+            chargeBarSprite:Update()
+            chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0))
+        return
+        end
 
 
         -- this renders the overlay
@@ -43,13 +54,6 @@ local fullAnim = "BarFull"
         chargeBarSprite:SetFrame(overlayAnim, 0)        
         chargeBarSprite:Update()
         chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0))
-
-        --for items that recharge with time
-        if maxCharge > 12 then
-            chargeBarSprite:SetFrame("BarOverlay1", 0)        
-            chargeBarSprite:Update()
-            chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0))
-        end
 
     end
     
@@ -63,15 +67,11 @@ local function readyToFireUp2(player, slot, offset, alpha, scale, chargeBarOffse
 local charge = player:GetActiveCharge(slot)
 local maxCharge = player:GetActiveMaxCharge(slot)
 local batteryCharge = player:GetBatteryCharge(slot)
-local ALPHA_CHANNEL = 0.3
 
     if player:GetActiveItem(slot) == CollectibleType.COLLECTIBLE_NULL then return end
 
     if charge == maxCharge and not (maxCharge > 12) and not (maxCharge < 1) then
-        if batteryCharge >= 1 then
-            local color = Color(1, 1, 1, ALPHA_CHANNEL)
-            sparklesSprite.Color = color
-        end
+        if batteryCharge >= 1 then return end
         if not sparklesIsPlaying then 
         sparklesSprite:SetFrame("Idle", 0)
         sparklesSprite:Play("Idle", false)

@@ -3,7 +3,7 @@ local ModID = "Critical Health"
 local Mod = TR_Manager:RegisterMod(ModID, 1)
 local game = Game()
 local level = game:GetLevel()
-local ALPHA_VALUE = 0.25
+local ALPHA_VALUE = 0.10
 
 Mod.critical = 0
 Mod.Damage = 0
@@ -20,18 +20,18 @@ function Mod:InitConfig()
   Mod.Config = {
     HUDColorMod = {
       R = 1,
-      G = 0, 
+      G = 1,
       B = 0.05,
       A = ALPHA_VALUE
     },
     Enabled = true,
     DSS = {}
-  }    
+  }
 end
 
 Mod:InitConfig()
 
-local DefaultColor = Color(1,0,0,ALPHA_VALUE)
+local DefaultColor = Color(1,1,0.05,ALPHA_VALUE)
 
 local json = require("json")
 
@@ -39,6 +39,7 @@ function Mod:SyncWithConfig()
   local hud_mod = Mod.Config.HUDColorMod or DefaultColor
   Mod.Config.ColorMod = Color(1*hud_mod.R,1*hud_mod.G,1*hud_mod.B,1*hud_mod.A)
   Mod:SaveData(json.encode(Mod.Config))
+  print(Mod.Config.ColorMod.R, Mod.Config.ColorMod.G, Mod.Config.ColorMod.B, Mod.Config.ColorMod.A)
 end
 
 function Mod:LoadConfig()
@@ -54,6 +55,8 @@ function Mod:LoadConfig()
     Mod:InitConfig()
   end
 end
+
+Mod:LoadConfig()
 
 function Mod:GetDSSData()
   if Mod.Config == nil then 
