@@ -167,7 +167,7 @@ local menu = {
             {
                 str = "show chance", fsize = 2,
                 choices = { "enabled", "disabled" },
-                setting = 2,
+                setting = 1,
                 variable = "TheGauntlet_ShowChance",
                 tooltip = {strset = {"whether the", "gauntlet room", "spawn chance", "should be", "visible"}},
 
@@ -301,12 +301,12 @@ TheGauntlet.Settings = {
         return TheGauntlet.SaveManager.GetSettingsSave().RemoveDionysus
     end,
 
-    ShowChance = function ()
+ShowChance = function ()
         if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
-            return true
+            return false
         end
         if TheGauntlet.SaveManager.GetSettingsSave().ShowChance == nil then
-            return true
+            return false
         end
         return TheGauntlet.SaveManager.GetSettingsSave().ShowChance
     end,
