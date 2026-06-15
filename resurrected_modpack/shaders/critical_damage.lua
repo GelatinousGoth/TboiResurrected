@@ -3,7 +3,6 @@ local ModID = "Critical Health"
 local Mod = TR_Manager:RegisterMod(ModID, 1)
 local game = Game()
 local level = game:GetLevel()
-local ALPHA_VALUE = 0.10
 
 Mod.critical = 0
 Mod.Damage = 0
@@ -20,32 +19,31 @@ function Mod:InitConfig()
   Mod.Config = {
     HUDColorMod = {
       R = 1,
-      G = 1,
+      G = 0,
       B = 0.05,
-      A = ALPHA_VALUE
+      A = 0.10
     },
     Enabled = true,
     DSS = {}
   }
+  print("Init " .. Mod.Config.HUDColorMod.R, Mod.Config.HUDColorMod.G, Mod.Config.HUDColorMod.B, Mod.Config.HUDColorMod.A)
 end
 
 Mod:InitConfig()
 
-local DefaultColor = Color(1,1,0.05,ALPHA_VALUE)
+local DefaultColor = Color(1,0,0.05,0.10)
 
 local json = require("json")
+local hud_mod = Mod.Config.HUDColorMod or DefaultColor
 
 function Mod:SyncWithConfig()
-  local hud_mod = Mod.Config.HUDColorMod or DefaultColor
   Mod.Config.ColorMod = Color(1*hud_mod.R,1*hud_mod.G,1*hud_mod.B,1*hud_mod.A)
   Mod:SaveData(json.encode(Mod.Config))
-  print(Mod.Config.ColorMod.R, Mod.Config.ColorMod.G, Mod.Config.ColorMod.B, Mod.Config.ColorMod.A)
 end
 
 function Mod:LoadConfig()
   if Mod:HasData() then 
-    Mod.Config = json.decode(Mod:LoadData(Mod))
-
+    Mod.Config = json.decode(Mod:LoadData())
     if Mod.Config == nil then 
       Mod:InitConfig()
     end
@@ -55,8 +53,8 @@ function Mod:LoadConfig()
     Mod:InitConfig()
   end
 end
+Mod:AddCallback(ModCallbacks.MC_POST_SAVESLOT_LOAD, Mod.LoadConfig)
 
-Mod:LoadConfig()
 
 function Mod:GetDSSData()
   if Mod.Config == nil then 
@@ -419,7 +417,6 @@ function Mod:OnRender(shadername)
     BMod = (Mod.Config.ColorMod or DefaultColor).B,
     AMod = (Mod.Config.ColorMod or DefaultColor).A,
   }
-
   return params;
 end
 
