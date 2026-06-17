@@ -21,7 +21,7 @@ IsaacReflourished.RFSettingsDefaults = {
     -- accursed trapdoors
     AccursedFirstFloor              = 2,
     AccursedSameAltCurse            = 1,
-    AccursedGuppysEye               = 1,
+    AccursedGuppysEye               = 2,
 
     -- instant poops + fires
     OneHitRedFires                  = 1,
