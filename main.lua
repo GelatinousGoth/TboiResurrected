@@ -67,6 +67,7 @@ TR_Manager:LoadMod("resurrected_modpack.graphics.super_greed_coin_tears")
 TR_Manager:LoadMod("resurrected_modpack.graphics.gellos_dressup")
 TR_Manager:LoadMod("resurrected_modpack.graphics.stairway_trapdoor")
 TR_Manager:LoadMod("resurrected_modpack.graphics.chargebar_fix")
+TR_Manager:LoadMod("resurrected_modpack.graphics.unique_spirit_swords")
 
 TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.chests_before_mother")
