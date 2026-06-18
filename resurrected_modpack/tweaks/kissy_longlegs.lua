@@ -1,5 +1,6 @@
 local TR_Manager = require("resurrected_modpack.manager")
 local KissyMod = TR_Manager:RegisterMod("Kissy Longlegs", 1, true)
+
 local ModName = "Kissy Longlegs"
 
 local SaveState = {}
