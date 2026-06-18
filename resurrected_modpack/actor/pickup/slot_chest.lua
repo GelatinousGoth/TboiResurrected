@@ -280,7 +280,7 @@ local function SlotChest_GetLootList(rng, shouldAdvance)
     local lootModifiers = 0
 
     if PlayerManager.AnyoneHasTrinket(TrinketType.TRINKET_POKER_CHIP) then
-        if pokerChip_rng:RandomInt(2) then
+        if pokerChip_rng:RandomInt(2) ~= 0 then
             return {{
                 type = EntityType.ENTITY_ATTACKFLY,
                 variant = 0,
