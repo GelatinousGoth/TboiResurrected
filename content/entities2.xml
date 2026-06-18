@@ -184,5 +184,8 @@
 	<entity id="3" variant="2049" subtype="0" name="TheGauntlet Apollo Baby" anm2path="gauntlet/familiars/apollo baby.anm2"
 			shadowSize="8" numGridCollisionPoints="12" collisionMass="3" collisionRadius="13" friction="1"
 			tags="cansacrifice" customtags="" />
+			
+	<entity name="Mr. Unlocki"   id="6" variant="5111"   anm2path="mole.anm2"
+	friction="1" collisionRadius="20" collisionMass="100" numGridCollisionPoints="24" />
 </entities>
 <!-- OLD ENTRY <entity anm2path="dream_catcher_entity.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" id="960" name="Hanging Dream Catcher" numGridCollisionPoints="0" shadowSize="13" stageHP="0" variant="245" shutdoors="false"/> -->	

@@ -95,6 +95,8 @@ TR_Manager:LoadMod("resurrected_modpack.tweaks.sac_room_rework")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.curse_of_darkness_silhouette")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.gauntlet")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.brown_nugget_pea_shooter")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.jesus_juice_water_walk")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.bomb_cooking")
 
 TR_Manager:LoadMod("resurrected_modpack.qol.hanging_dream_catcher")
 TR_Manager:LoadMod("resurrected_modpack.qol.hud_toggle")
@@ -121,6 +123,7 @@ TR_Manager:LoadMod("resurrected_modpack.sounds.shepard_tone")
 TR_Manager:LoadMod("resurrected_modpack.sounds.bell_chime_for_good_items")
 TR_Manager:LoadMod("resurrected_modpack.sounds.character_hit_sounds")
 TR_Manager:LoadMod("resurrected_modpack.sounds.rag_mega_sounds_like_rag_man")
+TR_Manager:LoadMod("resurrected_modpack.sounds.delirious_death")
 
 TR_Manager:LoadMod("resurrected_modpack.music.unique_mega_satan_music")
 
