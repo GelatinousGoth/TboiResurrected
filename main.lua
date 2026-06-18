@@ -98,6 +98,7 @@ TR_Manager:LoadMod("resurrected_modpack.tweaks.brown_nugget_pea_shooter")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.jesus_juice_water_walk")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.bomb_cooking")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.unlock_key")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.kissy_longlegs")
 
 TR_Manager:LoadMod("resurrected_modpack.qol.hanging_dream_catcher")
 TR_Manager:LoadMod("resurrected_modpack.qol.hud_toggle")
