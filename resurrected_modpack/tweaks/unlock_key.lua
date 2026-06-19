@@ -7,10 +7,10 @@ local mod = UnlockKey
 --[[ Constants ]]--
 mod.Item = Isaac.GetItemIdByName("Unlock Key")
 mod.MoleVariant = Isaac.GetEntityVariantByName("Mr. Unlocki")
-mod.EnemyHPIncrease = 20 -- In percent
+mod.EnemyHPIncrease = 22.5 -- In percent
 
 -- Time limits (minutes * seconds * frames)
-mod.TimeLimit   = 1.5 * 60 * 30
+mod.TimeLimit   = 1.25 * 60 * 30
 mod.TimeLimitXL = 2.5 * 60 * 30
 
 
