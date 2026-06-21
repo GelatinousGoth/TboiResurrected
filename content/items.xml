@@ -1,4 +1,4 @@
-<items gfxroot="gfx/gauntlet/items/" deathanm2="gfx/death_items.anm2" version="1">
+<items gfxroot="gfx/moddeditems/items/" deathanm2="gfx/death_items.anm2" version="1">
 	<trinket name="##RESURRECTED_RED_KEY_ACHIEVEMENT_TRACKER"  description="This message should not appear. If it does, it's a bug." achievement="415"/>
     <trinket name="##RESURRECTED_WOODEN_CHEST_ACHIEVEMENT_TRACKER"  description="This message should not appear, but it'll be a pain if it does." achievement="609"/>
 	
@@ -150,6 +150,13 @@
 		tags=""
 	/>
 	
-    <passive id="1" name="Unlock Key" description="With progress comes strife" gfx="Collectibles_UnlockKey.png"
-	quality="0" craftquality="-1" hidden="true" tags="quest nogreed offensive nocantrip nochallenge lazarussharedglobal noeden" />
+    <passive id="20" 
+		name="Unlock Key" 
+		description="With progress comes strife" 
+		gfx="collectibles_unlockKey.png"
+		quality="0" 
+		craftquality="-1" 
+		hidden="true" 
+		tags="quest nogreed offensive nocantrip nochallenge lazarussharedglobal noeden" 
+	/>
 </items>
