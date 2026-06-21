@@ -34,3 +34,30 @@ function mod:ambushNPCInit(npc)
     end
 end
 mod:AddCallback(ModCallbacks.MC_PRE_NPC_RENDER, mod.ambushNPCInit)
+
+
+--the following code was written by xxlucia_07xx EPIC 
+function mod:bossRushDoorRender(door)
+local level = game:GetLevel()
+local room = level:GetCurrentRoom()
+    if not level:HasBossChallenge() then return end
+    local doorIsBossAmbush =
+    (room:GetType() == RoomType.ROOM_DEFAULT and door.TargetRoomType == RoomType.ROOM_CHALLENGE) or
+    (room:GetType() == RoomType.ROOM_CHALLENGE and door.TargetRoomType == RoomType.ROOM_DEFAULT)
+
+    if not doorIsBossAmbush then return end
+    local sprite = door:GetSprite()
+
+    if not door:IsOpen() then return end
+
+    local currentAnim = sprite:GetAnimation()
+
+    if currentAnim == "Open" then
+        if sprite:IsFinished("Open") then
+            sprite:Play("Opened", true)
+        end
+    elseif currentAnim ~= "Opened" then
+        sprite:Play("Opened", true)
+    end
+end
+mod:AddCallback(ModCallbacks.MC_POST_GRID_ENTITY_DOOR_RENDER, mod.bossRushDoorRender)
