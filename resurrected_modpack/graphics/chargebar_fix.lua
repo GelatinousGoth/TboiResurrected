@@ -25,7 +25,7 @@ local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
     if maxCharge < 1 then return end
     if charge == maxCharge then
         --print("charge: " .. charge .. " maxCharge: " .. maxCharge .. " slot: " .. slot)
-        --this makes the item smaller if its in the secondary slot
+        --this makes the chargebar smaller if its in the secondary slot
         if (slot == ActiveSlot.SLOT_PRIMARY) or (pocketItem:GetType() == PocketItemType.ACTIVE_ITEM) then 
             local scale = Vector(1,1)
             chargeBarSprite.Scale = scale
@@ -37,15 +37,25 @@ local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
         --this renders the charge
         if batteryCharge == maxCharge then
             local color = Color(1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0)
+            color:SetColorize(1,1,1,1)
             chargeBarSprite.Color = color
+        elseif FiendFolio and FiendFolio:getChargeDebt(player, slot) > 1 then
+            local redBarColor = Color(1,1,1,1)
+            redBarColor:SetColorize(1,0,0,1)
+            chargeBarSprite.Color = redBarColor
         else
             local color = Color(1, 1, 1, 1, 0, 0, 0)
+            color:SetColorize(1,1,1,1)
             chargeBarSprite.Color = color
         end
         chargeBarSprite:SetFrame(fullAnim, 0)        
         chargeBarSprite:Update()
         chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29)) -- last vector crops the bottom so only the tippy top is shown
-
+        
+        --changes color back to normal
+        local color = Color(1, 1, 1, 1, 0, 0, 0)
+        color:SetColorize(1,1,1,1)
+        chargeBarSprite.Color = color
         --for items that recharge with time
         if maxCharge > 12 then
             chargeBarSprite:SetFrame("BarOverlay1", 0)        
@@ -56,11 +66,6 @@ local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
 
 
         -- this renders the overlay
-        if batteryCharge == maxCharge then
-            --print(batteryCharge)
-            local color = Color(1, 1, 1, 1, 0, 0, 0)
-            chargeBarSprite.Color = color
-        end
         chargeBarSprite:SetFrame(overlayAnim, 0)        
         chargeBarSprite:Update()
         chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29))
