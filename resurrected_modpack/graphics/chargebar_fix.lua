@@ -1,6 +1,6 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-local mod = TR_Manager:RegisterMod("Chargebar GFX Fix", 1)
+local mod = TR_Manager:RegisterMod("Refined Chargebar", 1)
 
 local chargeBarSprite = Sprite()
 chargeBarSprite:Load("gfx/ui/ui_chargebar.anm2", true)
@@ -18,11 +18,21 @@ local batteryCharge = player:GetBatteryCharge(slot)
 local maxCharge = player:GetActiveMaxCharge(slot)
 local overlayAnim = "BarOverlay" .. tostring(maxCharge)
 local fullAnim = "BarFull"
+local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
+
     if player:GetActiveItem(slot) == CollectibleType.COLLECTIBLE_NULL then return end
     -- for one use active items
     if maxCharge < 1 then return end
     if charge == maxCharge then
         --print("charge: " .. charge .. " maxCharge: " .. maxCharge .. " slot: " .. slot)
+        --this makes the item smaller if its in the secondary slot
+        if (slot == ActiveSlot.SLOT_PRIMARY) or (pocketItem:GetType() == PocketItemType.ACTIVE_ITEM) then 
+            local scale = Vector(1,1)
+            chargeBarSprite.Scale = scale
+        else
+            local scale = Vector(0.5,0.5)
+            chargeBarSprite.Scale = scale
+        end
 
         --this renders the charge
         if batteryCharge == maxCharge then
@@ -40,7 +50,7 @@ local fullAnim = "BarFull"
         if maxCharge > 12 then
             chargeBarSprite:SetFrame("BarOverlay1", 0)        
             chargeBarSprite:Update()
-            chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0))
+            chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29))
         return
         end
 
@@ -53,13 +63,13 @@ local fullAnim = "BarFull"
         end
         chargeBarSprite:SetFrame(overlayAnim, 0)        
         chargeBarSprite:Update()
-        chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0))
+        chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29))
 
     end
     
 end
 
-local sparklesIsPlaying = false
+local sparklesIsPlaying = {}
 local overchargeIsPlaying = false
 
 --this makes little sparkles appear when you have your item charged woohoo
@@ -67,25 +77,30 @@ local function readyToFireUp2(player, slot, offset, alpha, scale, chargeBarOffse
 local charge = player:GetActiveCharge(slot)
 local maxCharge = player:GetActiveMaxCharge(slot)
 local batteryCharge = player:GetBatteryCharge(slot)
+local pocketItem = player:GetPocketItem(PillCardSlot.SECONDARY)
 
+    if (slot == ActiveSlot.SLOT_SECONDARY) or (pocketItem:GetType() == PocketItemType.ACTIVE_ITEM) then return end
     if player:GetActiveItem(slot) == CollectibleType.COLLECTIBLE_NULL then return end
 
-    if charge == maxCharge and not (maxCharge > 12) and not (maxCharge < 1) then
+    local key = GetPtrHash(player) .. "_" .. tostring(slot)
+
+    if charge == maxCharge and not (maxCharge < 1) then
         if batteryCharge >= 1 then return end
-        if not sparklesIsPlaying then 
+        if not sparklesIsPlaying[key] then 
         sparklesSprite:SetFrame("Idle", 0)
         sparklesSprite:Play("Idle", false)
-        sparklesIsPlaying = true
+        sparklesIsPlaying[key] = true
         end
         sparklesSprite:Update()
         sparklesSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0))
     else
-        sparklesIsPlaying = false
+        sparklesIsPlaying[key] = false
     end
 end
 
 local function readyToFireUpOvercharge(player, slot, offset, alpha, scale, chargeBarOffset)
 local batteryCharge = player:GetBatteryCharge(slot)
+    if slot == ActiveSlot.SLOT_SECONDARY then return end
     if player:GetActiveItem(slot) == CollectibleType.COLLECTIBLE_NULL then return end
         if batteryCharge >= 1 then
         if not overchargeIsPlaying then
