@@ -5,7 +5,8 @@ local game = Game()
 
 bombCookingMod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, p)
 	if communityRemix and p:HasCollectible(communityRemix.CollectibleType.COLLECTIBLE_OVEN_MITT) then return end
-	
+	if BossButch and p:HasCollectible(BossButch.RatBombsID) then return end
+
 	local d = p:GetData()
 	
 	if d.bombbuttonframes == nil then d.bombbuttonframes = -1 end
@@ -32,6 +33,8 @@ end)
 
 bombCookingMod:AddCallback(ModCallbacks.MC_POST_PLAYER_USE_BOMB, function(_, p, bomb)
 	if communityRemix and p:HasCollectible(communityRemix.CollectibleType.COLLECTIBLE_OVEN_MITT) then return end
+	if BossButch and p:HasCollectible(BossButch.RatBombsID) then return end
+
 	local d = p:GetData()
 	if d.bombbuttonframes == nil then d.bombbuttonframes = 0 end
 	if d.bombbuttonframes >= 8 then
