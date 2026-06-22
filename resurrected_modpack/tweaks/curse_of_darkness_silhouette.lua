@@ -16,7 +16,7 @@ CurseOfDarkness.colorsByLevel = {
 }
 
 CurseOfDarkness.lightSources = {
-  {type = 1, radius = 200, radius2 = 140, radius3 = 110, radius4 = 80 },
+  {type = 1, radius = 220, radius2 = 140, radius3 = 110, radius4 = 80 },
   {type = 3, variant = 201, subtype = 13, radius = 50 },
   {type = EntityType.ENTITY_HORF, variant = Isaac.GetEntityVariantByName("Flaming Horf"), radius = 70 },
   {type = EntityType.ENTITY_FLAMINGHOPPER, radius = 70 },
