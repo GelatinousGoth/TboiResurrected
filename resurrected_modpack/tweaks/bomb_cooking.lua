@@ -48,6 +48,7 @@ bombCookingMod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function(_, e, hook, ac
 	if e and e.Type == 1 then
 		local p = e:ToPlayer()
 		if communityRemix and p:HasCollectible(communityRemix.CollectibleType.COLLECTIBLE_OVEN_MITT) then return end
+		if BossButch and p:HasCollectible(BossButch.RatBombsID) then return end
 		local d = p:GetData()
 		if action == ButtonAction.ACTION_BOMB then
 			if hook == 1 then
