@@ -52,7 +52,7 @@ function CurseOfDarkness.OnUpdate (_)
 local curses = (Game():GetLevel():GetCurses() & LevelCurse.CURSE_OF_DARKNESS)
 local darkMod = Game():GetDarknessModifier()
 
-if darkMod ~= 0 or curses ~= 0 then
+if darkMod == 0 and curses == 0 then return end
   local entities = Isaac.FindInRadius(Isaac.GetPlayer(0).Position,1500, EntityPartition.ENEMY | EntityPartition.BULLET | EntityPartition.PICKUP)
   for i,npc in pairs(entities) do
     local data = npc:GetData()
@@ -82,7 +82,6 @@ if darkMod ~= 0 or curses ~= 0 then
         end
     end
   end
-end
   
 end
 
