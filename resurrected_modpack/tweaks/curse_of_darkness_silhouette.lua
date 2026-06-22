@@ -49,8 +49,10 @@ end
 
 
 function CurseOfDarkness.OnUpdate (_)
-  if Game():GetLevel():GetCurses() & LevelCurse.CURSE_OF_DARKNESS ~= 0 then
+local curses = (Game():GetLevel():GetCurses() & LevelCurse.CURSE_OF_DARKNESS)
+local darkMod = Game():GetDarknessModifier()
 
+if darkMod ~= 0 or curses ~= 0 then
   local entities = Isaac.FindInRadius(Isaac.GetPlayer(0).Position,1500, EntityPartition.ENEMY | EntityPartition.BULLET | EntityPartition.PICKUP)
   for i,npc in pairs(entities) do
     local data = npc:GetData()
@@ -80,8 +82,8 @@ function CurseOfDarkness.OnUpdate (_)
         end
     end
   end
-
-  end
+end
+  
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, CurseOfDarkness.OnUpdate)
