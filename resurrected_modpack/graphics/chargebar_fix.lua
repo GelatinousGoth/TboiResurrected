@@ -5,6 +5,9 @@ local mod = TR_Manager:RegisterMod("Refined Chargebar", 1)
 local chargeBarSprite = Sprite()
 chargeBarSprite:Load("gfx/ui/ui_chargebar.anm2", true)
 
+local chargeBarOverlay = Sprite()
+chargeBarOverlay:Load("gfx/ui/ui_chargebar.anm2", true)
+
 local sparklesSprite = Sprite()
 sparklesSprite:Load("gfx/ui/chargebar_sparkles.anm2", true)
 
@@ -18,6 +21,7 @@ local batteryCharge = player:GetBatteryCharge(slot)
 local maxCharge = player:GetActiveMaxCharge(slot)
 local overlayAnim = "BarOverlay" .. tostring(maxCharge)
 local fullAnim = "BarFull"
+local emptyAnim = "BarEmpty"
 local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
 
     if player:GetActiveItem(slot) == CollectibleType.COLLECTIBLE_NULL then return end
@@ -29,15 +33,18 @@ local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
         if (slot == ActiveSlot.SLOT_PRIMARY) or (pocketItem:GetType() == PocketItemType.ACTIVE_ITEM) then 
             local scale = Vector(1,1)
             chargeBarSprite.Scale = scale
+            chargeBarOverlay.Scale = scale
+
         else
             local scale = Vector(0.5,0.5)
             chargeBarSprite.Scale = scale
+            chargeBarOverlay.Scale = scale
+
         end
 
         --this renders the charge
         if batteryCharge == maxCharge then
             local color = Color(1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0)
-            color:SetColorize(1,1,1,1)
             chargeBarSprite.Color = color
         elseif FiendFolio and FiendFolio:getChargeDebt(player, slot) > 1 then
             local redBarColor = Color(1,1,1,1)
@@ -45,31 +52,45 @@ local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
             chargeBarSprite.Color = redBarColor
         else
             local color = Color(1, 1, 1, 1, 0, 0, 0)
-            color:SetColorize(1,1,1,1)
             chargeBarSprite.Color = color
         end
         chargeBarSprite:SetFrame(fullAnim, 0)        
         chargeBarSprite:Update()
         chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29)) -- last vector crops the bottom so only the tippy top is shown
-        
-        --changes color back to normal
-        local color = Color(1, 1, 1, 1, 0, 0, 0)
-        color:SetColorize(1,1,1,1)
-        chargeBarSprite.Color = color
+
         --for items that recharge with time
         if maxCharge > 12 then
-            chargeBarSprite:SetFrame("BarOverlay1", 0)        
-            chargeBarSprite:Update()
-            chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29))
+            chargeBarOverlay:SetFrame("BarOverlay1", 0)        
+            chargeBarOverlay:Update()
+            chargeBarOverlay:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29))
         return
         end
 
 
         -- this renders the overlay
-        chargeBarSprite:SetFrame(overlayAnim, 0)        
-        chargeBarSprite:Update()
-        chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29))
+        chargeBarOverlay:SetFrame(overlayAnim, 0)        
+        chargeBarOverlay:Update()
+        chargeBarOverlay:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29))
 
+        elseif charge == 0 then
+   
+        if (slot == ActiveSlot.SLOT_PRIMARY) or (pocketItem:GetType() == PocketItemType.ACTIVE_ITEM) then
+            local scale = Vector(1,1)
+            chargeBarSprite.Scale = scale
+            chargeBarOverlay.Scale = scale
+        else
+            local scale = Vector(0.5,0.5)
+            chargeBarSprite.Scale = scale
+            chargeBarOverlay.Scale = scale
+        end
+
+        chargeBarSprite:SetFrame(emptyAnim, 0)
+        chargeBarSprite:Update()
+        chargeBarSprite:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0)) -- last vector crops the bottom so only the tippy top is shown
+
+        chargeBarOverlay:SetFrame(overlayAnim, 0)
+        chargeBarOverlay:Update()
+        chargeBarOverlay:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0))
     end
     
 end
