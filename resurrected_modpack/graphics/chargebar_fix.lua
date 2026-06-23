@@ -37,7 +37,6 @@ local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
         --this renders the charge
         if batteryCharge == maxCharge then
             local color = Color(1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0)
-            color:SetColorize(1,1,1,1)
             chargeBarSprite.Color = color
         elseif FiendFolio and FiendFolio:getChargeDebt(player, slot) > 1 then
             local redBarColor = Color(1,1,1,1)
@@ -45,7 +44,6 @@ local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
             chargeBarSprite.Color = redBarColor
         else
             local color = Color(1, 1, 1, 1, 0, 0, 0)
-            color:SetColorize(1,1,1,1)
             chargeBarSprite.Color = color
         end
         chargeBarSprite:SetFrame(fullAnim, 0)        
@@ -54,8 +52,8 @@ local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
         
         --changes color back to normal
         local color = Color(1, 1, 1, 1, 0, 0, 0)
-        color:SetColorize(1,1,1,1)
         chargeBarSprite.Color = color
+
         --for items that recharge with time
         if maxCharge > 12 then
             chargeBarSprite:SetFrame("BarOverlay1", 0)        
