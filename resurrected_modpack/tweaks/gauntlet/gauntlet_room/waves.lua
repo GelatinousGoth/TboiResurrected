@@ -294,6 +294,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     local level = game:GetLevel()
     local room = game:GetRoom()
+    local player = Isaac.GetPlayer(0)
 
     if level:GetDimension() == Dimension.MIRROR then return end
     if room:IsAmbushDone() then return end
@@ -315,7 +316,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
             table.insert(adjacentRooms, neighborDescriptor.GridIndex)
         end
     end
-
+        sfxManager:Play(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY)
+        player:AddGoldenHearts(-1)
     local randomRoomIndex = TheGauntlet.Utility.RandomItemFromList(adjacentRooms, teleportRNG)
     game:StartRoomTransition(randomRoomIndex, -1, RoomTransitionAnim.TELEPORT)
 

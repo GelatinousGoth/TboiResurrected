@@ -32,7 +32,6 @@ function TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(gridIndex)
     if not gridSave.GauntletRoom.FedHeart then
         gridSave.GauntletRoom.FedHeart = true
         sprite:Play("KeyOpen", true)
-        sfxManager:Play(SoundEffect.SOUND_MEAT_JUMPS)
     end
     tempSave.GauntletRoom.IsOpen = true
 end
@@ -184,7 +183,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_
     end
 
     if sprite:IsEventTriggered("Sound") then
-        sfxManager:Play(SoundEffect.SOUND_MEAT_FEET_SLOW0)
         sfxManager:Play(SoundEffect.SOUND_METAL_DOOR_OPEN)
     end
     if gridSave.GauntletRoom.FedHeart == true then
@@ -267,12 +265,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PLAYER_GRID_COLLISION, function (_, play
     if gridSave.GauntletRoom.FedHeart == true then return end
 
     local tookDamage = false
-    if player:GetHealthType() ~= HealthType.NO_HEALTH then
-        local cooldown = (player:GetTrinketMultiplier(TrinketType.TRINKET_BLIND_RAGE) + 1) * 60
-        tookDamage = player:TakeDamage(2, DamageFlag.DAMAGE_NO_PENALTIES | DamageFlag.DAMAGE_NO_MODIFIERS, EntityRef(nil), cooldown)
-        sfxManager:Play(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY)
-        player:AddMaxHearts(-2)
-        player:AddGoldenHearts(1)
+    if player:GetHealthType() == HealthType.NO_HEALTH then return end
+    if player:GetHealthType() ~= HealthType.KEEPER then
+        if player:GetGoldenHearts() >= 1 then
+            tookDamage = true
+        end
     else
         tookDamage = true
     end
