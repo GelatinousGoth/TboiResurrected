@@ -37,6 +37,39 @@ function TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(gridIndex)
     tempSave.GauntletRoom.IsOpen = true
 end
 
+---@param gridIndex integer
+function TheGauntlet.GauntletRoom.LockGauntletRoomDoor(gridIndex)
+    local gridEntity = game:GetRoom():GetGridEntity(gridIndex)
+    if gridEntity == nil then return end
+
+    local door = gridEntity:ToDoor()
+    if door == nil then return end
+
+    if not DoesDoorLeadToGauntletRoom(door) then return end
+
+    local roomConfig = game:GetLevel():GetCurrentRoomDesc().Data
+    if roomConfig.Type == RoomType.ROOM_SECRET or roomConfig.Type == RoomType.ROOM_SUPERSECRET then return end
+
+    local sprite = door:GetSprite()
+    local gridSave = TheGauntlet.SaveManager.GetRoomSave(door:GetGridIndex())
+    local tempSave = TheGauntlet.SaveManager.GetTempSave(door:GetGridIndex())
+
+    if not gridSave.GauntletRoom then
+        gridSave.GauntletRoom = { FedHeart = false }
+    end
+    if not tempSave.GauntletRoom then
+        tempSave.GauntletRoom = { WasClear = false, IsOpen = false }
+    end
+
+    if gridSave.GauntletRoom.FedHeart then
+        gridSave.GauntletRoom.FedHeart = false
+        sprite:Play("KeyClose", true)
+        sfxManager:Play(SoundEffect.SOUND_METAL_DOOR_CLOSE)
+    end
+    tempSave.GauntletRoom.IsOpen = false
+end
+
+
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
@@ -242,6 +275,22 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_RENDER, function (_
 
     if not gridSave.GauntletRoom.FedHeart then
         sprite:Play("KeyClosed", true)
+    end
+end)
+
+-- this handles being teleported out of the room 
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
+    local room = Game():GetRoom()
+    
+    if TheGauntlet.justLeftGauntlet == true then
+        TheGauntlet.justLeftGauntlet = false
+        for _, doorSlot in pairs(DoorSlot) do
+            local door = room:GetDoor(doorSlot)
+            if door == nil then goto continue end
+            if not DoesDoorLeadToGauntletRoom(door) then goto continue end
+            TheGauntlet.GauntletRoom.LockGauntletRoomDoor(door:GetGridIndex())
+            ::continue::
+        end
     end
 end)
 

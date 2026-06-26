@@ -16,7 +16,7 @@ TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_HARD_MODE = {
 local TIME_BETWEEN_WAVES = 30
 local TIME_BEFORE_DOORS_CLOSE = 10
 
-
+TheGauntlet.justLeftGauntlet = false
 
 local game = Game()
 local sfxManager = SFXManager()
@@ -322,4 +322,5 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     game:StartRoomTransition(randomRoomIndex, -1, RoomTransitionAnim.TELEPORT)
 
     sfxManager:Play(TheGauntlet.GauntletRoom.SHADOW_SPELL_SOUND_EFFECT)
+    TheGauntlet.justLeftGauntlet = true
 end)
