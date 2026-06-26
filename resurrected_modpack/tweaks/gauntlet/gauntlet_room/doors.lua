@@ -32,6 +32,7 @@ function TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(gridIndex)
     if not gridSave.GauntletRoom.FedHeart then
         gridSave.GauntletRoom.FedHeart = true
         sprite:Play("KeyOpen", true)
+        sfxManager:Play(SoundEffect.SOUND_MEAT_JUMPS)
     end
     tempSave.GauntletRoom.IsOpen = true
 end
@@ -183,6 +184,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_
     end
 
     if sprite:IsEventTriggered("Sound") then
+        sfxManager:Play(SoundEffect.SOUND_MEAT_JUMPS)
         sfxManager:Play(SoundEffect.SOUND_METAL_DOOR_OPEN)
     end
     if gridSave.GauntletRoom.FedHeart == true then
@@ -267,9 +269,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PLAYER_GRID_COLLISION, function (_, play
     local tookDamage = false
     if player:GetHealthType() == HealthType.NO_HEALTH then return end
     if player:GetHealthType() ~= HealthType.KEEPER then
-        if player:GetGoldenHearts() >= 1 then
-            tookDamage = true
-        end
+        local cooldown = (player:GetTrinketMultiplier(TrinketType.TRINKET_BLIND_RAGE) + 1) * 60
+        tookDamage = player:TakeDamage(2, DamageFlag.DAMAGE_NO_PENALTIES | DamageFlag.DAMAGE_NO_MODIFIERS, EntityRef(nil), cooldown)
+        sfxManager:Play(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY)
+        player:AddMaxHearts(-2)
+        player:AddGoldenHearts(1)
+        tookDamage = true
     else
         tookDamage = true
     end
@@ -280,6 +285,39 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PLAYER_GRID_COLLISION, function (_, play
 end)
 
 --#endregion
+
+--unlocking by having a golden heart
+
+---@param player EntityPlayer
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
+    if not Game():GetRoom():IsClear() then return end
+
+    local hasCondition = false
+    if player:GetHealthType() == HealthType.NO_HEALTH then return end
+    if player:GetHealthType() ~= HealthType.KEEPER then
+        if player:GetGoldenHearts() >= 1 then
+            hasCondition = true
+        end
+    else
+        hasCondition = true
+    end
+
+    local room = Game():GetRoom()
+
+    for _, doorSlot in pairs(DoorSlot) do
+        local door = room:GetDoor(doorSlot)
+        if door == nil then goto continue end
+        if not DoesDoorLeadToGauntletRoom(door) then goto continue end
+
+        if hasCondition then
+            TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex())
+        end
+
+        ::continue::
+    end
+end)
+
+--end of the code for the thing that is at the start of the code. just read it man idk what kind of IDE the original coder was using for it to require that stuff
 
 --#region Unlocking with Sharp Key
 
