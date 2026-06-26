@@ -10,7 +10,6 @@ local updateColorModifierFrameAmount = 0
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     local game = Game()
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
-        print("backdrop after PRE_BACKDROP_CHANGE:", game:GetRoom():GetBackdropType())
     local fxParams = Game():GetRoom():GetFXParams()
     fxParams.ColorModifier = ColorModifier(1.2, 0.8, 0.8, 0.2, 0, 1)
     fxParams.ShadowColor = KColor(0.04, 0.02, 0.02, 1.0)
