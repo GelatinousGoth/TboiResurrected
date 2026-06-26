@@ -93,6 +93,3 @@ include("resurrected_modpack.tweaks.gauntlet.compat.stageapi")
 
 TheGauntlet.SaveManager.Init(TheGauntlet)
 
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, function ()
-    TheGauntlet.Utility.Print("Not affiliated with Team Rapture")
-end)
