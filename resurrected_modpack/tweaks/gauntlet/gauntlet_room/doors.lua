@@ -13,7 +13,8 @@ end
 
 ---Opens a door to a Gauntlet Room, if it leads to one.
 ---@param gridIndex integer
-function TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(gridIndex)
+---@param key boolean
+function TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(gridIndex, key)
     local gridEntity = game:GetRoom():GetGridEntity(gridIndex)
     if gridEntity == nil then return end
 
@@ -31,7 +32,11 @@ function TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(gridIndex)
 
     if not gridSave.GauntletRoom.FedHeart then
         gridSave.GauntletRoom.FedHeart = true
-        sprite:Play("KeyOpen", true)
+        if key == true then
+            sprite:Play("KeyOpen", true)
+        else
+            sprite:Play("NoKeyOpen", true)
+        end
         sfxManager:Play(SoundEffect.SOUND_MEAT_JUMPS)
     end
     tempSave.GauntletRoom.IsOpen = true
@@ -329,7 +334,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PLAYER_GRID_COLLISION, function (_, play
     end
     
     if tookDamage then
-        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex())
+        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex(), true)
     end
 end)
 
@@ -359,7 +364,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
         if not DoesDoorLeadToGauntletRoom(door) then goto continue end
 
         if hasCondition then
-            TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex())
+            TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex(), false)
         end
 
         ::continue::
@@ -378,7 +383,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_TEAR_GRID_COLLISION, function (_, tear, 
 
     if gridEntity == nil then return end
 
-    TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(gridEntity:GetGridIndex())
+    TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(gridEntity:GetGridIndex(), false)
 end)
 
 --#endregion
@@ -403,7 +408,7 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_ITEM, CallbackPriority.EARLY
         local door = room:GetDoor(doorSlot)
         if door == nil then goto continue end
 
-        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex())
+        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex(), false)
 
         ::continue::
     end
@@ -428,7 +433,7 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_CARD, CallbackPriority.EARLY
         local door = room:GetDoor(doorSlot)
         if door == nil then goto continue end
 
-        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex())
+        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex(), false)
 
         ::continue::
     end
@@ -472,7 +477,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
             nil
         )
 
-        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex())
+        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex(), true)
 
         ::continue::
     end
