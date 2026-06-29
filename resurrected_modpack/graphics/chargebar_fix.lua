@@ -73,7 +73,7 @@ local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
         chargeBarOverlay:Render(chargeBarOffset, Vector(0, 0), Vector(0, 29))
 
         elseif charge == 0 then
-   
+        if player:HasCollectible(CollectibleType.COLLECTIBLE_9_VOLT) == true then return end
         if (slot == ActiveSlot.SLOT_PRIMARY) or (pocketItem:GetType() == PocketItemType.ACTIVE_ITEM) then
             local scale = Vector(1,1)
             chargeBarSprite.Scale = scale
