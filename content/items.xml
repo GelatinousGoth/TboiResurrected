@@ -1,7 +1,4 @@
 <items gfxroot="gfx/moddeditems/items/" deathanm2="gfx/death_items.anm2" version="1">
-	<trinket name="##RESURRECTED_RED_KEY_ACHIEVEMENT_TRACKER"  description="This message should not appear. If it does, it's a bug." achievement="415"/>
-    <trinket name="##RESURRECTED_WOODEN_CHEST_ACHIEVEMENT_TRACKER"  description="This message should not appear, but it'll be a pain if it does." achievement="609"/>
-	
 	<!-- Null Items -->
     <null id="1" name="RF Greed Boss Tracker" persistent="true"/>
     <null id="2" name="RF White Fireplace Effect" persistent="true"/>
