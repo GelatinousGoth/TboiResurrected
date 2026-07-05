@@ -204,15 +204,15 @@ local validAnims = {
 
         chargeBarSprite:SetFrame(emptyAnim, 0)
         chargeBarSprite:Update()
-        chargeBarSprite:Render(chargeBarOffset, Vector(0, 26), Vector(0, 0)) -- last vector crops the bottom so only the tippy top is shown
+        chargeBarSprite:Render(chargeBarOffset, Vector(0, 26), Vector(7, 4)) -- last vector crops the bottom so only the tippy top is shown
         if not validAnims[overlayAnim] then
             chargeBarOverlay:SetFrame("BarOverlay1", 0)
             chargeBarOverlay:Update()
-            chargeBarOverlay:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0))
+            chargeBarOverlay:Render(chargeBarOffset, Vector(0, 26), Vector(0, 0))
         else
             chargeBarOverlay:SetFrame(overlayAnim, 0)
             chargeBarOverlay:Update()
-            chargeBarOverlay:Render(chargeBarOffset, Vector(0, 0), Vector(0, 0))
+            chargeBarOverlay:Render(chargeBarOffset, Vector(0, 26), Vector(0, 0))
         end
 
     end
