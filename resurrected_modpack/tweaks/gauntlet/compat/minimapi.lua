@@ -14,33 +14,12 @@ local game = Game()
 local gauntletMinimapSprite = Sprite("gfx/gauntlet/ui/gauntlet_minimap_icon.anm2", true)
 gauntletMinimapSprite:SetFrame("Idle", 0)
 
-local ceresWinterSprite = Sprite("gfx/gauntlet/ui/ceres_season.anm2", true)
-ceresWinterSprite:SetFrame("Idle", 0)
-local ceresSpringSprite = Sprite("gfx/gauntlet/ui/ceres_season.anm2", true)
-ceresSpringSprite:SetFrame("Idle", 1)
-local ceresSummerSprite = Sprite("gfx/gauntlet/ui/ceres_season.anm2", true)
-ceresSummerSprite:SetFrame("Idle", 2)
-local ceresAutumnSprite = Sprite("gfx/gauntlet/ui/ceres_season.anm2", true)
-ceresAutumnSprite:SetFrame("Idle", 3)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, function ()
     if MinimapAPI == nil then return end
 
     MinimapAPI:AddIcon(TheGauntlet.Compat.MinimapAPI.GAUNTLET_ROOM_MAP_ICON, gauntletMinimapSprite)
 
-
-    MinimapAPI:AddMapFlag(TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_WINTER, function ()
-        return TheGauntlet.Items.Ceres.GetSeason() == TheGauntlet.Items.Ceres.Season.WINTER
-    end, ceresWinterSprite, "Idle", 0)
-    MinimapAPI:AddMapFlag(TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_SPRING, function ()
-        return TheGauntlet.Items.Ceres.GetSeason() == TheGauntlet.Items.Ceres.Season.SPRING
-    end, ceresSpringSprite, "Idle", 1)
-    MinimapAPI:AddMapFlag(TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_SUMMER, function ()
-        return TheGauntlet.Items.Ceres.GetSeason() == TheGauntlet.Items.Ceres.Season.SUMMER
-    end, ceresSummerSprite, "Idle", 2)
-    MinimapAPI:AddMapFlag(TheGauntlet.Compat.MinimapAPI.DEMETER_MAP_FLAG_AUTUMN, function ()
-        return TheGauntlet.Items.Ceres.GetSeason() == TheGauntlet.Items.Ceres.Season.AUTUMN
-    end, ceresAutumnSprite, "Idle", 3)
 end)
 
 ---@param dimension Dimension

@@ -1,20 +1,5 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-local DefaultDrunkDistortionParameters = {
-    WaveAmplitudes = {0, 0, 0, 0},
-    Timers = {0, 0, 0, 0},
-    WaveContributionWeights = {0, 0, 0, 0},
-}
-
-local DefaultScreenColorizeParameters = {
-    ColorToChangeTo = {0, 0, 0, 0}
-}
-
-local DefaultGauntletHeatWaveParameters = {
-    Timer = 0,
-    Amplitude = 0,
-    Frequency = 0
-}
 
 local DefaultHeatWaveParameters = {
     Time = 0,
@@ -51,9 +36,6 @@ local DefaultRotgutDungeonVignetteParams = {
     PlayerPosition = {0, 0}
 }
 
-TR_Manager:RegisterShader("TheGauntlet Drunk Distortion", DefaultDrunkDistortionParameters)
-TR_Manager:RegisterShader("TheGauntlet ScreenColorize", DefaultScreenColorizeParameters)
-TR_Manager:RegisterShader("TheGauntlet Heat Wave", DefaultGauntletHeatWaveParameters)
 TR_Manager:RegisterShader("Hot_HeatWave", DefaultHeatWaveParameters)
 TR_Manager:RegisterShader("PauseScreenCompletionMarks", {})
 TR_Manager:RegisterShader("Black_Hole", DefaultBlackHoleParameters)

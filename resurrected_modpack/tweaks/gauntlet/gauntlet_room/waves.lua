@@ -166,7 +166,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     local room = game:GetRoom()
 
-    room:SetItemPool(TheGauntlet.GauntletRoom.ITEM_POOL_ID)
+    --room:SetItemPool(TheGauntlet.GauntletRoom.ITEM_POOL_ID)
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
     local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
