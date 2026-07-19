@@ -13,6 +13,18 @@ TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_HARD_MODE = {
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 10, MaxDifficulty = 10 },
 }
 
+local EFFECT = {
+    type = 1000,
+    variant = 614,
+    subtype = 0
+}
+
+local SLOT_ANIMS = {
+    Appear = "Appear",
+    Idle = "Idle",
+    Initiate = "Initiate"
+}
+
 local TIME_BETWEEN_WAVES = 30
 local TIME_BEFORE_DOORS_CLOSE = 10
 
@@ -59,9 +71,14 @@ local function OnFinishGauntletRoom()
         collectibleSpawnPosition, Vector.Zero,
         nil
     )
-
     --This is where I would put Temporary Tattoo's effect, but it already spawns a chest (the intended effect) so it works out. lol
     room:TriggerClear(true)
+    local pedestal = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -1, false, false)[1]
+    local pedestalSprite = pedestal:GetSprite()
+    
+    pedestalSprite:ReplaceSpritesheet(0, "gfx/gauntlet/gold_pedestal_empty.png")
+    pedestalSprite:ReplaceSpritesheet(5, "gfx/gauntlet/gold_pedestal_empty.png")
+    pedestalSprite:LoadGraphics()
 end
 
 ---@param type EntityType
@@ -161,6 +178,18 @@ local function SpawnAmbush(roomType, minDifficulty, maxDifficulty)
     end
 end
 
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
+local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
+if not tempSave.GauntletFixRoom then
+    tempSave.GauntletFixRoom ={
+        TrinketPicked = false,
+        PedestalIsGolden = false,
+        PulleySpawned = false,
+        GoldenFountainRan = false
+    }
+end
+end)
+
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
@@ -170,6 +199,17 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
     local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
+
+    if tempSave.GauntletFixRoom.PedestalIsGolden == false then
+    local pedestal = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -1, false, false)[1]
+    if pedestal then
+    local pedestalSprite = pedestal:GetSprite()
+    
+    pedestalSprite:ReplaceSpritesheet(0, "gfx/gauntlet/gold_pedestal_empty.png")
+    pedestalSprite:ReplaceSpritesheet(5, "gfx/gauntlet/gold_pedestal_empty.png")
+    pedestalSprite:LoadGraphics()
+    end
+    end
 
     tempSave.GauntletRoom = {
         WaveDelay = 0,
@@ -275,6 +315,17 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             musicManager:Queue(Music.MUSIC_BOSS_OVER)
 
             OnFinishGauntletRoom()
+            if not tempSave.GauntletFixRoom.PulleySpawned then
+                local centerPos = room:GetCenterPos()
+                local posX = 0
+                if room:GetDoor(DoorSlot.RIGHT0) ~= nil then
+                    posX = 200
+                else
+                    posX = 400
+                end
+                game:Spawn(EntityType.ENTITY_SLOT, 319, Vector(posX, centerPos.Y), Vector(0, 0), nil, 0, Game():GetRoom():GetSpawnSeed()) -- i dont wanna do an enum for ts
+                tempSave.GauntletFixRoom.PulleySpawned = true
+            end
         else
             local waveConfiguration = waveConfigurations[tempSave.GauntletRoom.WaveNumber]
             SpawnAmbush(waveConfiguration.RoomSubtype, waveConfiguration.MinDifficulty, waveConfiguration.MaxDifficulty)
@@ -283,6 +334,173 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
     tempSave.GauntletRoom.DidHostileEnemiesExist = doHostileEnemiesExist
 end)
+
+local function ReplaceItem()
+    if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
+
+    local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
+    if tempSave.GauntletFixRoom.TrinketPicked then return end
+    if tempSave.GauntletRoom.IsGauntletAmbushOngoing then return end
+
+    local rng = RNG()
+    rng:SetSeed(Random(), 35)
+    local pedestals = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -1, false, false)
+    local pedestal = pedestals[1]
+
+    if pedestal:ToPickup().SubType == CollectibleType.COLLECTIBLE_NULL then return end
+    tempSave.GauntletFixRoom.TrinketPicked = true
+
+    game:Spawn(EFFECT.type, EFFECT.variant, Vector(game:GetRoom():GetCenterPos().X, 290), Vector(0,0), nil, EFFECT.subtype, game:GetRoom():GetSpawnSeed())
+
+
+end
+
+function TheGauntlet:GoldenPedestal()
+    local player = Isaac.GetPlayer(0)
+    local room = game:GetRoom()
+
+    if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
+
+    local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
+    if not tempSave.GauntletFixRoom.TrinketPicked then return end
+    local trinket = player:GetTrinket(0)
+    if player:GetTrinket(0) == TrinketType.TRINKET_NULL then return end
+    local goldenTrinket = trinket | TrinketType.TRINKET_GOLDEN_FLAG
+    if player:GetTrinket(0) == goldenTrinket then return end
+
+    game:Spawn(5, 350, room:FindFreePickupSpawnPosition(room:GetCenterPos()) , Vector(0, 0), nil, goldenTrinket, room:GetSpawnSeed()):ClearEntityFlags(EntityFlag.FLAG_APPEAR)
+    player:TryRemoveTrinket(trinket)
+
+    tempSave.GauntletFixRoom.PedestalIsGolden = true
+    
+end
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_PICKUP_COLLISION, TheGauntlet.GoldenPedestal, PickupVariant.PICKUP_COLLECTIBLE)
+
+function TheGauntlet:GoldenPedestalSprite()
+    if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
+
+    local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
+    if not tempSave.GauntletFixRoom.TrinketPicked then return end
+    if tempSave.GauntletFixRoom.PedestalIsGolden then return end
+
+        TheGauntlet.Utility.SpawnPickup
+    (
+        EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0,
+        game:GetRoom():GetCenterPos(), Vector.Zero,
+        nil
+    )
+    local pedestal = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -1, false, false)[1]
+    pedestal:ToPickup():TryRemoveCollectible()
+
+    local pedestalSprite = pedestal:GetSprite()
+
+    pedestalSprite:ReplaceSpritesheet(0, "gfx/gauntlet/gold_pedestal.png")
+    pedestalSprite:ReplaceSpritesheet(5, "gfx/gauntlet/gold_pedestal.png")
+    pedestalSprite:LoadGraphics()
+
+end
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, TheGauntlet.GoldenPedestalSprite)
+
+--thx cryoxe for the slot template>o<
+---@table with type, variant and subtype of my slot
+local slot = {
+    type = 6,
+    variant = 319,
+    subtype = 0
+}
+
+---The Slot behaviour on collision
+---@param slot EntitySlot
+---@param collider Entity
+---@param low boolean
+local function post_slot_collision(_, slot, collider, low)
+    local slotSprite = slot:GetSprite()
+    if not slotSprite:IsPlaying(SLOT_ANIMS.Idle) then return end
+    slotSprite:Play(SLOT_ANIMS.Initiate, true)
+    ReplaceItem()
+end
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_SLOT_COLLISION, post_slot_collision, slot.variant)
+
+--- Stuff when the slot explode
+---@param slot EntitySlot
+---@return boolean
+local function pre_slot_explosion(_, slot)
+    return false -- false means no drops
+end
+TheGauntlet:AddCallback(ModCallbacks.MC_PRE_SLOT_CREATE_EXPLOSION_DROPS, pre_slot_explosion, slot.variant)
+
+
+---@param slot EntitySlot
+local function post_slot_update(_, slot)
+    local slotSprite = slot:GetSprite()
+    if slotSprite:IsEventTriggered("PulleyBye") then
+        slot:Remove()
+    end
+    if slotSprite:IsFinished(SLOT_ANIMS.Appear) then
+        slotSprite:Play(SLOT_ANIMS.Idle, true)
+    end
+end
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_SLOT_UPDATE, post_slot_update, slot.variant)
+
+
+--- stuff when the slot init
+---@param slot EntitySlot
+local function post_slot_init(_, slot)
+    local slotSprite = slot:GetSprite()
+    slotSprite:Play("Appear", true)
+    slotSprite:Update()
+    
+end
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_SLOT_INIT, post_slot_init, slot.variant)
+
+-- thank you soulspine omfg
+
+---@param effect EntityEffect
+local function piss_rain_init(_, effect)
+    local data = effect:GetData()
+
+    data.PISS_RAIN = {}
+
+    data.PISS_RAIN.Trinket = Game():GetItemPool():GetTrinket(true) | TrinketType.TRINKET_GOLDEN_FLAG
+    data.PISS_RAIN.Pedestal = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -1, false, false)[1]:ToPickup()
+end
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, piss_rain_init, EFFECT.variant)
+
+---@param effect EntityEffect
+local function post_effect_update(_, effect)    
+    local sprite = effect:GetSprite()
+    local data = effect:GetData().PISS_RAIN
+
+    ---@type EntityPickup
+    local pedestal = data.Pedestal
+
+    ---@type integer
+    local trinketId = data.Trinket
+
+    if not sprite:IsPlaying("Pour") then return end
+    if sprite:IsEventTriggered("RemoveItem") then
+        if pedestal then pedestal:TryRemoveCollectible() end
+    end
+    if sprite:IsEventTriggered("SpawnGold") then
+        local room = game:GetRoom()
+        game:Spawn(
+            EntityType.ENTITY_PICKUP,
+            PickupVariant.PICKUP_TRINKET,
+            room:FindFreePickupSpawnPosition(room:GetCenterPos()),
+            Vector(0, 0),
+            nil,
+            trinketId,
+            room:GetSpawnSeed()
+        ):ClearEntityFlags(EntityFlag.FLAG_APPEAR)
+    local pedestalSprite = pedestal:GetSprite()
+    
+    pedestalSprite:ReplaceSpritesheet(0, "gfx/gauntlet/gold_pedestal.png")
+    pedestalSprite:ReplaceSpritesheet(5, "gfx/gauntlet/gold_pedestal.png")
+    pedestalSprite:LoadGraphics()
+    end
+
+end
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, post_effect_update, EFFECT.variant)
 
 ---@param entity Entity
 ---@param damage number

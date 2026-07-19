@@ -24,6 +24,7 @@ function mod:onUpdate()
             local Item = Isaac.GetItemConfig():GetCollectible(Pedastal.SubType)
  
             --If set to true in Mod Config or lower than or equal to the minimum quality or if Mod Config is not installed, just see if the quality is 0
+            if TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
             if (CustomChimeTable[Item.ID] == nil or CustomChimeTable[Item.ID] == 0) then
                 local ToPlay = SoundEffect.SOUND_NULL
  

@@ -45,7 +45,9 @@ function mod:pedestal(pickup)
 		elseif room:GetType() == RoomType.ROOM_TREASURE then
 			altarType = "treasure"
 		elseif room:GetType() == RoomType.ROOM_CHALLENGE then
+		if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then
 			altarType = "ambush"
+		end
 		elseif room:GetType() == RoomType.ROOM_BOSSRUSH then
 			altarType = "bossrush"
 		end
