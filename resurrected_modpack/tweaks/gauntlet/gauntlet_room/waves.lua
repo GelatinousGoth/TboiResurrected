@@ -76,6 +76,7 @@ local function OnFinishGauntletRoom()
     local pedestal = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -1, false, false)[1]
     local pedestalSprite = pedestal:GetSprite()
     
+    pedestalSprite:ReplaceSpritesheet(4, "gfx/gauntlet/tile_empty.png")
     pedestalSprite:ReplaceSpritesheet(0, "gfx/gauntlet/gold_pedestal_empty.png")
     pedestalSprite:ReplaceSpritesheet(5, "gfx/gauntlet/gold_pedestal_empty.png")
     pedestalSprite:LoadGraphics()
@@ -211,7 +212,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     local pedestal = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -1, false, false)[1]
     if pedestal then
     local pedestalSprite = pedestal:GetSprite()
-    
+    pedestalSprite:ReplaceSpritesheet(4, "gfx/gauntlet/tile_empty.png")
     pedestalSprite:ReplaceSpritesheet(0, "gfx/gauntlet/gold_pedestal_empty.png")
     pedestalSprite:ReplaceSpritesheet(5, "gfx/gauntlet/gold_pedestal_empty.png")
     pedestalSprite:LoadGraphics()
@@ -427,6 +428,7 @@ local function post_slot_collision(_, slot, collider, low)
     local slotSprite = slot:GetSprite()
     if not slotSprite:IsPlaying(SLOT_ANIMS.Idle) then return end
     slotSprite:Play(SLOT_ANIMS.Initiate, true)
+    sfxManager:Play(SoundEffect.SOUND_DOOR_HEAVY_CLOSE)
     ReplaceItem()
 end
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_SLOT_COLLISION, post_slot_collision, slot.variant)
@@ -488,6 +490,9 @@ local function post_effect_update(_, effect)
     local trinketId = data.Trinket
 
     if not sprite:IsPlaying("Pour") then return end
+    if sprite:IsEventTriggered("SfxGold") then
+        sfxManager:Play(SoundEffect.SOUND_LAVA_LOOP, 1, 2, true)
+    end
     if sprite:IsEventTriggered("RemoveItem") then
         if pedestal then pedestal:TryRemoveCollectible() end
     end
@@ -502,8 +507,10 @@ local function post_effect_update(_, effect)
             trinketId,
             room:GetSpawnSeed()
         ):ClearEntityFlags(EntityFlag.FLAG_APPEAR)
+        sfxManager:Stop(SoundEffect.SOUND_LAVA_LOOP)
+        sfxManager:Play(SoundEffect.SOUND_FIREDEATH_HISS)
     local pedestalSprite = pedestal:GetSprite()
-    
+
     pedestalSprite:ReplaceSpritesheet(0, "gfx/gauntlet/gold_pedestal.png")
     pedestalSprite:ReplaceSpritesheet(5, "gfx/gauntlet/gold_pedestal.png")
     pedestalSprite:LoadGraphics()
