@@ -12,6 +12,7 @@
         <Events>
             <Event Id="0" Name="RemoveItem"/>
             <Event Id="1" Name="SpawnGold"/>
+            <Event Id="2" Name="SfxGold"/>
         </Events>
     </Content>
     <Animations DefaultAnimation="Pour">
@@ -62,6 +63,7 @@
             </LayerAnimations>
             <NullAnimations/>
             <Triggers>
+                <Trigger EventId="2" AtFrame="2"/>
                 <Trigger EventId="0" AtFrame="7"/>
                 <Trigger EventId="1" AtFrame="57"/>
             </Triggers>
