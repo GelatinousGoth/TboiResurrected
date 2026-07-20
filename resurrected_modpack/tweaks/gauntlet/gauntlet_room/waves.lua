@@ -178,17 +178,23 @@ local function SpawnAmbush(roomType, minDifficulty, maxDifficulty)
     end
 end
 
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
-local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
-if not tempSave.GauntletFixRoom then
-    tempSave.GauntletFixRoom ={
-        TrinketPicked = false,
-        PedestalIsGolden = false,
-        PulleySpawned = false,
-        GoldenFountainRan = false
-    }
+--believe it or not, this save is not temporary, but ive stuck around with the name so long that i cant be arsed to change it
+local function GauntletFixTempSave()
+    local roomSave = TheGauntlet.SaveManager.GetRoomSave()
+
+    if not roomSave.GauntletFixRoom then
+        roomSave.GauntletFixRoom = {
+            TrinketPicked = false,
+            PedestalIsGolden = false,
+            PulleySpawned = false,
+            GoldenFountainRan = false
+        }
+    end
+
+    return roomSave
 end
-end)
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, GauntletFixTempSave)
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, GauntletFixTempSave)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
@@ -199,8 +205,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
     local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
+    local customTempSave = GauntletFixTempSave()
 
-    if tempSave.GauntletFixRoom.PedestalIsGolden == false then
+    if customTempSave.GauntletFixRoom.PedestalIsGolden == false then
     local pedestal = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -1, false, false)[1]
     if pedestal then
     local pedestalSprite = pedestal:GetSprite()
@@ -241,6 +248,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     local room = game:GetRoom()
 
     local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
+    local customTempSave = GauntletFixTempSave()
 
     if level:GetDimension() == Dimension.MIRROR then return end
     if room:IsAmbushDone() then
@@ -315,7 +323,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             musicManager:Queue(Music.MUSIC_BOSS_OVER)
 
             OnFinishGauntletRoom()
-            if not tempSave.GauntletFixRoom.PulleySpawned then
+            if not customTempSave.GauntletFixRoom.PulleySpawned then
                 local centerPos = room:GetCenterPos()
                 local posX = 0
                 if room:GetDoor(DoorSlot.RIGHT0) ~= nil then
@@ -324,7 +332,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
                     posX = 400
                 end
                 game:Spawn(EntityType.ENTITY_SLOT, 319, Vector(posX, centerPos.Y), Vector(0, 0), nil, 0, Game():GetRoom():GetSpawnSeed()) -- i dont wanna do an enum for ts
-                tempSave.GauntletFixRoom.PulleySpawned = true
+                customTempSave.GauntletFixRoom.PulleySpawned = true
             end
         else
             local waveConfiguration = waveConfigurations[tempSave.GauntletRoom.WaveNumber]
@@ -339,7 +347,9 @@ local function ReplaceItem()
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
     local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
-    if tempSave.GauntletFixRoom.TrinketPicked then return end
+    local customTempSave = GauntletFixTempSave()
+
+    if customTempSave.GauntletFixRoom.TrinketPicked then return end
     if tempSave.GauntletRoom.IsGauntletAmbushOngoing then return end
 
     local rng = RNG()
@@ -348,7 +358,7 @@ local function ReplaceItem()
     local pedestal = pedestals[1]
 
     if pedestal:ToPickup().SubType == CollectibleType.COLLECTIBLE_NULL then return end
-    tempSave.GauntletFixRoom.TrinketPicked = true
+    customTempSave.GauntletFixRoom.TrinketPicked = true
 
     game:Spawn(EFFECT.type, EFFECT.variant, Vector(game:GetRoom():GetCenterPos().X, 290), Vector(0,0), nil, EFFECT.subtype, game:GetRoom():GetSpawnSeed())
 
@@ -361,8 +371,8 @@ function TheGauntlet:GoldenPedestal()
 
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
-    local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
-    if not tempSave.GauntletFixRoom.TrinketPicked then return end
+    local customTempSave = GauntletFixTempSave()
+    if not customTempSave.GauntletFixRoom.TrinketPicked then return end
     local trinket = player:GetTrinket(0)
     if player:GetTrinket(0) == TrinketType.TRINKET_NULL then return end
     local goldenTrinket = trinket | TrinketType.TRINKET_GOLDEN_FLAG
@@ -371,7 +381,7 @@ function TheGauntlet:GoldenPedestal()
     game:Spawn(5, 350, room:FindFreePickupSpawnPosition(room:GetCenterPos()) , Vector(0, 0), nil, goldenTrinket, room:GetSpawnSeed()):ClearEntityFlags(EntityFlag.FLAG_APPEAR)
     player:TryRemoveTrinket(trinket)
 
-    tempSave.GauntletFixRoom.PedestalIsGolden = true
+    customTempSave.GauntletFixRoom.PedestalIsGolden = true
     
 end
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PICKUP_COLLISION, TheGauntlet.GoldenPedestal, PickupVariant.PICKUP_COLLECTIBLE)
@@ -379,9 +389,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PICKUP_COLLISION, TheGauntlet.Golde
 function TheGauntlet:GoldenPedestalSprite()
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
-    local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
-    if not tempSave.GauntletFixRoom.TrinketPicked then return end
-    if tempSave.GauntletFixRoom.PedestalIsGolden then return end
+    local customTempSave = GauntletFixTempSave()
+    if not customTempSave.GauntletFixRoom.TrinketPicked then return end
+    if customTempSave.GauntletFixRoom.PedestalIsGolden then return end
 
         TheGauntlet.Utility.SpawnPickup
     (

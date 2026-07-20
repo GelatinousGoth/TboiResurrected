@@ -75,10 +75,10 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_POST_GAME_STARTED, CallbackPrior
     UpdateMinimapIcon(Dimension.NORMAL)
     UpdateMinimapIcon(Dimension.MIRROR)
 end)
---[[
+
 TheGauntlet:AddPriorityCallback(ModCallbacks.MC_POST_HUD_RENDER, CallbackPriority.LATE, function (_)
     if MinimapAPI == nil then return end
 
     UpdateMinimapIcon(Dimension.NORMAL)
     UpdateMinimapIcon(Dimension.MIRROR)
-end)]]
+end)
