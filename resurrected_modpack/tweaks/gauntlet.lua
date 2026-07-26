@@ -49,5 +49,3 @@ include("resurrected_modpack.tweaks.gauntlet.compat.minimapi")
 include("resurrected_modpack.tweaks.gauntlet.compat.stageapi")
 
 TheGauntlet.SaveManager.Init(TheGauntlet)
-
-print("gauntlet init")
