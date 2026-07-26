@@ -3,6 +3,15 @@ local mod = EnhancementChamber
 local game = Game()
 local sound = SFXManager()
 
+---@param door GridEntityDoor
+---@return boolean
+local function DoesDoorLeadToGauntletRoom(door)
+    local targetRoom = game:GetLevel():GetCurrentRoomDesc():GetNeighboringRooms()[door.Slot]
+    if targetRoom == nil then return false end
+    return TheGauntlet.GauntletRoom.IsRoomGauntletRoom(targetRoom)
+end
+
+
 -- Ambush Champion Chance
 ---@param npc EntityNPC
 function mod:ambushNPCInit(npc)
@@ -40,12 +49,19 @@ mod:AddCallback(ModCallbacks.MC_PRE_NPC_RENDER, mod.ambushNPCInit)
 function mod:bossRushDoorRender(door)
 local level = game:GetLevel()
 local room = level:GetCurrentRoom()
+local roomDescriptor = level:GetCurrentRoomDesc()
     if not level:HasBossChallenge() then return end
     local doorIsBossAmbush =
     (room:GetType() == RoomType.ROOM_DEFAULT and door.TargetRoomType == RoomType.ROOM_CHALLENGE) or
     (room:GetType() == RoomType.ROOM_CHALLENGE and door.TargetRoomType == RoomType.ROOM_DEFAULT)
 
+    local doorIsGauntlet =
+    (room:GetType() == RoomType.ROOM_DEFAULT and DoesDoorLeadToGauntletRoom(door)) or
+    (TheGauntlet.GauntletRoom.IsRoomGauntletRoom(roomDescriptor) and door.TargetRoomType == RoomType.ROOM_DEFAULT)
+
     if not doorIsBossAmbush then return end
+    if doorIsGauntlet then return end
+
     local sprite = door:GetSprite()
 
     if not door:IsOpen() then return end
