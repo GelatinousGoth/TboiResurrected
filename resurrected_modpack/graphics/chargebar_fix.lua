@@ -58,10 +58,10 @@ local validAnims = {
         if batteryCharge == maxCharge then
             local color = Color(1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0)
             chargeBarSprite.Color = color
-        elseif FiendFolio and FiendFolio:getChargeDebt(player, slot) > 1 then
-            local redBarColor = Color(1,1,1,1)
-            redBarColor:SetColorize(1,0,0,1)
-            chargeBarSprite.Color = redBarColor
+        --elseif FiendFolio and FiendFolio:getChargeDebt(player, slot) > 1 then
+        --    local redBarColor = Color(1,1,1,1)
+        --    redBarColor:SetColorize(1,0,0,1)
+        --    chargeBarSprite.Color = redBarColor
         else
             local color = Color(1, 1, 1, 1, 0, 0, 0)
             chargeBarSprite.Color = color
