@@ -37,7 +37,7 @@ function mod:InitItemsRenamed()
 			{FiendFolio.ITEM.COLLECTIBLE.GREG_THE_EGG, "Suprise Egg", "A Hutts hatching"},
 			{FiendFolio.ITEM.COLLECTIBLE.SMALL_WOOD, "Wooden Plank", "Ouch, I've got a Splinter"},
 			{FiendFolio.ITEM.COLLECTIBLE.SMALL_PIPE, "Loose Pipe", "Congratulations on the Pipe!"},
-			{FiendFolio.ITEM.COLLECTIBLE.EMOJI_GLASSES, "Emoji Glasses", "Web Hieroglyphs"},
+			{FiendFolio.ITEM.COLLECTIBLE.EMOJI_GLASSES, "Emoji Glasses", "Web Hieroglyphs"},			
         }
         for _, itemInfo in ipairs(ffItems) do
             table.insert(items, itemInfo)
@@ -56,6 +56,14 @@ function mod:InitItemsRenamed()
         local ffTrinkets = {
             {FiendFolio.ITEM.TRINKET.ETERNAL_CAR_BATTERY, "Overcharged Battery", "Potentially Dangerous"},
             {FiendFolio.ITEM.TRINKET.SWALLOWED_M90, "Replica Gun", "Keep Away From Children"},
+			{FiendFolio.ITEM.TRINKET.NOTABLE_ALBUM, "Notable Album", "The Bugs"},
+			{FiendFolio.ITEM.TRINKET.TROLL_PENNY, "Troll Face", "U Mad Bro?"},
+			{FiendFolio.ITEM.TRINKET.TATTY_CLEAT, "Cleats", "Shoe Spikes"},
+			{FiendFolio.ITEM.TRINKET.DOG_PENNY, "Annoying Dog", "Doge Dollars"},
+			{FiendFolio.ITEM.TRINKET.FACEBOOK_PENNY, "Lowercase f", "Wealth of Friends"},
+			{FiendFolio.ITEM.TRINKET.BERRY_PENNY, "Wildberry", "Better Out than In"},
+			{FiendFolio.ITEM.TRINKET.MAP_PENNY, "Cardboard Penny", "It's scribbled on..."},
+			{FiendFolio.ITEM.TRINKET.DADS_LOST_PENNY, "Dad's Lost Coin 2", "I Forgot This..."},
         }
         for _, trinketInfo in ipairs(ffTrinkets) do
             table.insert(trinkets, trinketInfo)
