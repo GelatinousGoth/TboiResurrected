@@ -9,6 +9,8 @@ local BusinessCardBack = Isaac.GetEntitySubTypeByName("BusinessCardBack")
 local SportsCardBack = Isaac.GetEntitySubTypeByName("SportsCardBack")
 local FloopedCreatureCardBack = Isaac.GetEntitySubTypeByName("FloopedCreatureCardBack")
 local GoldCardBack = Isaac.GetEntitySubTypeByName("GoldCardBack")
+local StoneSlabCardBack = Isaac.GetEntitySubTypeByName("StoneSlabCardBack")
+local ExpressoCardBack = Isaac.GetEntitySubTypeByName("ExpressoCardBack")
 
 ---@type table<integer, string>
 local cardFronts = {}
@@ -24,6 +26,8 @@ function mod:InitCardResprites()
 cardBacks[FiendFolio.ITEM.CARD.CARDJITSU_SOCCER] = SportsCardBack
 cardBacks[FiendFolio.ITEM.CARD.GROTTO_BEAST] = FloopedCreatureCardBack
 cardBacks[FiendFolio.ITEM.CARD.KING_OF_DIAMONDS] = GoldCardBack
+cardBacks[FiendFolio.ITEM.CARD.REVERSE_KING_OF_PENTACLES] = StoneSlabCardBack
+cardBacks[FiendFolio.ITEM.CARD.YELLOW_CAR] = ExpressoCardBack
 
     cardFronts[FiendFolio.ITEM.CARD.GLASS_AZURITE_SPINDOWN] = "gfx/alt_fiend_folio_cards.png"
 cardFronts[FiendFolio.ITEM.CARD.THREE_OF_HEARTS] = "gfx/alt_fiend_folio_cards.png"
@@ -38,6 +42,8 @@ cardFronts[FiendFolio.ITEM.CARD.HORSE_PUSHPOP] = "gfx/alt_fiend_folio_cards.png"
 cardFronts[FiendFolio.ITEM.CARD.KING_OF_DIAMONDS] = "gfx/alt_fiend_folio_cards.png"
 cardFronts[FiendFolio.ITEM.CARD.GROTTO_BEAST] = "gfx/alt_fiend_folio_cards.png"
 cardFronts[FiendFolio.ITEM.CARD.KING_OF_CLUBS] = "gfx/alt_fiend_folio_cards.png"
+cardFronts[FiendFolio.ITEM.CARD.REVERSE_KING_OF_PENTACLES] = "gfx/alt_fiend_folio_cards.png"
+cardFronts[FiendFolio.ITEM.CARD.YELLOW_CAR] = "gfx/alt_fiend_folio_cards.png"
 end
 
     for card, cardBack in pairs(cardBacks) do
