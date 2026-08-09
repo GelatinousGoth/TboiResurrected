@@ -100,6 +100,8 @@ function mod:InitItemsRenamed()
 			{FiendFolio.ITEM.CARD.KING_OF_DIAMONDS, "Gilded Card", "Mint Condition Foil"},
 			{FiendFolio.ITEM.CARD.GROTTO_BEAST, "Flooped Creature", "Card Wars!"},
 			{FiendFolio.ITEM.CARD.THIRTEEN_OF_STARS, "Jack Of All Trades", "Master Of None"},
+			{FiendFolio.ITEM.CARD.YELLOW_CAR, "Expresso", "Caffeine Delivery"},
+			{FiendFolio.ITEM.CARD.REVERSE_KING_OF_PENTACLES, "Stone Slab", "Press Q to Chisel"},
         }
 
         for _, cardInfo in ipairs(ffCards) do
