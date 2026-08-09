@@ -37,7 +37,21 @@ function mod:InitItemsRenamed()
 			{FiendFolio.ITEM.COLLECTIBLE.GREG_THE_EGG, "Suprise Egg", "A Hutts hatching"},
 			{FiendFolio.ITEM.COLLECTIBLE.SMALL_WOOD, "Wooden Plank", "Ouch, I've got a Splinter"},
 			{FiendFolio.ITEM.COLLECTIBLE.SMALL_PIPE, "Loose Pipe", "Congratulations on the Pipe!"},
-			{FiendFolio.ITEM.COLLECTIBLE.EMOJI_GLASSES, "Emoji Glasses", "Web Hieroglyphs"},			
+			{FiendFolio.ITEM.COLLECTIBLE.FENDS_MOP, "The Mop", "Clean Thy Enemy"},
+			{FiendFolio.ITEM.COLLECTIBLE.EMOJI_GLASSES, "Emoji Glasses", "Web Hieroglyphs"},		
+			{FiendFolio.ITEM.COLLECTIBLE.FUN_PIZZA, "Gummy Pizza Slice", "Chewy..."},		
+			{FiendFolio.ITEM.COLLECTIBLE.PAGEANT_BOY_2, "Make-Believe Boy", "A Fall from Grace"},		
+			{FiendFolio.ITEM.COLLECTIBLE.SIDEWAYS_ONION, "Inside-Out Onion", "Tears Up... Sideways"},		
+			{FiendFolio.ITEM.COLLECTIBLE.FRIENDS_FIREBALL_FORMULA, "Fireball Formula", "Things are Heating Up!"},		
+			{FiendFolio.ITEM.COLLECTIBLE.GRANDPAS_GATLING_GUN, "Gatling Gun", "Not So Mini Gun"},		
+			{FiendFolio.ITEM.COLLECTIBLE.STORY_OF_UNDERTALE, "The Under Tale", "Written by W.G.D."},		
+			{FiendFolio.ITEM.COLLECTIBLE.IMP_SODA_TRICKY_CHERRY, "UBER ENERGY", "A Refreshing blast of Power"},	
+			{FiendFolio.ITEM.COLLECTIBLE.GKUNHOMDIMA, "Dwarf Planet", "G!kún||'hòmdímà"},
+			{FiendFolio.ITEM.COLLECTIBLE.ONION_DISC, "Malformed Onion", "Tears Up, Trial Onions?"},
+			{FiendFolio.ITEM.COLLECTIBLE.ANARCHISTS_EASY_BAKE, "Knock-Off Easy-Bake", "Summon Bombs, Kids Edition!"},
+			{FiendFolio.ITEM.COLLECTIBLE.DEVILSKNIFE, "Devil's Knife", "The World Revolving"},
+			{FiendFolio.ITEM.COLLECTIBLE.KALU, "Trauma Dog", "Oh the Horror..."},		
+			{FiendFolio.ITEM.COLLECTIBLE.KALUS_HEAD, "Severed Dog Head", "Horrifying Visage"},				
         }
         for _, itemInfo in ipairs(ffItems) do
             table.insert(items, itemInfo)
