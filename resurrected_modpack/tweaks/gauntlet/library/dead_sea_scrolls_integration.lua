@@ -113,57 +113,10 @@ local menu = {
         tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
 
         buttons = {
-            { str = "gameplay", fsize = 3, nosel = true },
-            { str = "", fsize=1, nosel=true },
-
-            {
-                str = "remove dionysus", fsize = 2,
-                choices = { "enabled", "disabled" },
-                setting = 2,
-                variable = "TheGauntlet_RemoveDionysus",
-                tooltip = {strset = {"removes", "dionysus from", "the pool", "", "use if it", "strains", "your eyes"}},
-
-                load = function ()
-                    if TheGauntlet.SaveManager.GetSettingsSave().RemoveDionysus ~= true then
-                        return 2
-                    end
-                    return 1
-                end,
-                store = function (value)
-                    value = value
-
-                    TheGauntlet.SaveManager.GetSettingsSave().RemoveDionysus = value == 1
-                end
-            },
-
             { str = "", fsize=3, nosel=true },
             { str = "visuals", fsize = 3, nosel = true },
             { str = "", fsize=1, nosel=true },
 
-            {
-                str = "ceres visuals", fsize = 2,
-                choices = { "all enabled", "only tint", "only particles", "disabled" },
-                setting = 1,
-                variable = "TheGauntlet_CeresVisuals",
-                tooltip = {strset = {"configures", "visuals for", "ceres"}},
-
-                load = function ()
-                    local value = 4
-
-                    if TheGauntlet.SaveManager.GetSettingsSave().EnableCeresTint ~= false then
-                        value = value - 2
-                    end
-                    if TheGauntlet.SaveManager.GetSettingsSave().EnableCeresParticles ~= false then
-                        value = value - 1
-                    end
-
-                    return value
-                end,
-                store = function (value)
-                    TheGauntlet.SaveManager.GetSettingsSave().EnableCeresTint = value <= 2
-                    TheGauntlet.SaveManager.GetSettingsSave().EnableCeresParticles = value % 2 == 1
-                end
-            },
             {
                 str = "show chance", fsize = 2,
                 choices = { "enabled", "disabled" },

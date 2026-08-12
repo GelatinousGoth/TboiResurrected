@@ -21,7 +21,6 @@ if backupDataHolder ~= nil then
 end
 
 include("resurrected_modpack.tweaks.gauntlet.library.dead_sea_scrolls_integration")
-include("resurrected_modpack.tweaks.gauntlet.library.dead_sea_scrolls_changelogs")
 
 TheGauntlet.Utility = {}
 include("resurrected_modpack.tweaks.gauntlet.utility.callbacks")
@@ -45,6 +44,13 @@ include("resurrected_modpack.tweaks.gauntlet.gauntlet_room.waves")
 
 TheGauntlet.Compat = {}
 TheGauntlet.Compat.EID = {}
+
+TheGauntlet.Compat.FiendFolio = {}
+include("resurrected_modpack.tweaks.gauntlet.compat.fiend_folio.keep_gauntlet_backdrop")
+include("resurrected_modpack.tweaks.gauntlet.compat.fiend_folio.spirit_urn_gauntlets")
+include("resurrected_modpack.tweaks.gauntlet.compat.fiend_folio.gauntlet_disc.gauntlet_disc")
+include("resurrected_modpack.tweaks.gauntlet.compat.fiend_folio.gauntlet_disc.item_icons")
+
 include("resurrected_modpack.tweaks.gauntlet.compat.minimapi")
 include("resurrected_modpack.tweaks.gauntlet.compat.stageapi")
 
