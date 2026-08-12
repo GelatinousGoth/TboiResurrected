@@ -323,7 +323,7 @@
                     <Frame XPivot="16" YPivot="16" XCrop="137" YCrop="180" Width="126" Height="66" XPosition="21" YPosition="24" Delay="1" Visible="true" XScale="100" YScale="100" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
                 </LayerAnimation>
                 <LayerAnimation LayerId="28" Visible="true">
-                    <Frame XPivot="16" YPivot="16" XCrop="0" YCrop="162" Width="34" Height="32" XPosition="75" YPosition="32" Delay="1" Visible="true" XScale="100" YScale="100" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
+                    <Frame XPivot="16" YPivot="16" XCrop="1" YCrop="160" Width="41" Height="33" XPosition="68" YPosition="32" Delay="1" Visible="true" XScale="100" YScale="100" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
                 </LayerAnimation>
             </LayerAnimations>
             <NullAnimations/>
