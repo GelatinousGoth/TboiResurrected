@@ -52,7 +52,7 @@ function mod:SplashesRenamed()
             "we hate fun!",
             "everything has a price",
             "too many fortunes!",
-            "Isaac fact!",
+            "isaac fact!",
             "powered by repentogon!",
             "more than 500 enemies!",
             "beware of the pipeline"
