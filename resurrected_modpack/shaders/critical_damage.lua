@@ -335,13 +335,12 @@ DeadSeaScrollsMenu.AddMenu(ModID, {
 
 
 function Mod:PostUpdate()
-  
   for _,player in pairs(Isaac.FindByType(1,-1,-1)) do
     player = player:ToPlayer()
     local effectivehealth = player:GetSoulHearts() + player:GetHearts() + player:GetEternalHearts() + player:GetBoneHearts()
     
     Mod.effectivehealth = effectivehealth
-    
+    if (player:GetPlayerType() ~= PlayerType.PLAYER_THEFORGOTTEN_B) then return end
     if effectivehealth == 2 then
       
       if Mod.Damage > 0 then
@@ -350,7 +349,7 @@ function Mod:PostUpdate()
       
       Mod.critical = math.max((math.sin(Isaac.GetFrameCount() / 100) + 1.5) / 4,Mod.Damage)
       
-    elseif (effectivehealth == 1) and (player:GetPlayerType() ~= PlayerType.PLAYER_THELOST) and (player:GetPlayerType() ~= PlayerType.PLAYER_THELOST_B) and (not player:IsDead()) and (not Game():GetRoom():IsClear()) then
+    elseif (effectivehealth == 1) and (player:GetPlayerType() ~= PlayerType.PLAYER_THELOST) and (player:GetPlayerType() ~= PlayerType.PLAYER_THELOST_B) and (player:GetPlayerType() ~= PlayerType.PLAYER_THEFORGOTTEN_B) and (not player:IsDead()) and (not Game():GetRoom():IsClear()) then
       if Mod.Damage > 0 then
         Mod.Damage = Mod.Damage - 0.1
       end
