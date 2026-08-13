@@ -148,6 +148,10 @@ function mod:DisableBlackHole(position)
 
 end
 
+mod:AddCallback(ModCallbacks.MC_PRE_ROOM_EXIT, function()
+    mod:DisableBlackHole(mod.ShaderData.blackHolePosition)
+end)
+
 ------------------------------------------------------------
 --BLACK HOLE ITEM-------------------------------------------
 ------------------------------------------------------------
