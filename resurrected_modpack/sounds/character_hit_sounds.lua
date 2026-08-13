@@ -128,6 +128,9 @@ function CHS:EntityTakeDamage(Entity, Amount, DamageFlags, Source, CountdownFram
 	local PlayerType = Player:GetPlayerType()
 	local PlayerName = CHS.PLAYER_NAME[PlayerType]
 	if PlayerName == nil then return end
+	if PlayerName == "Tainted Forgotten" then
+		PlayerName = "Tainted Soul"
+	end
 
 	local SoundName = CHS.Data.Config[PlayerName].Hit
 
