@@ -118,6 +118,7 @@ TR_Manager:LoadMod("resurrected_modpack.qol.zodiac_indicator")
 TR_Manager:LoadMod("resurrected_modpack.qol.reflourished")
 TR_Manager:LoadMod("resurrected_modpack.qol.esc_closes_dss")
 TR_Manager:LoadMod("resurrected_modpack.qol.eden_smelted_trinket_fix")
+TR_Manager:LoadMod("resurrected_modpack.qol.splashes_renamed")
 
 TR_Manager:LoadMod("resurrected_modpack.shaders.hotter_mines")
 TR_Manager:LoadMod("resurrected_modpack.shaders.critical_damage")
