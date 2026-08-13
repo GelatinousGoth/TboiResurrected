@@ -11,21 +11,6 @@ local trinkets
 local cards
 local pills
 
---shoutout catinsurance for making it possible
-function mod:SplashesRenamed()
-    if not FiendFolio then return end
-        FiendFolio.SplashTexts = {
-            Small = {
-            "test small"},
-            Medium = {
-            "test medium"},
-            Large = {
-            "test large"}
-        }
-    FiendFolio:BuildSplashTexts()
-end
-mod:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, mod.SplashesRenamed)
-
 function mod:InitItemsRenamed()
     -- {itemId, 'name', 'desc'}
     items = {
