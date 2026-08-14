@@ -139,16 +139,27 @@ function mod:InitItemsRenamed()
 
     local game = Game()
     if EID then
+    local pickup = EntityType.ENTITY_PICKUP
         -- Adds trinkets defined in trinkets
         for _, trinket in ipairs(trinkets) do
-            local EIDdescription = EID:getDescriptionObj(5, 350, trinket[1]).Description
+            local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_TRINKET, trinket[1]).Description
             EID:addTrinket(trinket[1], EIDdescription, trinket[2], "en_us")
         end
 
         -- Adds items defined in items
         for _, item in ipairs(items) do
-            local EIDdescription = EID:getDescriptionObj(5, 100, item[1]).Description
+            local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_COLLECTIBLE, item[1]).Description
             EID:addCollectible(item[1], EIDdescription, item[2], "en_us")
+        end
+        -- Adds cards defined in cards
+        for _, card in ipairs(cards) do
+            local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_TAROTCARD, card[1]).Description
+            EID:addCard(card[1], EIDdescription, card[2], "en_us")
+        end
+        -- Adds pills defined in pills
+        for _, pill in ipairs(pills) do
+            local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_PILL, pill[1]).Description
+            EID:addCard(pill[1], EIDdescription, pill[2], "en_us")
         end
     end
 

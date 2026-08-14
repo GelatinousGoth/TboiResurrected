@@ -42,7 +42,7 @@ cardFronts[FiendFolio.ITEM.CARD.HORSE_PUSHPOP] = "gfx/alt_fiend_folio_cards.png"
 cardFronts[FiendFolio.ITEM.CARD.KING_OF_DIAMONDS] = "gfx/alt_fiend_folio_cards.png"
 cardFronts[FiendFolio.ITEM.CARD.GROTTO_BEAST] = "gfx/alt_fiend_folio_cards.png"
 cardFronts[FiendFolio.ITEM.CARD.KING_OF_CLUBS] = "gfx/alt_fiend_folio_cards.png"
-cardFronts[FiendFolio.ITEM.CARD.REVERSE_KING_OF_PENTACLES] = "gfx/alt_fiend_folio_cards.png"
+cardFronts[FiendFolio.ITEM.CARD.REVERSE_KING_OF_PENTACLES] = "gfx/alt_fiend_folio_cards_2.png"
 cardFronts[FiendFolio.ITEM.CARD.YELLOW_CAR] = "gfx/alt_fiend_folio_cards.png"
 end
 
