@@ -767,5 +767,6 @@ function TR_Manager:GetModIdByName(name)
 end
 
 TR_Manager.ModRef = TboiRekindled
+TR_Manager.PrivateData = {}
 
 return TR_Manager
