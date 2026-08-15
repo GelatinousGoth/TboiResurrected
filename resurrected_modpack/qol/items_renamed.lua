@@ -156,11 +156,6 @@ function mod:InitItemsRenamed()
             local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_TAROTCARD, card[1]).Description
             EID:addCard(card[1], EIDdescription, card[2], "en_us")
         end
-        -- Adds pills defined in pills
-        for _, pill in ipairs(pills) do
-            local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_PILL, pill[1]).Description
-            EID:addCard(pill[1], EIDdescription, pill[2], "en_us")
-        end
     end
 
     if Encyclopedia then
@@ -221,3 +216,13 @@ function mod:InitItemsRenamed()
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, mod.InitItemsRenamed)
+
+-- Adds pills defined in pills
+function mod:EIDPillNames()
+    if not EID then return end
+    for _, pill in ipairs(pills) do
+        local EIDdescription = EID:getDescriptionObj(5, PickupVariant.PICKUP_PILL, pill[1]).Description
+        EID:addPill(pill[1], EIDdescription, pill[2], "en_us")
+    end
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED , mod.EIDPillNames)
