@@ -194,8 +194,20 @@ local function GauntletFixTempSave()
 
     return roomSave
 end
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, GauntletFixTempSave)
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, GauntletFixTempSave)
+
+local function GauntletSaveDefaults()
+    local roomSave = TheGauntlet.SaveManager.GetRoomSave()
+    if not roomSave.GauntletFixRoom then
+        roomSave.GauntletFixRoom = {
+            TrinketPicked = false,
+            PedestalIsGolden = false,
+            PulleySpawned = false,
+            GoldenFountainRan = false
+        }
+    end
+end
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, GauntletSaveDefaults)
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, GauntletSaveDefaults)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
