@@ -102,6 +102,7 @@ TR_Manager:LoadMod("resurrected_modpack.tweaks.bomb_cooking")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.unlock_key")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.kissy_longlegs")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.ff_china_new_tears")
+TR_Manager:LoadMod("resurrected_modpack.tweaks.ff_mo_boss_chance")
 
 TR_Manager:LoadMod("resurrected_modpack.qol.hanging_dream_catcher")
 TR_Manager:LoadMod("resurrected_modpack.qol.hud_toggle")
