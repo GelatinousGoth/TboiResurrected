@@ -1,6 +1,6 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-local ModName = "Splashes Renamed"
+local ModName = "Fiend Folio Splashes"
 local mod = TR_Manager:RegisterMod(ModName, 1)
 
 function mod:SplashesRenamed()

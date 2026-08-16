@@ -11,7 +11,6 @@ require("resurrected_modpack.modcompat.disable_mods")
 require("resurrected_modpack.modcompat.custom_boss_weight_fix")
 require("resurrected_modpack.modcompat.boss_icons")
 require("resurrected_modpack.modcompat.retribution")
-require("resurrected_modpack.modcompat.splashes_renamed")
 
 
 -- require("resurrected_modpack.enums")
@@ -121,6 +120,7 @@ TR_Manager:LoadMod("resurrected_modpack.qol.zodiac_indicator")
 TR_Manager:LoadMod("resurrected_modpack.qol.reflourished")
 TR_Manager:LoadMod("resurrected_modpack.qol.esc_closes_dss")
 TR_Manager:LoadMod("resurrected_modpack.qol.eden_smelted_trinket_fix")
+TR_Manager:LoadMod("resurrected_modpack.qol.splashes_renamed")
 
 TR_Manager:LoadMod("resurrected_modpack.shaders.hotter_mines")
 TR_Manager:LoadMod("resurrected_modpack.shaders.critical_damage")
