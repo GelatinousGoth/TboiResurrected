@@ -9,8 +9,11 @@ local api = {
 	CustomAnims = {
 		[PlayerType.PLAYER_LAZARUS2] = { Anm2 = "gfx/ui/unique_coop_icons.anm2", Animation = "LazarusRisen" },
 		[PlayerType.PLAYER_LAZARUS2_B] = { Anm2 = "gfx/ui/unique_coop_icons.anm2", Animation = "LazarusRisenB" },
+		[PlayerType.PLAYER_JACOB] = { Anm2 = "gfx/ui/unique_coop_icons.anm2", Animation = "Jacob" },
 		[PlayerType.PLAYER_ESAU] = { Anm2 = "gfx/ui/unique_coop_icons.anm2", Animation = "Esau" },
-		[PlayerType.PLAYER_THESOUL_B] = { Anm2 = "gfx/ui/unique_coop_icons.anm2", Animation = "The Soul" }
+		[PlayerType.PLAYER_THEFORGOTTEN_B] = { Anm2 = "gfx/ui/unique_coop_icons.anm2", Animation = "The Forgotten" },
+		[PlayerType.PLAYER_THESOUL_B] = { Anm2 = "gfx/ui/unique_coop_icons.anm2", Animation = "The Soul" },
+		[PlayerType.PLAYER_JACOB_B] = { Anm2 = "gfx/ui/unique_coop_icons.anm2", Animation = "JacobB" },
 	},
 	---@type table<PlayerType, PlayerType>
 	RegisteredTwins = {
