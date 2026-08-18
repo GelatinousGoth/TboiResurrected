@@ -1030,3 +1030,52 @@ mod:AddCallback(ModCallbacks.MC_POST_PLAYER_USE_BOMB, function(_, player, bomb)
         end
     end
 end)
+
+-- thank you pine of the soul ! 
+local function setGoldCoinSpritesheet()
+    local gfxPath = ""
+    if mod:LoadData() == "1" then
+        gfxPath = "clockPickup_shaders/hudpickups_anim_goldcoin.png"
+    else
+        gfxPath = "clockPickup_shaders/hudpickups_anim.png"
+    end
+    mod.sprs.Coin:ReplaceSpritesheet(0, gfxPath, true)
+end
+
+
+local previousGoldenCoinCount = 0
+local previousRoomId = nil
+
+-- monitors number of golden coins in the room; when it decreases, triggers a sprite replacement
+function mod:goldenCoinDeath()
+    local goldenCoinCount = 0
+    for _, entity in ipairs(Isaac.GetRoomEntities()) do
+        local pickup = entity:ToPickup()
+        if pickup and entity.Variant == PickupVariant.PICKUP_COIN and entity.SubType == CoinSubType.COIN_GOLDEN then
+            if not pickup:GetSprite():IsPlaying("Collect") then --this is because the coin still exists while another one is reappearing
+                goldenCoinCount = goldenCoinCount + 1
+            end
+        end
+    end
+
+    local currentRoomId = Game():GetLevel():GetCurrentRoomIndex()
+    if currentRoomId == previousRoomId and previousGoldenCoinCount > goldenCoinCount then
+        mod:SaveData("1")
+        setGoldCoinSpritesheet()
+        print(mod.sprs.Coin:GetFilename())
+    end
+    previousGoldenCoinCount = goldenCoinCount
+    previousRoomId = currentRoomId
+
+end
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.goldenCoinDeath)
+
+function mod:goldenCoinRunRestart()
+    setGoldCoinSpritesheet()
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.goldenCoinRunRestart, true)
+
+function mod:goldenCoinNewLevel()
+    mod:SaveData("0")
+end
+mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.goldenCoinNewLevel)
