@@ -7,7 +7,7 @@ local game = Game()
 local woodenChestPercent = 5
 local oldChestPercent = 5
 
-local crackedKeyPercent = 6.66
+local crackedKeyPercent = 1.75
 
 --Chest Replacements
 
