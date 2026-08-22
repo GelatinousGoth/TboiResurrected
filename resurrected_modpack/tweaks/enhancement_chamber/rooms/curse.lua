@@ -62,7 +62,7 @@ function mod:curseDoorRender(door)
 
             -- Flat file synergy
             if player:HasTrinket(TrinketType.TRINKET_FLAT_FILE) then
-                door:GetSprite():ReplaceSpritesheet(3, "gfx/grid/curse_door_nospike.png")
+                door:GetSprite():ReplaceSpritesheet(3, "gfx/grid/door_04_selfsacrificeroomdoor_nospikes.png")
                 door:GetSprite():LoadGraphics()
             end
         end
