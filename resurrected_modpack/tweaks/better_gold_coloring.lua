@@ -10,9 +10,10 @@ local GOLDENCOLORS = {
 ---@param entity EntityNPC
 function mod:gildedShit(entity)
     if entity:GetEntityFlags() & EntityFlag.FLAG_MIDAS_FREEZE == EntityFlag.FLAG_MIDAS_FREEZE then
-        entity.Color = GOLDENCOLORS.Gilded
-    else
+        entity:GetSprite():SetRenderFlags(AnimRenderFlags.GOLDEN)
         entity.Color = GOLDENCOLORS.Normal
+    elseif entity:GetSprite():GetRenderFlags() == AnimRenderFlags.GOLDEN then
+        entity:GetSprite():SetRenderFlags(entity:GetSprite():GetRenderFlags() & ~AnimRenderFlags.GOLDEN)
     end
 end
 mod:AddCallback(ModCallbacks.MC_PRE_NPC_RENDER, mod.gildedShit)
