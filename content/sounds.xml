@@ -212,4 +212,50 @@
     <sound name="deadseascrolls_whoosh">
         <sample weight="1" path="deadseascrolls/whoosh.wav" />
     </sound>
+	
+	<!--Community Remix Sounds-->
+	<sound name="remix tear splatter">
+		<sample weight="1" path="tear_remix/splatter 0.wav" />
+		<sample weight="1" path="tear_remix/splatter 1.wav" />
+		<sample weight="1" path="tear_remix/splatter 2.wav" />
+	</sound>
+	<sound name="remix tear block">
+		<sample weight="1" path="tear_remix/tear block 0.wav" />
+		<sample weight="1" path="tear_remix/tear block 1.wav" />
+		<sample weight="1" path="tear_remix/tear block 2.wav" />
+	</sound>
+	<sound name="remix tear fire">
+		<sample weight="1" path="tear_remix/tear fire 0.wav" />
+		<sample weight="1" path="tear_remix/tear fire 1.wav" />
+		<sample weight="1" path="tear_remix/tear fire 2.wav" />
+		<sample weight="1" path="tear_remix/tear fire 3.wav" />
+	</sound>
+	
+	<sound name="flash tear block">
+		<sample weight="1" path="tear_flash/tear block 0.wav" />
+		<sample weight="1" path="tear_flash/tear block 1.wav" />
+		<sample weight="1" path="tear_flash/tear block 2.wav" />
+	</sound>
+	<sound name="flash tear fire">
+		<sample weight="1" path="tear_flash/tear fire 0.wav" />
+		<sample weight="1" path="tear_flash/tear fire 1.wav" />
+		<sample weight="1" path="tear_flash/tear fire 2.wav" />
+	</sound>
+
+		<sound name="poison damage tick">
+		<sample weight="1" path="remix/poison_hit_1.wav" />
+		<sample weight="1" path="remix/poison_hit_2.wav" />
+		<sample weight="1" path="remix/poison_hit_3.wav" />
+		<sample weight="1" path="remix/poison_hit_4.wav" />
+	</sound>
+	<sound name="burn damage tick">
+		<sample weight="1" path="remix/burn_hit_1.wav" />
+		<sample weight="1" path="remix/burn_hit_2.wav" />
+		<sample weight="1" path="remix/burn_hit_3.wav" />
+		<sample weight="1" path="remix/burn_hit_4.wav" />
+	</sound>
+		<sound name="hit_crit_heavy">
+		<sample weight="1" path="remix/hit_heavy_0.wav" />
+		<sample weight="1" path="remix/hit_heavy_1.wav" />
+	</sound>
 </sounds>

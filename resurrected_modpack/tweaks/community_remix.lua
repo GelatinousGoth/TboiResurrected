@@ -1,0 +1,554 @@
+local TR_Manager = require("resurrected_modpack.manager")
+
+TRCommunityRemix = TR_Manager:RegisterMod("Community Remix", 1)
+
+TRCommunityRemix.RNG = RNG()
+TRCommunityRemix.SFX = SFXManager()
+TRCommunityRemix.GAME = Game()
+TRCommunityRemix.MUSIC = MusicManager()
+local game = TRCommunityRemix.GAME
+local sfx = TRCommunityRemix.SFX
+local rng = TRCommunityRemix.RNG
+local mus = TRCommunityRemix.MUSIC
+
+local pm = PlayerManager
+
+local rmcfgholder = RoomConfigHolder
+local itemcfg = Isaac.GetItemConfig()
+local pgd = Isaac.GetPersistentGameData()
+local json = require("json")
+
+local diffLib = require("resurrected_modpack.tweaks.community_remix.difflib")(TRCommunityRemix)
+require("resurrected_modpack.tweaks.community_remix.imgui")()
+require("resurrected_modpack.tweaks.community_remix.clearawards")
+require("resurrected_modpack.tweaks.community_remix.enums")
+
+TRCommunityRemix.saveData = TRCommunityRemix.saveData or {}
+
+function TRCommunityRemix.GetSaveData()
+	return TRCommunityRemix.saveData
+end
+
+TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, iscont) -- seed rng n shit
+	TRCommunityRemix.RNG:SetSeed(game:GetSeeds():GetStartSeed())
+	TRCommunityRemix.GAME = Game()
+	pgd = Isaac.GetPersistentGameData()
+end)
+
+do -- custom callbacks and core shit
+
+TRCommunityRemix:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, died)
+	Isaac.RunCallback("CR_MC_PRE_DATA_SAVE", TRCommunityRemix.saveData)
+	TRCommunityRemix:SaveData(json.encode(TRCommunityRemix.saveData))
+end)
+
+TRCommunityRemix.saveData.insaneMark = TRCommunityRemix.saveData.insaneMark ~= nil and TRCommunityRemix.saveData.insaneMark or {}
+TRCommunityRemix.saveData.cfg = TRCommunityRemix.saveData.cfg or {}
+TRCommunityRemix.saveData.cfg.tear_sounds = TRCommunityRemix.saveData.cfg.tear_sounds ~= nil and TRCommunityRemix.saveData.cfg.tear_sounds or {}
+
+TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_SAVESLOT_LOAD, function(_, slot)
+	pgd = Isaac.GetPersistentGameData()
+	if TRCommunityRemix:HasData() then
+		TRCommunityRemix.saveData = json.decode(TRCommunityRemix:LoadData())
+		if not TRCommunityRemix.saveData.cfg then TRCommunityRemix.saveData.cfg = {} end
+		Isaac.RunCallback("CR_MC_POST_DATA_LOAD", TRCommunityRemix.saveData)
+		TRCommunityRemix:SaveData(json.encode(TRCommunityRemix.saveData))
+	else
+		TRCommunityRemix.saveData = {}
+		TRCommunityRemix.saveData.cfg = {}
+		TRCommunityRemix.saveData.insaneMark = TRCommunityRemix.saveData.insaneMark ~= nil and TRCommunityRemix.saveData.insaneMark or {}
+		TRCommunityRemix:SaveData(json.encode(TRCommunityRemix.saveData))
+	end
+	if TRCommunityRemix.saveData.cfg == nil then TRCommunityRemix.saveData.cfg = {} end
+end)
+end
+
+TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_)
+end)
+
+local isrendermodsprite = ""
+local insanemodemarksprite = Sprite()
+insanemodemarksprite:Load("gfx/ui/ex/marks_remix.anm2", true)
+insanemodemarksprite:LoadGraphics()
+
+local isaacheadsprite = Sprite()
+isaacheadsprite:Load("gfx/ui/ex/isaac_head.anm2", true)
+isaacheadsprite:LoadGraphics()
+isaacheadsprite:Play("head")
+local headY = 96
+
+local showhead_bl = {
+	[MainMenuType.TITLE] = true,
+	[MainMenuType.COLLECTION] = true,
+	[MainMenuType.STATS] = true,
+	[MainMenuType.ENDINGS] = true,
+	[MainMenuType.BESTIARY] = true,
+	[MainMenuType.MODCHALLENGES] = true,
+	[MainMenuType.MODS] = true,
+	[MainMenuType.KEYCONFIG] = true,
+}
+
+---@param playerType PlayerType
+---@param sprite Sprite
+---@param pos Vector
+---@param defaultScale Vector
+---@param defaultColor Color
+TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_RENDER_CHARACTER_SELECT_PORTRAIT, function(_, playerType, sprite, pos, defaultScale, defaultColor)
+	isrendermodsprite = sprite:GetAnimation()
+end)
+
+TRCommunityRemix:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
+	isaacheadsprite:Update()
+	local charpage = CharacterMenu.GetBigCharPageSprite()
+	if TRCommunityRemix.saveData.insaneMark and TRCommunityRemix.saveData.insaneMark[isrendermodsprite] then
+		if CharacterMenu.GetActiveStatus() ~= CharacterMenuStatus.SEED then
+			insanemodemarksprite:Play("Insane")
+			insanemodemarksprite:Render(Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, Vector(78, 29)), Vector.Zero, Vector.Zero)
+		end
+	end
+	isrendermodsprite = charpage:GetAnimation()
+
+	if showhead_bl[MenuManager.GetActiveMenu()] then
+		if headY < 96 then headY = headY + 1 end
+		headY = headY * 1.05
+		if headY > 96 then headY = 96 end
+	else
+		if headY > 0 then headY = headY /1.05 end
+	end
+
+	if headY > 96 then headY = 96 elseif headY < 0 then headY = 0 end
+
+	isaacheadsprite:Render(Vector(0, Isaac.GetScreenHeight() + 112 + headY), Vector.Zero, Vector.Zero)
+end)
+
+TRCommunityRemix:AddCallback("DIFFLIB_MC_POST_DIFFICULTY_CHANGED", function()
+	local diffName = DifficultyManager.GetDifficultySelected().Name
+	local charMenu = CharacterMenu
+	local bloodStainSprite = charMenu.GetDifficultyOverlaySprite()
+	if diffName ~= nil and diffName == "Insane" then
+		if charMenu.GetSelectedCharacterMenu() == 0 then
+			bloodStainSprite:ReplaceSpritesheet(17, "gfx/ui/main menu/charactermenu_insane.png")
+			bloodStainSprite:LoadGraphics()
+		else
+			bloodStainSprite:ReplaceSpritesheet(17, "gfx/ui/main menu/charactermenualt_insane.png")
+			bloodStainSprite:LoadGraphics()
+		end
+		print(bloodStainSprite:GetSpritesheet(17):GetName())
+		isaacheadsprite:Play("head_to_bloody")
+	else
+		if charMenu.GetSelectedCharacterMenu() == 0 then
+			bloodStainSprite:ReplaceSpritesheet(17, "gfx/ui/main menu/charactermenu.png")
+			bloodStainSprite:LoadGraphics()
+		else
+			bloodStainSprite:ReplaceSpritesheet(17, "gfx/ui/main menu/charactermenualt.png")
+			bloodStainSprite:LoadGraphics()
+		end
+		print(bloodStainSprite:GetSpritesheet(17):GetName())
+		isaacheadsprite:Play("bloody_to_head")
+	end
+end)
+
+do -- gamemodes
+	local drs = Sprite()
+	drs:Load("gfx/ui/ex/difficulties_remix.anm2")
+	drs:LoadGraphics()
+
+	local phud = Sprite()
+	phud:Load("gfx/ui/ex/playerhud.anm2")
+	phud:LoadGraphics()
+
+	do -- insane mode / easy mode
+
+	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_HUD_RENDER, function(_)
+		if DifficultyManager.GetDifficulty() == "Insane" then
+			if game:GetHUD():IsVisible() then
+				phud:Play("Insane")
+				local addoffset = 0
+				local isjacob = 0
+				if Isaac.GetPlayer(0) and Isaac.GetPlayer(0):GetPlayerType() == PlayerType.PLAYER_JACOB then
+					if addoffset <= 0 then addoffset = -4 end
+					addoffset = addoffset + 18
+					isjacob = 1
+				end
+				if PlayerManager.AnyoneIsPlayerType(PlayerType.PLAYER_BETHANY) then
+					if addoffset <= 0 then addoffset = -2 end
+					addoffset = addoffset + 11 - (2*isjacob)
+					isjacob = 0
+				end
+				if PlayerManager.AnyoneIsPlayerType(PlayerType.PLAYER_BETHANY_B) then
+					if addoffset <= 0 then addoffset = -2 end
+					addoffset = addoffset + 11 - (2*isjacob)
+					isjacob = 0
+				end
+				if PlayerManager.AnyoneIsPlayerType(PlayerType.PLAYER_BLUEBABY_B) then
+					if addoffset <= 0 then addoffset = -2 end
+					addoffset = addoffset + 11 - (2*isjacob)
+					isjacob = 0
+				end
+				local hudoffsetvec = Vector(20, 12) * Options.HUDOffset
+				phud:Render(Vector(4, 74 + addoffset) + hudoffsetvec, Vector.Zero, Vector.Zero)
+			end
+		end
+	end)
+
+	TRCommunityRemix:AddCallback("DIFFLIB_MC_POST_ADD_REBIRTH_DIFFICULTIES", function(_)
+		if DifficultyManager then
+			if DifficultyManager.GetDifficultyIdByName("Insane") then
+				DifficultyManager.ClearDifficulty("Insane")
+			end
+			if pgd:Unlocked(33) then
+				DifficultyManager.AddDifficulty("Insane", drs, 1)
+			end
+		end
+	end)
+
+
+	TRCommunityRemix:AddCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, function(_, pi, e)
+		if DifficultyManager.GetDifficulty() == "Insane" then
+            
+			if e and e.Type == EntityType.ENTITY_PLAYER and pi.Variant == 40 and pi.SubType == 1 and pi.Price <= 0 then
+				if rng:RandomInt(1, 10) == 1 then
+					Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF01, -1, pi.Position, Vector.Zero, pi)
+					Isaac.Spawn(4, 3, 0, pi.Position, pi.Velocity, pi)
+					sfx:Play(267, 1, 0, false, 1, 0)
+					pi:Remove()
+					return {Collide = true, SkipCollisionEffects = true}
+				end
+			end
+		end
+	end)
+	
+	TRCommunityRemix:AddCallback(ModCallbacks.MC_PLAYER_GET_HEART_LIMIT, function(_, p, amnt, keeper)
+		if DifficultyManager.GetDifficulty() == "Insane" and not keeper then
+			if amnt > 12 then
+				return amnt - 12
+			elseif amnt > 6 then
+				return amnt - 6
+			end
+		end
+	end)
+
+
+	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_COMPLETION_EVENT, function(_, mark)
+		if mark ~= CompletionType.MOMS_HEART then return end
+
+		if DifficultyManager.GetDifficulty() == "Insane" then
+			local players = pm.GetPlayers()
+			for _, p in ipairs(players) do
+				local ptype = p:GetPlayerType()
+				local idstring = {
+					[1] = "01_Isaac",
+					[2] = "02_Magdalene",
+					[3] = "03_Cain",
+					[4] = "04_Judas",
+					[5] = "06_Bluebaby",
+					[6] = "05_Eve",
+					[7] = "07_Samson",
+					[8] = "08_Azazel",
+					[9] = "09_Lazarus",
+					[10] = "10_Eden",
+					[11] = "11_TheLost",
+					[12] = "09_Lazarus",
+					[13] = "04_Judas",
+					[14] = "12_Lilith",
+					[15] = "13_Keeper",
+					[16] = "15_Apollyon",
+					[17] = "16_TheForgotten",
+					[18] = "16_TheForgotten",
+					[19] = "17_Bethany",
+					[20] = "18_JacobEsau",
+					[21] = "18_JacobEsau",
+
+					[22] = "01_Isaac",
+					[23] = "02_Magdalene",
+					[24] = "03_Cain",
+					[25] = "04_Judas",
+					[26] = "06_Bluebaby",
+					[27] = "05_Eve",
+					[28] = "07_Samson",
+					[29] = "08_Azazel",
+					[30] = "09_Lazarus",
+					[39] = "09_Lazarus",
+					[31] = "10_Eden",
+					[32] = "11_TheLost",
+					[33] = "12_Lilith",
+					[34] = "13_Keeper",
+					[35] = "15_Apollyon",
+					[36] = "16_TheForgotten",
+					[41] = "16_TheForgotten",
+					[37] = "17_Bethany",
+					[38] = "18_JacobEsau",
+					[40] = "18_JacobEsau",
+				}
+				local namestr = p:GetName()
+				if idstring[ptype + 1] then
+					namestr = idstring[ptype + 1]
+				end
+
+                if TRCommunityRemix.saveData.insaneMark == nil then
+					TRCommunityRemix.saveData.insaneMark = {}
+				end
+
+				if not TRCommunityRemix.saveData.insaneMark[namestr] and not p.Parent then
+					TRCommunityRemix.saveData.insaneMark[namestr] = true
+				end
+			end
+		end
+	end)
+
+	end
+
+end
+
+-- yoinked insane mode features
+
+-- insane mode gushers/pacers
+---@param e EntityNPC
+TRCommunityRemix:AddCallback(ModCallbacks.MC_NPC_UPDATE, function(_, e)
+	if DifficultyManager.GetDifficulty() == "Insane" then
+		if e.SubType == 1 then return end -- no creep for gushers
+		local d = e:GetData()
+		d.creep_cd = d.creep_cd or 0
+		if d.creep_cd > 0 then d.creep_cd = d.creep_cd - 1 end
+
+		if d.creep_cd == 0 then
+			local creep = Isaac.Spawn(1000, EffectVariant.CREEP_RED, 0, e.Position, Vector.Zero, e):ToEffect()
+			creep:SetColor(Color(1, 1, 1, 0, 0, 0, 0), 1, 999, false, true)
+			creep.Scale = 0.75
+			creep:SetTimeout(90)
+			d.creep_cd = 12
+        end
+	end
+end, 11)
+
+-- insane mode splashers
+---@param e EntityNPC 
+TRCommunityRemix:AddCallback(ModCallbacks.MC_NPC_UPDATE, function(_, e)
+	if DifficultyManager.GetDifficulty() == "Insane" then
+		local d = e:GetData()
+		d.creep_cd = d.creep_cd or 0
+		if d.creep_cd > 0 then d.creep_cd = d.creep_cd - 1 end
+
+		if d.creep_cd == 0 then
+			local creep = Isaac.Spawn(1000, EffectVariant.CREEP_GREEN, 0, e.Position, Vector.Zero, e):ToEffect()
+			creep:SetColor(Color(1, 1, 1, 0, 0, 0, 0), 1, 999, false, true)
+			creep.Scale = 0.75
+			creep:SetTimeout(90)
+			d.creep_cd = 12
+        end
+	end
+end, 238)
+
+-- insane mode black globin
+---@param e EntityNPC 
+TRCommunityRemix:AddCallback(ModCallbacks.MC_NPC_UPDATE, function(_, e)
+	if DifficultyManager.GetDifficulty() == "Insane" then
+		local d = e:GetData()
+		d.creep_cd = d.creep_cd or 0
+		if d.creep_cd > 0 then d.creep_cd = d.creep_cd - 1 end
+
+		if d.creep_cd == 0 then
+			local creep = Isaac.Spawn(1000, EffectVariant.CREEP_WHITE, 0, e.Position, Vector.Zero, e):ToEffect()
+			creep:SetColor(Color(1, 1, 1, 0, 0, 0, 0), 1, 999, false, true)
+			creep.Scale = 0.75
+			creep:SetTimeout(90)
+			d.creep_cd = 12
+        end
+	end
+end, 280)
+
+TRCommunityRemix:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function(_, door)
+	local level = game:GetLevel()
+	if DifficultyManager.GetDifficulty() == "Insane" then
+		local dimension = level:GetDimension()
+		if dimension == 0 then
+			if door.TargetRoomType == 4 and door.Desc.Variant ~= DoorVariant.DOOR_HIDDEN then
+				if not TRCommunityRemix.saveData.lockedRoomIdx then TRCommunityRemix.saveData.lockedRoomIdx = {} end
+				local islockedidx
+				for i, v in ipairs(TRCommunityRemix.saveData.lockedRoomIdx) do
+					if v == door.TargetRoomIndex then 
+						islockedidx = true
+					end
+				end
+				if door:IsLocked() == false and not islockedidx then
+					door:SetLocked(true)
+					TRCommunityRemix.saveData.lockedRoomIdx[#TRCommunityRemix.saveData.lockedRoomIdx + 1] = door.TargetRoomIndex
+				end
+			end
+		end
+	end
+end)
+
+do -- tear SFX
+
+	local _toreplace = {
+		[1] = {
+			[150] = Isaac.GetSoundIdByName("remix tear block"), -- tear block
+			[153] = Isaac.GetSoundIdByName("remix tear fire"), -- tear fire
+			[258] = Isaac.GetSoundIdByName("remix tear splatter") -- tear fall
+		},
+		[2] = {
+			[150] = Isaac.GetSoundIdByName("flash tear block"), -- tear block
+			[153] = Isaac.GetSoundIdByName("flash tear fire"), -- tear fire
+			[258] = Isaac.GetSoundIdByName("remix tear splatter") -- tear fall
+		}
+	}
+
+	TRCommunityRemix:AddCallback(ModCallbacks.MC_PRE_SFX_PLAY, function(_, id, vol, fd, loop, pitch, pan)
+		if TRCommunityRemix.saveData.cfg then
+			if TRCommunityRemix.saveData.cfg.tear_sounds and _toreplace[TRCommunityRemix.saveData.cfg.tear_sounds] and _toreplace[TRCommunityRemix.saveData.cfg.tear_sounds][id] then
+				return {_toreplace[TRCommunityRemix.saveData.cfg.tear_sounds][id], vol, fd, loop, pitch, pan}
+			end
+		end
+	end)
+
+end
+
+do --game feel ?????
+
+	local goreblacklist = {}
+	goreblacklist[217] = true
+
+	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function(_, e, amnt, flags, src, cd)
+		if e:IsEnemy() and amnt > 0 then
+			local e = e:ToNPC()
+			if e ~= nil and e:IsVulnerableEnemy() and e:IsActiveEnemy() then
+				if flags & DamageFlag.DAMAGE_POISON_BURN > 0 then
+					if e:HasEntityFlags(EntityFlag.FLAG_POISON) then
+						sfx:Play(TRCommunityRemix.SoundEffect.SOUND_POISON, 1, 3, false, 1, 0)
+					end
+					if e:HasEntityFlags(EntityFlag.FLAG_BURN) then
+						sfx:Play(TRCommunityRemix.SoundEffect.SOUND_BURN, 1, 3, false, 1, 0)
+					end
+				else
+					if amnt >= e.MaxHitPoints then
+						if not goreblacklist[e.Type] then
+							e:AddEntityFlags(EntityFlag.FLAG_EXTRA_GORE)
+						end
+					end
+					if amnt >= (e.MaxHitPoints / 3) then
+						local d = e:GetData()
+						if amnt >= 10 then
+							sfx:Play(77, 0.5, 3, false, 1, 0)
+							sfx:Play(TRCommunityRemix.SoundEffect.SOUND_HIT_CRIT_HEAVY, 0.5, 3, false, 0.75, 0)
+						elseif amnt >= 7 then
+							sfx:Play(TRCommunityRemix.SoundEffect.SOUND_HIT_CRIT_HEAVY, 0.5, 3, false, 1, 0)
+							sfx:Play(642, 0.5, 3, false, 1.25, 0)
+						else
+							sfx:Play(642, 0.5, 3, false, 1.5, 0)
+						end
+						if not d._gf_hitstun then
+							d._gf_hitstun = 5
+						end
+					else
+						if amnt >= 10 then
+							sfx:Play(77, 0.35, 3, false, 1, 0)
+							sfx:Play(TRCommunityRemix.SoundEffect.SOUND_HIT_CRIT_HEAVY, 0.35, 3, false, 1, 0)
+						elseif amnt >= 7 then
+							sfx:Play(TRCommunityRemix.SoundEffect.SOUND_HIT_CRIT_HEAVY, 0.35, 3, false, 1, 0)
+							sfx:Play(642, 0.35, 3, false, 1.5, 0)
+						else
+							sfx:Play(642, 0.35, 3, false, 1.75, 0)
+						end
+					end
+				end
+			end
+		end
+	end)
+
+		TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_PRE_NPC_UPDATE, CallbackPriority.IMPORTANT, function(_, e)
+		local d = e:GetData()
+		if d._gf_hitstun and e.State ~= NpcState.STATE_APPEAR and e.FrameCount > 4 then
+			local s = e:GetSprite()
+			if d._gf_hitstun > 0 then 
+				if s.PlaybackSpeed > 0 and e:IsBoss() == false then
+					if not d._gf_original_pbspd then d._gf_original_pbspd = s.PlaybackSpeed end
+					if d._gf_original_scale == nil then d._gf_original_scale = Vector(e.SpriteScale.X, e.SpriteScale.Y) end
+					if not d._gf_original_vel then d._gf_original_vel = e.Velocity end
+					s.PlaybackSpeed = 0
+				end
+				
+				if d._gf_hitstun == 5 then
+					e:SetColor(Color(0/255, 0/255, 0/255, 1, 192/255, 0, 0), 3, 999, false, false)
+				end
+				
+				if d._gf_hitstun == 3 then
+					e:SetColor(Color(1, 1, 1, 1, 0.5, 0.5, 0.5), 3, 1, false, false)
+				end
+				
+				if d._gf_hitstun == 1 then
+					e:SetColor(Color(172/255, 140/255, 76/255, 1, 64/255, 48/255, 16/255), 3, 1, false, false)
+				end
+				
+				d._gf_hitstun = d._gf_hitstun - 1
+				e:MultiplyFriction(0.25)
+				
+				if not e:HasMortalDamage() then
+					return true
+				else
+					if d._gf_original_pbspd then
+						s.PlaybackSpeed = 1
+						d._gf_original_pbspd = nil
+					end
+					
+					if d._gf_original_vel then
+						e.Velocity = d._gf_original_vel
+						d._gf_original_vel = nil
+					end
+					
+					if d._gf_original_scale then
+						e.SpriteScale = d._gf_original_scale
+						d._gf_original_scale = nil
+					end
+					
+					d._gf_hitstun = nil
+				end
+			else
+				if d._gf_original_pbspd then
+					s.PlaybackSpeed = 1
+					d._gf_original_pbspd = nil
+				end
+				
+				if d._gf_original_vel then
+					e.Velocity = d._gf_original_vel
+					d._gf_original_vel = nil
+				end
+				
+				if d._gf_original_scale then
+					e.SpriteScale = d._gf_original_scale
+					d._gf_original_scale = nil
+				end
+				d._gf_hitstun = nil
+			end
+		end
+	end)
+	
+	TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_PRE_NPC_RENDER, CallbackPriority.IMPORTANT, function(_, e)
+		local d = e:GetData()
+		if d._gf_hitstun then
+			local s = e:GetSprite()
+			if d._gf_hitstun > 0 and e:IsBoss() == false and s:GetAnimation() ~= "Appear" then
+				
+				if d._gf_hitstun >= 4 then
+					if d._gf_original_scale then
+						e.SpriteScale = Vector(d._gf_original_scale.X * 0.9, d._gf_original_scale.Y * 1.1)
+					end
+				end
+				
+				if d._gf_hitstun < 4 then
+					if d._gf_original_scale then
+						e.SpriteScale = Vector(d._gf_original_scale.X * 1.1, d._gf_original_scale.Y * 0.9)
+					end
+				end
+				
+				if d._gf_hitstun < 2 then
+					if d._gf_original_scale then
+						e.SpriteScale = Vector(d._gf_original_scale.X * 0.95, d._gf_original_scale.Y * 1.05)
+					end
+				end
+			end
+		end
+	end)
+
+
+end
