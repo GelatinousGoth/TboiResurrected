@@ -126,7 +126,15 @@ return function(parentMod) -- pass mod reference. must have a global savedata ar
 			
 			if menu == MainMenuType.CHARACTER then
 				if Input.IsActionTriggered(ButtonAction.ACTION_MENUUP, -1) then currsel = currsel - 1 if currsel ~= 0 then Isaac.RunCallback("DIFFLIB_MC_POST_DIFFICULTY_CHANGED") end end
-				if Input.IsActionTriggered(ButtonAction.ACTION_MENUDOWN, -1) then currsel = currsel + 1 if currsel ~= 6 then Isaac.RunCallback("DIFFLIB_MC_POST_DIFFICULTY_CHANGED") end end
+				if Input.IsActionTriggered(ButtonAction.ACTION_MENUDOWN, -1) then currsel = currsel + 1 
+				if communityRemix then
+					if currsel ~= 8 then 
+						Isaac.RunCallback("DIFFLIB_MC_POST_DIFFICULTY_CHANGED")
+					end
+				elseif currsel ~= 6 then
+						Isaac.RunCallback("DIFFLIB_MC_POST_DIFFICULTY_CHANGED")
+				end
+				end
 				lastsel = currsel
 			end
 			

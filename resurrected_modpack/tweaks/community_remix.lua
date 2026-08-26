@@ -9,12 +9,9 @@ TRCommunityRemix.MUSIC = MusicManager()
 local game = TRCommunityRemix.GAME
 local sfx = TRCommunityRemix.SFX
 local rng = TRCommunityRemix.RNG
-local mus = TRCommunityRemix.MUSIC
 
 local pm = PlayerManager
 
-local rmcfgholder = RoomConfigHolder
-local itemcfg = Isaac.GetItemConfig()
 local pgd = Isaac.GetPersistentGameData()
 local json = require("json")
 
@@ -77,6 +74,24 @@ isaacheadsprite:LoadGraphics()
 isaacheadsprite:Play("head")
 local headY = 96
 
+local diffOverlay = Sprite()
+diffOverlay:Load("gfx/ui/ex/difficulty_overlay.anm2", true)
+diffOverlay:LoadGraphics()
+diffOverlay:Play("NewBlood_0_fadeout")
+diffOverlay.Color = Color(1, 1, 1, 0.9, 0, 0, 0,0,0,0,0.2)
+
+local diffShadowOverlay = Sprite()
+diffShadowOverlay:Load("gfx/ui/ex/difficulty_shadowoverlay.anm2", true)
+diffShadowOverlay:LoadGraphics()
+diffShadowOverlay:Play("nooverlay")
+diffShadowOverlay.Color = Color(1,1,1,1,0,0,0)
+
+local winStreakOverlay = Sprite()
+winStreakOverlay:Load("gfx/ui/ex/winstreakwidget_overlay.anm2", true)
+winStreakOverlay:LoadGraphics()
+winStreakOverlay:Play("WinStreak_fadeout")
+winStreakOverlay.Color = Color(1, 1, 1, 0.9, 0, 0, 0,0,0,0,0.2)
+
 local showhead_bl = {
 	[MainMenuType.TITLE] = true,
 	[MainMenuType.COLLECTION] = true,
@@ -99,6 +114,11 @@ end)
 
 TRCommunityRemix:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
 	isaacheadsprite:Update()
+	diffShadowOverlay:Update()
+	winStreakOverlay:Update()
+	local headX = TRCommunityRemix.saveData.cfg.mainmenuhandpos
+
+	if Isaac.GetFrameCount()%2==0 then diffOverlay:Update() end
 	local charpage = CharacterMenu.GetBigCharPageSprite()
 	if TRCommunityRemix.saveData.insaneMark and TRCommunityRemix.saveData.insaneMark[isrendermodsprite] then
 		if CharacterMenu.GetActiveStatus() ~= CharacterMenuStatus.SEED then
@@ -108,6 +128,7 @@ TRCommunityRemix:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
 	end
 	isrendermodsprite = charpage:GetAnimation()
 
+	if TRCommunityRemix.saveData.cfg.mainmenugfx then
 	if showhead_bl[MenuManager.GetActiveMenu()] then
 		if headY < 96 then headY = headY + 1 end
 		headY = headY * 1.05
@@ -118,33 +139,43 @@ TRCommunityRemix:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
 
 	if headY > 96 then headY = 96 elseif headY < 0 then headY = 0 end
 
-	isaacheadsprite:Render(Vector(0, Isaac.GetScreenHeight() + 112 + headY), Vector.Zero, Vector.Zero)
+	isaacheadsprite:Render(Vector(headX, Isaac.GetScreenHeight() + 112 + headY), Vector.Zero, Vector.Zero)
+	end
+	diffOverlay:Render(Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, charpage.Offset), Vector(0,0), Vector(0,0))
+	winStreakOverlay:Render(Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, charpage.Offset), Vector(0,0), Vector(0,0))
+	diffShadowOverlay:Render(Vector(0,0), Vector(0,0), Vector(0,0))
+	diffShadowOverlay.Scale = Vector(Isaac.GetScreenWidth()/480, Isaac.GetScreenHeight()/270)
+	if DifficultyManager.GetDifficultySelected().Name ~= "Insane" then return end
+	if CharacterMenu.GetActiveStatus() == CharacterMenuStatus.CHARACTER_PAPER_SWAP then
+		if CharacterMenu.GetSelectedCharacterMenu() == 0 then
+			diffOverlay:Play("NewBlood_swapout")
+		end
+		if CharacterMenu.GetSelectedCharacterMenu() == 1 then
+			diffOverlay:Play("NewBlood_swapin")
+		end
+	end
 end)
 
 TRCommunityRemix:AddCallback("DIFFLIB_MC_POST_DIFFICULTY_CHANGED", function()
 	local diffName = DifficultyManager.GetDifficultySelected().Name
-	local charMenu = CharacterMenu
-	local bloodStainSprite = charMenu.GetDifficultyOverlaySprite()
 	if diffName ~= nil and diffName == "Insane" then
-		if charMenu.GetSelectedCharacterMenu() == 0 then
-			bloodStainSprite:ReplaceSpritesheet(17, "gfx/ui/main menu/charactermenu_insane.png")
-			bloodStainSprite:LoadGraphics()
-		else
-			bloodStainSprite:ReplaceSpritesheet(17, "gfx/ui/main menu/charactermenualt_insane.png")
-			bloodStainSprite:LoadGraphics()
-		end
-		print(bloodStainSprite:GetSpritesheet(17):GetName())
 		isaacheadsprite:Play("head_to_bloody")
-	else
-		if charMenu.GetSelectedCharacterMenu() == 0 then
-			bloodStainSprite:ReplaceSpritesheet(17, "gfx/ui/main menu/charactermenu.png")
-			bloodStainSprite:LoadGraphics()
+		diffShadowOverlay:Play("overlay_fadein")
+		winStreakOverlay:Play("WinStreak_fadein")
+		if CharacterMenu.GetSelectedCharacterMenu() == 0 then
+			diffOverlay:Play("NewBlood_0_fadein")
 		else
-			bloodStainSprite:ReplaceSpritesheet(17, "gfx/ui/main menu/charactermenualt.png")
-			bloodStainSprite:LoadGraphics()
+			diffOverlay:Play("NewBlood_1_fadein")
 		end
-		print(bloodStainSprite:GetSpritesheet(17):GetName())
+	else
 		isaacheadsprite:Play("bloody_to_head")
+		diffShadowOverlay:Play("overlay_fadeout")
+		winStreakOverlay:Play("WinStreak_fadeout")
+		if CharacterMenu.GetSelectedCharacterMenu() == 0 then
+			diffOverlay:Play("NewBlood_0_fadeout")
+		else
+			diffOverlay:Play("NewBlood_1_fadeout")
+		end
 	end
 end)
 
@@ -410,6 +441,7 @@ do --game feel ?????
 	goreblacklist[217] = true
 
 	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function(_, e, amnt, flags, src, cd)
+		if not TRCommunityRemix.saveData.cfg.gamefeel then return end
 		if e:IsEnemy() and amnt > 0 then
 			local e = e:ToNPC()
 			if e ~= nil and e:IsVulnerableEnemy() and e:IsActiveEnemy() then
