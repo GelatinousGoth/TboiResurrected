@@ -6,7 +6,8 @@ return function(parentMod) -- pass mod reference. must have a global savedata ar
 	local menu = 0
 	local init = false
 	if not DifficultyLibrary then
-		DifficultyLibrary = RegisterMod("Difficulty Library", 1)
+		local TR_Manager = require("resurrected_modpack.manager")
+		DifficultyLibrary = TR_Manager:RegisterMod("Difficulty Library", 1)
 	end
 	local json = include("json")
 	local pgd = Isaac.GetPersistentGameData()

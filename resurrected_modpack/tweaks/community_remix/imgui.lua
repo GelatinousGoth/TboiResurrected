@@ -2,11 +2,11 @@ return function()
 	local json = include("json")
 	if not ImGui.ElementExists('TRCremixMenu') then
 		print("imgui menu exists")
-		ImGui.CreateMenu('TRCremixMenu', '\u{f5d1} TBOI: Rekindled Options')
+		ImGui.CreateMenu('TRCremixMenu', '\u{f091} TBOI: Rekindled Options')
 		do -- cosmetic
 		
-		ImGui.AddElement('TRCremixMenu', 'remixMenuCosmetic', ImGuiElement.MenuItem, '\u{f7d9} Cosmetic')
-		ImGui.CreateWindow('remixWindowCosmetic', 'Cosmetic')
+		ImGui.AddElement('TRCremixMenu', 'remixMenuCosmetic', ImGuiElement.MenuItem, '\u{f5d1} Community Remix Options')
+		ImGui.CreateWindow('remixWindowCosmetic', 'Community Remix Options')
 		ImGui.LinkWindowToElement('remixWindowCosmetic', 'remixMenuCosmetic')
 
 		ImGui.AddElement('remixWindowCosmetic', '', ImGuiElement.Text, "\n")
