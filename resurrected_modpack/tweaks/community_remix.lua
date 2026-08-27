@@ -19,6 +19,7 @@ local diffLib = require("resurrected_modpack.tweaks.community_remix.difflib")(TR
 require("resurrected_modpack.tweaks.community_remix.imgui")()
 require("resurrected_modpack.tweaks.community_remix.clearawards")
 require("resurrected_modpack.tweaks.community_remix.enums")
+require("resurrected_modpack.tweaks.community_remix.patch_hearts")
 
 TRCommunityRemix.saveData = TRCommunityRemix.saveData or {}
 
@@ -63,6 +64,7 @@ end
 TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_)
 end)
 
+--sprite init 
 local isrendermodsprite = ""
 local insanemodemarksprite = Sprite()
 insanemodemarksprite:Load("gfx/ui/ex/marks_remix.anm2", true)
@@ -78,19 +80,27 @@ local diffOverlay = Sprite()
 diffOverlay:Load("gfx/ui/ex/difficulty_overlay.anm2", true)
 diffOverlay:LoadGraphics()
 diffOverlay:Play("NewBlood_0_fadeout")
-diffOverlay.Color = Color(1, 1, 1, 0.9, 0, 0, 0,0,0,0,0.2)
+local diffBlendMode = diffOverlay:GetLayer(0):GetBlendMode()
+diffBlendMode.RGBSourceFactor = BlendFactor.DST_COLOR
+diffBlendMode.RGBDestinationFactor = BlendFactor.ONE_MINUS_SRC_ALPHA
+diffBlendMode.AlphaSourceFactor = BlendFactor.DST_COLOR
+diffBlendMode.AlphaDestinationFactor = BlendFactor.ONE_MINUS_SRC_ALPHA
 
 local diffShadowOverlay = Sprite()
 diffShadowOverlay:Load("gfx/ui/ex/difficulty_shadowoverlay.anm2", true)
 diffShadowOverlay:LoadGraphics()
-diffShadowOverlay:Play("nooverlay")
+diffShadowOverlay:Play("overlay_fadeout")
 diffShadowOverlay.Color = Color(1,1,1,1,0,0,0)
 
 local winStreakOverlay = Sprite()
 winStreakOverlay:Load("gfx/ui/ex/winstreakwidget_overlay.anm2", true)
 winStreakOverlay:LoadGraphics()
 winStreakOverlay:Play("WinStreak_fadeout")
-winStreakOverlay.Color = Color(1, 1, 1, 0.9, 0, 0, 0,0,0,0,0.2)
+local winStreakBlendMode = winStreakOverlay:GetLayer(0):GetBlendMode()
+winStreakBlendMode.RGBSourceFactor = BlendFactor.DST_COLOR
+winStreakBlendMode.RGBDestinationFactor = BlendFactor.ONE_MINUS_SRC_ALPHA
+winStreakBlendMode.AlphaSourceFactor = BlendFactor.DST_COLOR
+winStreakBlendMode.AlphaDestinationFactor = BlendFactor.ONE_MINUS_SRC_ALPHA
 
 local showhead_bl = {
 	[MainMenuType.TITLE] = true,
@@ -109,10 +119,10 @@ local showhead_bl = {
 ---@param defaultScale Vector
 ---@param defaultColor Color
 TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_RENDER_CHARACTER_SELECT_PORTRAIT, function(_, playerType, sprite, pos, defaultScale, defaultColor)
-	isrendermodsprite = sprite:GetAnimation()
+	isrendermodsprite = tostring(CharacterMenu.GetSelectedCharacterPlayerType())
 end)
 
-TRCommunityRemix:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
+TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_MAIN_MENU_RENDER, CallbackPriority.LATE, function()
 	isaacheadsprite:Update()
 	diffShadowOverlay:Update()
 	winStreakOverlay:Update()
@@ -126,7 +136,7 @@ TRCommunityRemix:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
 			insanemodemarksprite:Render(Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, Vector(78, 29)), Vector.Zero, Vector.Zero)
 		end
 	end
-	isrendermodsprite = charpage:GetAnimation()
+	isrendermodsprite = tostring(CharacterMenu.GetSelectedCharacterPlayerType())
 
 	if TRCommunityRemix.saveData.cfg.mainmenugfx then
 	if showhead_bl[MenuManager.GetActiveMenu()] then
@@ -141,7 +151,9 @@ TRCommunityRemix:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
 
 	isaacheadsprite:Render(Vector(headX, Isaac.GetScreenHeight() + 112 + headY), Vector.Zero, Vector.Zero)
 	end
-	diffOverlay:Render(Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, charpage.Offset), Vector(0,0), Vector(0,0))
+	local X = Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, charpage.Offset).X --39
+	local Y = Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, charpage.Offset).Y--15
+	diffOverlay:Render((Vector(X-39, Y-15)), Vector(0,0), Vector(0,0))
 	winStreakOverlay:Render(Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, charpage.Offset), Vector(0,0), Vector(0,0))
 	diffShadowOverlay:Render(Vector(0,0), Vector(0,0), Vector(0,0))
 	diffShadowOverlay.Scale = Vector(Isaac.GetScreenWidth()/480, Isaac.GetScreenHeight()/270)
@@ -252,13 +264,36 @@ do -- gamemodes
 	TRCommunityRemix:AddCallback(ModCallbacks.MC_PLAYER_GET_HEART_LIMIT, function(_, p, amnt, keeper)
 		if DifficultyManager.GetDifficulty() == "Insane" and not keeper then
 			if amnt > 12 then
-				return amnt - 12
+				return amnt - 6
 			elseif amnt > 6 then
 				return amnt - 6
 			end
 		end
 	end)
 
+	local maxHearts = 0
+	local newHearts = 0
+
+	
+	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(_, p)
+		if DifficultyManager.GetDifficulty() == "Insane" then
+			newHearts = p:GetMaxHearts()
+		end
+	end)
+
+	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, p)
+		if DifficultyManager.GetDifficulty() == "Insane" then
+			maxHearts = p:GetMaxHearts()
+			if maxHearts == newHearts then
+				return
+			else
+				maxHearts = p:GetMaxHearts() - newHearts
+				p:AddMaxHearts(-maxHearts)
+				p:AddBrokenHearts(maxHearts/2)
+				newHearts = p:GetMaxHearts()
+			end
+		end
+	end)
 
 	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_COMPLETION_EVENT, function(_, mark)
 		if mark ~= CompletionType.MOMS_HEART then return end
@@ -320,8 +355,8 @@ do -- gamemodes
 					TRCommunityRemix.saveData.insaneMark = {}
 				end
 
-				if not TRCommunityRemix.saveData.insaneMark[namestr] and not p.Parent then
-					TRCommunityRemix.saveData.insaneMark[namestr] = true
+				if not TRCommunityRemix.saveData.insaneMark[ptype] and not p.Parent then
+					TRCommunityRemix.saveData.insaneMark[ptype] = true
 				end
 			end
 		end

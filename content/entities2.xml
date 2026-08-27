@@ -193,5 +193,10 @@
 
 	<entity name="Mr. Unlocki"   id="6" variant="5111"   anm2path="mole.anm2"
 	friction="1" collisionRadius="20" collisionMass="100" numGridCollisionPoints="24" />
+
+    <!--Community Remix/Patch Hearts-->
+    <entity anm2path="items/pickups/patched_heart.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" friction="1" id="5" name="Patched heart" numGridCollisionPoints="24" shadowSize="17" stageHP="0" variant="10" subtype="3320">
+		<preload-snd id="185" /> <!-- BOSS2_BUBBLES -->
+    </entity>
 </entities>
 <!-- OLD ENTRY <entity anm2path="dream_catcher_entity.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" id="960" name="Hanging Dream Catcher" numGridCollisionPoints="0" shadowSize="13" stageHP="0" variant="245" shutdoors="false"/> -->	

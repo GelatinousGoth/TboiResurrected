@@ -45,13 +45,21 @@ TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, 9999
 
 			if DifficultyManager.GetDifficulty() == "Insane" then
 				weight[PickupVariant.PICKUP_COIN] = 0.25
-				weight[PickupVariant.PICKUP_HEART] = 0.33
+				weight[PickupVariant.PICKUP_HEART] = (0.225 * 33)/100
 				weight[PickupVariant.PICKUP_BOMB] = 0.20
-				weight[PickupVariant.PICKUP_KEY] = 0.00
+				if Isaac.GetPlayer(0):GetNumKeys() > 1 then
+					weight[PickupVariant.PICKUP_KEY] = (0.075 * 7.5)/100
+				else
+					weight[PickupVariant.PICKUP_KEY] = 0.075
+				end
+				local insaneRNG = RNG(Game():GetSeeds():GetStartSeed())
+				if insaneRNG:RandomInt(1000) <= 125 then
+					return
+				end
 			end
-			
+
 			local callbacks_0 = Isaac.GetCallbacks("CR_MC_PRE_EVALUATE_ROOM_AWARDS")
-			
+
 			for _, callback in ipairs(callbacks_0) do
 				local ret = callback.Function(callback.Mod, weight)
 				if ret ~= nil then
@@ -189,7 +197,7 @@ TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, 9999
 			end
 			
 			if game.Difficulty == Difficulty.DIFFICULTY_HARD and pick == PickupVariant.PICKUP_HEART then
-				local float_chance = 0.15
+				local float_chance = 0.33
 				if DifficultyManager.GetDifficulty() == "Insane" then float_chance = float_chance * 2 end
 				if droprng:RandomFloat() <= float_chance then
 					pick = PickupVariant.PICKUP_NULL

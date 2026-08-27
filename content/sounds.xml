@@ -258,4 +258,12 @@
 		<sample weight="1" path="remix/hit_heavy_0.wav" />
 		<sample weight="1" path="remix/hit_heavy_1.wav" />
 	</sound>
+
+	<!--Community Remix/Patch Hearts-->
+	<sound name="PATCHED_HEART_SPAWN">
+		<sample weight="1" path="patched_heart_spawn.wav" />
+	</sound>
+	<sound name="PATCHED_HEART_HEAL">
+		<sample weight="1" path="patched_heart_heal.wav" />
+	</sound>
 </sounds>

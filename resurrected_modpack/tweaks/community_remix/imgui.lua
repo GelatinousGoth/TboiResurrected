@@ -39,7 +39,7 @@ return function()
 			ImGui.AddCallback(id, ImGuiCallback.Render, function()
 				local sd = TRCommunityRemix.GetSaveData()
 				if sd.cfg then
-					sd.cfg.gamefeel = sd.cfg.gamefeel or false
+					sd.cfg.gamefeel = sd.cfg.gamefeel or true
 					ImGui.UpdateData(id, ImGuiData.Value, sd.cfg.gamefeel)
 				end
 			end)
@@ -61,7 +61,7 @@ return function()
 			ImGui.AddCallback(id, ImGuiCallback.Render, function()
 				local sd = TRCommunityRemix.GetSaveData()
 				if sd.cfg then
-					sd.cfg.mainmenugfx = sd.cfg.mainmenugfx or false
+					sd.cfg.mainmenugfx = sd.cfg.mainmenugfx or true
 					ImGui.UpdateData(id, ImGuiData.Value, sd.cfg.mainmenugfx)
 				end
 			end)
