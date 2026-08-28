@@ -41,8 +41,13 @@ TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, 9999
 				[PickupVariant.PICKUP_TRINKET] = 0.027,
 				[PickupVariant.PICKUP_CHEST] = 0.05,
 				[PickupVariant.PICKUP_LIL_BATTERY] = 0.0,
+				
 			}
 
+
+			if FiendFolio then
+				weight[FiendFolio.PICKUP.VARIANT.FOOLS_GOLD_HEART] = 0
+			end
 			if DifficultyManager.GetDifficulty() == "Insane" then
 				weight[PickupVariant.PICKUP_COIN] = 0.25
 				weight[PickupVariant.PICKUP_HEART] = (0.225 * 33)/100
