@@ -234,6 +234,17 @@ do -- gamemodes
 		end
 	end)
 
+	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_COMPLETION_MARKS_RENDER, function(_, spr)
+		if MenuManager.IsActive() then return end
+		if TRCommunityRemix.saveData.insaneMark and TRCommunityRemix.saveData.insaneMark[isrendermodsprite] then
+			print(isrendermodsprite)
+			spr:ReplaceSpritesheet(0, "gfx/ui/completion_widget_pause_insane.png", true)
+		else
+			spr:ReplaceSpritesheet(0, "gfx/ui/completion_widget_pause.png", true)
+		end
+	end)
+
+
 	TRCommunityRemix:AddCallback("DIFFLIB_MC_POST_ADD_REBIRTH_DIFFICULTIES", function(_)
 		if DifficultyManager then
 			if DifficultyManager.GetDifficultyIdByName("Insane") then
@@ -273,7 +284,7 @@ do -- gamemodes
 
 	local maxHearts = 0
 	local newHearts = 0
-
+	local heartAdded = false
 	
 	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(_, p)
 		if DifficultyManager.GetDifficulty() == "Insane" then
@@ -281,19 +292,47 @@ do -- gamemodes
 		end
 	end)
 
+
+	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, function(_, p)
+		if DifficultyManager.GetDifficulty() == "Insane" then
+			if p.SubType ~= 3320 then return end
+			if p.State ~= 1 then return end
+			heartAdded = true
+			p.State = 2
+		end
+	end, 10)
+
+
 	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function(_, p)
 		if DifficultyManager.GetDifficulty() == "Insane" then
+			if Isaac.GetFrameCount() < 10*60 then return end
 			maxHearts = p:GetMaxHearts()
 			if maxHearts == newHearts then
 				return
 			else
-				maxHearts = p:GetMaxHearts() - newHearts
-				p:AddMaxHearts(-maxHearts)
-				p:AddBrokenHearts(maxHearts/2)
-				newHearts = p:GetMaxHearts()
+				Isaac.CreateTimer(function()
+					if heartAdded then newHearts = p:GetMaxHearts() return end
+					maxHearts = p:GetMaxHearts() - newHearts
+					p:AddMaxHearts(-maxHearts)
+					p:AddBrokenHearts(maxHearts/2)
+					newHearts = p:GetMaxHearts()
+				end, 1, 1, true)
 			end
 		end
 	end)
+
+
+	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_UPDATE, function(_)
+		if DifficultyManager.GetDifficulty() == "Insane" then
+
+			if heartAdded then
+				Isaac.CreateTimer(function()
+				heartAdded = false
+			end, 2, 1, true)
+			end
+		end
+	end)
+
 
 	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_COMPLETION_EVENT, function(_, mark)
 		if mark ~= CompletionType.MOMS_HEART then return end

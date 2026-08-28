@@ -30,10 +30,13 @@ local function collect(pickup, player)
 
     for i=1, (pickup.SubType == 3321 and 2 or 1) do
         if player:GetBrokenHearts() > 0 then
+            pickup.State = 1
             player:AddBrokenHearts(-1)
+            player:AddMaxHearts(2)
             if i==1 then SFXManager():Play(PATCH_GLOBAL.HEAL_SFX, 1, 0) end
         else
             player:AddHearts(1)
+            pickup.State = 1
             if i==1 then SFXManager():Play(185, 1, 0) end
         end
     end
