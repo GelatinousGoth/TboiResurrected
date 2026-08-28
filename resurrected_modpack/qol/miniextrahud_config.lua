@@ -1,6 +1,11 @@
 return {
     IconScale = 1.0,
     RightMargin = 4,
+    TopPosition = 50,
+    BottomPosition = 80,
+    ItemListColumns = 2,
+    JacobEsauItemListColumns = 1,
+    ShowLemegetonItems = true,
     IconOpacity = 0.4,
     UpdateInterval = 1,
     ScrollDownKey = Keyboard.KEY_PAGE_DOWN,

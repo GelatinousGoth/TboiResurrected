@@ -5,6 +5,7 @@ local TR_Manager = require("resurrected_modpack.manager")
 local MiniExtraHud = TR_Manager:RegisterMod("Mini ExtraHud", 1)
 local Config = require("resurrected_modpack.qol.miniextrahud_config")
 local registerMcm = require("resurrected_modpack.qol.miniextrahud_mcm")
+local json = require("json")
 local game = Game()
 local itemConfig = Isaac.GetItemConfig()
 local vectorZero = Vector(0, 0)
@@ -26,17 +27,18 @@ local LOG_FILE_PATH = "miniextrahud_log.txt"
 local TWIN_COLUMN_DIVIDER_WIDTH = 1
 local TWIN_DIVIDER_SOLID_HEIGHT = 5
 local TWIN_DIVIDER_GAP_HEIGHT = 8
+local TEMPORARY_ITEM_OUTLINE_SCALE = 1.1
 local MINIMAP_TOP_GAP = 2
 local MINIMAP_SMALL_ROOM_HEIGHT = 7
 local MINIMAP_LARGE_ROOM_HEIGHT = 15
 local MINIMAP_ROOM_BOTTOM_PADDING = 16
-local MINIMAP_FRAME_BOTTOM_BORDER = 2
 local VANILLA_MAP_TAP_FRAME_LIMIT = 8
 local VANILLA_LARGE_ROOM_HEIGHT = 15
 local VANILLA_LARGE_ROOM_BOTTOM_PADDING = 16
 local VANILLA_LARGE_MAP_EXTRA_BOTTOM_PADDING = 20
 local ITEM_ENTRY_COLLECTIBLE = "collectible"
 local ITEM_ENTRY_SWALLOWED_TRINKET = "swallowedTrinket"
+local ITEM_ENTRY_TEMPORARY_COLLECTIBLE = "temporaryCollectible"
 local BOOK_OF_VIRTUES_ID = CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES
 
 -- These grid extents match miniMAPI's large-map room-shape layout.
@@ -58,17 +60,27 @@ local VANILLA_ROOM_SHAPE_GRID_SIZES = {
 local itemList = {}
 local ownedItemCounts = {}
 local swallowedTrinketCounts = {}
+local pendingSwallowedTrinketCounts = {}
+local temporaryCollectibleCounts = {}
 local jacobItemList = {}
 local jacobOwnedItemCounts = {}
 local jacobSwallowedTrinketCounts = {}
+local jacobPendingSwallowedTrinketCounts = {}
+local jacobTemporaryCollectibleCounts = {}
 local esauItemList = {}
 local esauOwnedItemCounts = {}
 local esauSwallowedTrinketCounts = {}
+local esauPendingSwallowedTrinketCounts = {}
+local esauTemporaryCollectibleCounts = {}
 local iconSprites = {}
 local whitePixelSprite = nil
 local vanillaMapHeldFrames = 0
 local vanillaMapIsLockedLarge = false
 local wasLoggingEnabled = false
+
+MiniExtraHud:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_)
+    print(Minimap.GetItemIconsSprite():GetFilename())
+end)
 
 local function getConfigValue(key)
     if type(ModConfigMenu) == "table" and type(ModConfigMenu.Config) == "table" then
@@ -173,10 +185,10 @@ local function getMinimapApiBottom()
         return nil
     end
 
-    local screenTopRight = minimapApi:GetScreenTopRight()
     if displayMode == 2 and not minimapApi:IsLarge() and minimapApi.GlobalScaleX >= 1 then
-        local frameTop = screenTopRight.Y + minimapApi:GetConfig("PositionY") - 10
-        return frameTop + minimapApi:GetConfig("MapFrameHeight") + MINIMAP_FRAME_BOTTOM_BORDER
+        -- A collapsed bounded map is contained by its fixed frame, like the vanilla minimap.
+        -- It should not move ExtraHud; expanded maps continue into the dynamic bounds path below.
+        return nil
     end
 
     local roomHeight = minimapApi:IsLarge() and MINIMAP_LARGE_ROOM_HEIGHT or MINIMAP_SMALL_ROOM_HEIGHT
@@ -285,24 +297,28 @@ local function getDisplayEntries(sourceList)
 
     for sourceIndex = #sourceList, 1, -1 do
         local entry = sourceList[sourceIndex]
+        local shouldDisplay = entry.type ~= ITEM_ENTRY_TEMPORARY_COLLECTIBLE
+            or getConfigValue("ShowLemegetonItems") == true
         local shouldCombine = (entry.type == ITEM_ENTRY_SWALLOWED_TRINKET and getConfigValue("CombineTrinkets") == true)
-            or (entry.type == ITEM_ENTRY_COLLECTIBLE and getConfigValue("CombineCollectibles") == true)
+            or ((entry.type == ITEM_ENTRY_COLLECTIBLE or entry.type == ITEM_ENTRY_TEMPORARY_COLLECTIBLE)
+                and getConfigValue("CombineCollectibles") == true)
 
-        if shouldCombine then
+        if shouldDisplay and shouldCombine then
             local key = entry.type .. ":" .. entry.id
             local displayEntry = combinedEntries[key]
             if displayEntry then
                 displayEntry.count = displayEntry.count + 1
+                displayEntry.showCount = displayEntry.count > 1
             else
                 displayEntry = {
                     entry = entry,
                     count = 1,
-                    showCount = true,
+                    showCount = false,
                 }
                 combinedEntries[key] = displayEntry
                 table.insert(displayEntries, displayEntry)
             end
-        else
+        elseif shouldDisplay then
             table.insert(displayEntries, {
                 entry = entry,
                 count = 1,
@@ -317,10 +333,14 @@ end
 local function getDisplayedRowCount()
     local jacobPlayer, esauPlayer = getTwinPlayers()
     if jacobPlayer and esauPlayer then
-        return math.max(#getDisplayEntries(jacobItemList), #getDisplayEntries(esauItemList))
+        local columnCount = getConfigValue("JacobEsauItemListColumns")
+        return math.max(
+            math.ceil(#getDisplayEntries(jacobItemList) / columnCount),
+            math.ceil(#getDisplayEntries(esauItemList) / columnCount)
+        )
     end
 
-    return math.ceil(#getDisplayEntries(itemList) / 2)
+    return math.ceil(#getDisplayEntries(itemList) / getConfigValue("ItemListColumns"))
 end
 
 local function getMaximumScrollOffset(hudTop)
@@ -330,7 +350,8 @@ local function getMaximumScrollOffset(hudTop)
     end
 
     local listBottomAtTop = hudTop + (rowCount - 1) * getRowHeight() + getIconSize()
-    return math.max(0, listBottomAtTop - (HUD_BOTTOM + HUD_SCROLL_BOTTOM_PADDING))
+    -- Reserve the lower padding inside the viewport so the final row is fully visible.
+    return math.max(0, listBottomAtTop - (HUD_BOTTOM - HUD_SCROLL_BOTTOM_PADDING))
 end
 
 local function clampScrollTarget(hudTop)
@@ -384,6 +405,12 @@ local function getScreenSize()
     return Vector(roomOriginX * 2 + 13 * 26, roomOriginY * 2 + 7 * 26)
 end
 
+local function updateHudBounds(screenSize)
+    local screenCenterY = screenSize.Y / 2
+    HUD_BASE_TOP = screenCenterY * getConfigValue("TopPosition") / 100
+    HUD_BOTTOM = screenCenterY * (1 + getConfigValue("BottomPosition") / 100)
+end
+
 local function removeOldestItemFromList(targetList, entryType, itemId, amount)
     local removed = 0
     local index = 1
@@ -399,6 +426,15 @@ local function removeOldestItemFromList(targetList, entryType, itemId, amount)
     end
 end
 
+local function isTrinketQueued(player, trinketId)
+    if player:IsItemQueueEmpty() then
+        return false
+    end
+
+    local queuedItem = player.QueuedItem.Item
+    return queuedItem and queuedItem:IsTrinket() and queuedItem.ID == trinketId
+end
+
 local function updateItemCount(player, itemListForPlayer, ownedCountsForPlayer, listName, itemId, item)
     -- Book of Virtues is a special active/passive hybrid. Its active-slot copy is included in
     -- GetCollectibleNum, so it must not be treated as a normal passive HUD entry.
@@ -406,7 +442,7 @@ local function updateItemCount(player, itemListForPlayer, ownedCountsForPlayer, 
         item = nil
     end
 
-    if item and item.Type == ItemType.ITEM_PASSIVE then
+    if item and (item.Type == ItemType.ITEM_PASSIVE or item.Type == ItemType.ITEM_FAMILIAR) then
         local currentCount = player:GetCollectibleNum(itemId, true)
         local previousCount = ownedCountsForPlayer[itemId] or 0
 
@@ -427,6 +463,59 @@ local function updateItemCount(player, itemListForPlayer, ownedCountsForPlayer, 
     elseif ownedCountsForPlayer[itemId] and ownedCountsForPlayer[itemId] > 0 then
         removeOldestItemFromList(itemListForPlayer, ITEM_ENTRY_COLLECTIBLE, itemId, ownedCountsForPlayer[itemId])
         ownedCountsForPlayer[itemId] = 0
+    end
+end
+
+local function getLemegetonItemWispCounts(player)
+    local itemWispCounts = {}
+    local playerHash = GetPtrHash(player)
+    local itemWisps = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, FamiliarVariant.ITEM_WISP)
+
+    for _, wisp in ipairs(itemWisps) do
+        local familiar = wisp:ToFamiliar()
+        if wisp.Visible and familiar and familiar.Player and GetPtrHash(familiar.Player) == playerHash then
+            local itemId = wisp.SubType
+            if itemConfig:GetCollectible(itemId) then
+                itemWispCounts[itemId] = (itemWispCounts[itemId] or 0) + 1
+            end
+        end
+    end
+
+    return itemWispCounts
+end
+
+local function updateTemporaryCollectibleCount(itemListForPlayer, temporaryCountsForPlayer, listName,
+        itemId, currentCount)
+    local previousCount = temporaryCountsForPlayer[itemId] or 0
+
+    if currentCount > previousCount then
+        for _ = 1, currentCount - previousCount do
+            table.insert(itemListForPlayer, { type = ITEM_ENTRY_TEMPORARY_COLLECTIBLE, id = itemId })
+        end
+    elseif currentCount < previousCount then
+        removeOldestItemFromList(itemListForPlayer, ITEM_ENTRY_TEMPORARY_COLLECTIBLE, itemId,
+            previousCount - currentCount)
+    end
+
+    if currentCount ~= previousCount then
+        writeLog(string.format("LEMEGETON_ITEM_COUNT_CHANGED list=%s itemId=%d previous=%d current=%d",
+            listName, itemId, previousCount, currentCount))
+    end
+
+    temporaryCountsForPlayer[itemId] = currentCount
+end
+
+local function updateLemegetonItemCounts(player, itemListForPlayer, temporaryCountsForPlayer, listName)
+    local currentCounts = getLemegetonItemWispCounts(player)
+
+    for itemId, currentCount in pairs(currentCounts) do
+        updateTemporaryCollectibleCount(itemListForPlayer, temporaryCountsForPlayer, listName, itemId, currentCount)
+    end
+
+    for itemId, previousCount in pairs(temporaryCountsForPlayer) do
+        if previousCount > 0 and not currentCounts[itemId] then
+            updateTemporaryCollectibleCount(itemListForPlayer, temporaryCountsForPlayer, listName, itemId, 0)
+        end
     end
 end
 
@@ -458,32 +547,64 @@ local function getSwallowedTrinketMultiplier(player, trinketId, playerHasMomsBox
 end
 
 local function updateSwallowedTrinketCount(player, itemListForPlayer, swallowedCountsForPlayer,
-        listName, trinketId, playerHasMomsBox)
+        pendingCountsForPlayer, listName, trinketId, playerHasMomsBox)
+    if isTrinketQueued(player, trinketId) then
+        return
+    end
+
     local currentCount = getSwallowedTrinketMultiplier(player, trinketId, playerHasMomsBox)
     local previousCount = swallowedCountsForPlayer[trinketId] or 0
+    local pendingCount = pendingCountsForPlayer[trinketId] or 0
 
-    if currentCount > previousCount then
-        for _ = 1, currentCount - previousCount do
-            table.insert(itemListForPlayer, {
-                type = ITEM_ENTRY_SWALLOWED_TRINKET,
-                id = trinketId,
-            })
-        end
-    elseif currentCount < previousCount then
+    if currentCount < previousCount then
         removeOldestItemFromList(itemListForPlayer, ITEM_ENTRY_SWALLOWED_TRINKET, trinketId,
             previousCount - currentCount)
+        swallowedCountsForPlayer[trinketId] = currentCount
+    elseif currentCount > previousCount + pendingCount then
+        pendingCountsForPlayer[trinketId] = currentCount - previousCount
     end
 
-    if currentCount ~= previousCount then
+    local confirmedCount = swallowedCountsForPlayer[trinketId] or 0
+    if confirmedCount ~= previousCount then
         writeLog(string.format("SWALLOWED_TRINKET_COUNT_CHANGED list=%s trinketId=%d previous=%d current=%d",
-            listName, trinketId, previousCount, currentCount))
+            listName, trinketId, previousCount, confirmedCount))
     end
+end
 
-    swallowedCountsForPlayer[trinketId] = currentCount
+local function confirmPendingSwallowedTrinkets(player, itemListForPlayer, swallowedCountsForPlayer,
+        pendingCountsForPlayer, listName)
+    local playerHasMomsBox = hasMomsBox(player)
+
+    for trinketId, pendingCount in pairs(pendingCountsForPlayer) do
+        if pendingCount > 0 then
+            if not isTrinketQueued(player, trinketId) then
+                local confirmedCount = swallowedCountsForPlayer[trinketId] or 0
+                local currentCount = getSwallowedTrinketMultiplier(player, trinketId, playerHasMomsBox)
+                local confirmedIncrease = math.min(pendingCount, math.max(0, currentCount - confirmedCount))
+
+                for _ = 1, confirmedIncrease do
+                    table.insert(itemListForPlayer, {
+                        type = ITEM_ENTRY_SWALLOWED_TRINKET,
+                        id = trinketId,
+                    })
+                end
+
+                if confirmedIncrease > 0 then
+                    swallowedCountsForPlayer[trinketId] = confirmedCount + confirmedIncrease
+                    writeLog(string.format("SWALLOWED_TRINKET_COUNT_CHANGED list=%s trinketId=%d previous=%d current=%d",
+                        listName, trinketId, confirmedCount, confirmedCount + confirmedIncrease))
+                end
+            end
+        end
+
+        if not isTrinketQueued(player, trinketId) then
+            pendingCountsForPlayer[trinketId] = nil
+        end
+    end
 end
 
 local function updatePlayerItemList(player, itemListForPlayer, ownedCountsForPlayer,
-        swallowedCountsForPlayer, listName)
+        swallowedCountsForPlayer, pendingCountsForPlayer, temporaryCountsForPlayer, listName)
     local collectibleCount = itemConfig:GetCollectibles().Size
     local trinketCount = itemConfig:GetTrinkets().Size
     local playerHasMomsBox = hasMomsBox(player)
@@ -494,23 +615,124 @@ local function updatePlayerItemList(player, itemListForPlayer, ownedCountsForPla
 
     for trinketId = 1, trinketCount - 1 do
         if itemConfig:GetTrinket(trinketId) then
-            updateSwallowedTrinketCount(player, itemListForPlayer, swallowedCountsForPlayer,
+            updateSwallowedTrinketCount(player, itemListForPlayer, swallowedCountsForPlayer, pendingCountsForPlayer,
                 listName, trinketId, playerHasMomsBox)
         end
     end
+
+    updateLemegetonItemCounts(player, itemListForPlayer, temporaryCountsForPlayer, listName)
 end
 
 local function updateItemList()
     local jacobPlayer, esauPlayer = getTwinPlayers()
     if jacobPlayer and esauPlayer then
         updatePlayerItemList(jacobPlayer, jacobItemList, jacobOwnedItemCounts,
-            jacobSwallowedTrinketCounts, "jacob")
+            jacobSwallowedTrinketCounts, jacobPendingSwallowedTrinketCounts, jacobTemporaryCollectibleCounts, "jacob")
         updatePlayerItemList(esauPlayer, esauItemList, esauOwnedItemCounts,
-            esauSwallowedTrinketCounts, "esau")
+            esauSwallowedTrinketCounts, esauPendingSwallowedTrinketCounts, esauTemporaryCollectibleCounts, "esau")
         return
     end
 
-    updatePlayerItemList(game:GetPlayer(0), itemList, ownedItemCounts, swallowedTrinketCounts, "default")
+    updatePlayerItemList(game:GetPlayer(0), itemList, ownedItemCounts, swallowedTrinketCounts,
+        pendingSwallowedTrinketCounts, temporaryCollectibleCounts, "default")
+end
+
+local function confirmPendingSwallowedTrinketLists()
+    local jacobPlayer, esauPlayer = getTwinPlayers()
+    if jacobPlayer and esauPlayer then
+        confirmPendingSwallowedTrinkets(jacobPlayer, jacobItemList, jacobSwallowedTrinketCounts,
+            jacobPendingSwallowedTrinketCounts, "jacob")
+        confirmPendingSwallowedTrinkets(esauPlayer, esauItemList, esauSwallowedTrinketCounts,
+            esauPendingSwallowedTrinketCounts, "esau")
+        return
+    end
+
+    confirmPendingSwallowedTrinkets(game:GetPlayer(0), itemList, swallowedTrinketCounts,
+        pendingSwallowedTrinketCounts, "default")
+end
+
+local function restoreItemList(savedList)
+    local restoredList = {}
+    if type(savedList) ~= "table" then
+        return restoredList
+    end
+
+    for _, entry in ipairs(savedList) do
+        if type(entry) == "table" and type(entry.id) == "number"
+            and (entry.type == ITEM_ENTRY_COLLECTIBLE or entry.type == ITEM_ENTRY_SWALLOWED_TRINKET
+                or entry.type == ITEM_ENTRY_TEMPORARY_COLLECTIBLE) then
+            table.insert(restoredList, {
+                type = entry.type,
+                id = entry.id,
+            })
+        end
+    end
+
+    return restoredList
+end
+
+local function rebuildItemCounts(sourceList, ownedCountsForPlayer, swallowedCountsForPlayer, temporaryCountsForPlayer)
+    for _, entry in ipairs(sourceList) do
+        if entry.type == ITEM_ENTRY_COLLECTIBLE then
+            ownedCountsForPlayer[entry.id] = (ownedCountsForPlayer[entry.id] or 0) + 1
+        elseif entry.type == ITEM_ENTRY_SWALLOWED_TRINKET then
+            swallowedCountsForPlayer[entry.id] = (swallowedCountsForPlayer[entry.id] or 0) + 1
+        elseif entry.type == ITEM_ENTRY_TEMPORARY_COLLECTIBLE then
+            temporaryCountsForPlayer[entry.id] = (temporaryCountsForPlayer[entry.id] or 0) + 1
+        end
+    end
+end
+
+local function resetItemTracking()
+    itemList = {}
+    ownedItemCounts = {}
+    swallowedTrinketCounts = {}
+    pendingSwallowedTrinketCounts = {}
+    temporaryCollectibleCounts = {}
+    jacobItemList = {}
+    jacobOwnedItemCounts = {}
+    jacobSwallowedTrinketCounts = {}
+    jacobPendingSwallowedTrinketCounts = {}
+    jacobTemporaryCollectibleCounts = {}
+    esauItemList = {}
+    esauOwnedItemCounts = {}
+    esauSwallowedTrinketCounts = {}
+    esauPendingSwallowedTrinketCounts = {}
+    esauTemporaryCollectibleCounts = {}
+end
+
+local function saveItemTracking()
+    local state = {
+        version = 1,
+        itemList = itemList,
+        jacobItemList = jacobItemList,
+        esauItemList = esauItemList,
+    }
+    local encoded, data = pcall(json.encode, state)
+    if encoded then
+        MiniExtraHud:SaveData(data)
+    else
+        writeLog("ITEM_LIST_SAVE_FAILED")
+    end
+end
+
+local function loadItemTracking()
+    if not MiniExtraHud:HasData() then
+        return false
+    end
+
+    local decoded, state = pcall(json.decode, MiniExtraHud:LoadData())
+    if not decoded or type(state) ~= "table" or state.version ~= 1 then
+        return false
+    end
+
+    itemList = restoreItemList(state.itemList)
+    jacobItemList = restoreItemList(state.jacobItemList)
+    esauItemList = restoreItemList(state.esauItemList)
+    rebuildItemCounts(itemList, ownedItemCounts, swallowedTrinketCounts, temporaryCollectibleCounts)
+    rebuildItemCounts(jacobItemList, jacobOwnedItemCounts, jacobSwallowedTrinketCounts, jacobTemporaryCollectibleCounts)
+    rebuildItemCounts(esauItemList, esauOwnedItemCounts, esauSwallowedTrinketCounts, esauTemporaryCollectibleCounts)
+    return true
 end
 
 local function getIconSprite(entry)
@@ -521,7 +743,7 @@ local function getIconSprite(entry)
     end
 
     local item = nil
-    if entry.type == ITEM_ENTRY_COLLECTIBLE then
+    if entry.type == ITEM_ENTRY_COLLECTIBLE or entry.type == ITEM_ENTRY_TEMPORARY_COLLECTIBLE then
         item = itemConfig:GetCollectible(entry.id)
     elseif entry.type == ITEM_ENTRY_SWALLOWED_TRINKET then
         item = itemConfig:GetTrinket(entry.id)
@@ -552,16 +774,51 @@ local function getWhitePixelSprite()
     return whitePixelSprite
 end
 
-local function renderIconSection(iconSprite, position, sectionTop, sectionBottom, opacity)
-    local iconSize = getIconSize()
+local function renderIconSection(iconSprite, position, sectionTop, sectionBottom, opacity, scaleMultiplier, useFlatTemporaryColor)
+    local iconSize = getIconSize() * (scaleMultiplier or 1)
     local iconScale = iconSize / ICON_SOURCE_SIZE
     local iconBottom = position.Y + iconSize
     local topClamp = (sectionTop - position.Y) / iconScale
     local bottomClamp = (iconBottom - sectionBottom) / iconScale
 
     iconSprite.Scale = Vector(iconScale, iconScale)
-    iconSprite.Color = Color(1, 1, 1, opacity, 0, 0, 0)
+    if useFlatTemporaryColor then
+        -- Zero tint plus a color offset produces a flat silhouette while preserving texture alpha.
+        iconSprite.Color = Color(0, 0, 0, opacity, 231 / 255, 100 / 255, 239 / 255)
+    else
+        iconSprite.Color = Color(1, 1, 1, opacity, 0, 0, 0)
+    end
     iconSprite:Render(position, Vector(0, topClamp), Vector(0, bottomClamp))
+end
+
+local function renderTemporaryItemOutline(iconSprite, position, hudTop)
+    local iconSize = getIconSize()
+    local enlargedIconSize = iconSize * TEMPORARY_ITEM_OUTLINE_SCALE
+    local expansionOffset = (enlargedIconSize - iconSize) / 2
+    local enlargedPosition = position - Vector(expansionOffset, expansionOffset)
+    local enlargedBottom = enlargedPosition.Y + enlargedIconSize
+    local visibleTop = math.max(hudTop, enlargedPosition.Y)
+    local visibleBottom = math.min(HUD_BOTTOM, enlargedBottom)
+    if visibleTop >= visibleBottom then
+        return
+    end
+
+    local fadeTop = HUD_BOTTOM - HUD_BOTTOM_FADE_HEIGHT
+    local solidBottom = math.min(visibleBottom, fadeTop)
+    if visibleTop < solidBottom then
+        renderIconSection(iconSprite, enlargedPosition, visibleTop, solidBottom, getIconOpacity(),
+            TEMPORARY_ITEM_OUTLINE_SCALE, true)
+    end
+
+    for fadePixel = 0, HUD_BOTTOM_FADE_HEIGHT - 1 do
+        local sectionTop = math.max(visibleTop, fadeTop + fadePixel)
+        local sectionBottom = math.min(visibleBottom, fadeTop + fadePixel + 1)
+        if sectionTop < sectionBottom then
+            local opacity = getIconOpacity() * (HUD_BOTTOM - sectionBottom) / HUD_BOTTOM_FADE_HEIGHT
+            renderIconSection(iconSprite, enlargedPosition, sectionTop, sectionBottom, opacity,
+                TEMPORARY_ITEM_OUTLINE_SCALE, true)
+        end
+    end
 end
 
 local function renderItemIcon(entry, position, hudTop)
@@ -575,6 +832,10 @@ local function renderItemIcon(entry, position, hudTop)
     local visibleBottom = math.min(HUD_BOTTOM, iconBottom)
     if visibleTop >= visibleBottom then
         return
+    end
+
+    if entry.type == ITEM_ENTRY_TEMPORARY_COLLECTIBLE then
+        renderTemporaryItemOutline(iconSprite, position, hudTop)
     end
 
     local fadeTop = HUD_BOTTOM - HUD_BOTTOM_FADE_HEIGHT
@@ -617,34 +878,45 @@ local function renderItemCount(displayEntry, position, hudTop)
 end
 
 local function renderTwinItemColumns(hudTop, screenSize, iconSize)
+    local columnCount = getConfigValue("JacobEsauItemListColumns")
     local rightColumnX = screenSize.X - getConfigValue("RightMargin") - iconSize
-    local dividerX = rightColumnX - TWIN_COLUMN_DIVIDER_WIDTH
-    local leftColumnX = dividerX - iconSize
+    local columnWidth = iconSize + HUD_ICON_GAP
+    local esauLeftColumnX = rightColumnX - (columnCount - 1) * columnWidth
+    local dividerX = esauLeftColumnX - TWIN_COLUMN_DIVIDER_WIDTH
+    local jacobRightColumnX = dividerX - iconSize
+    local jacobLeftColumnX = jacobRightColumnX - (columnCount - 1) * columnWidth
     local rowHeight = getRowHeight()
     local jacobDisplayEntries = getDisplayEntries(jacobItemList)
     local esauDisplayEntries = getDisplayEntries(esauItemList)
 
     for displayIndex, displayEntry in ipairs(jacobDisplayEntries) do
-        local y = hudTop - HUD_SCROLL_OFFSET + (displayIndex - 1) * rowHeight
-        local position = Vector(leftColumnX, y)
+        local column = (displayIndex - 1) % columnCount
+        local row = math.floor((displayIndex - 1) / columnCount)
+        local y = hudTop - HUD_SCROLL_OFFSET + row * rowHeight
+        local position = Vector(jacobLeftColumnX + column * columnWidth, y)
         renderItemIcon(displayEntry.entry, position, hudTop)
         renderItemCount(displayEntry, position, hudTop)
     end
 
     for displayIndex, displayEntry in ipairs(esauDisplayEntries) do
-        local y = hudTop - HUD_SCROLL_OFFSET + (displayIndex - 1) * rowHeight
-        local position = Vector(rightColumnX, y)
+        local column = (displayIndex - 1) % columnCount
+        local row = math.floor((displayIndex - 1) / columnCount)
+        local y = hudTop - HUD_SCROLL_OFFSET + row * rowHeight
+        local position = Vector(esauLeftColumnX + column * columnWidth, y)
         renderItemIcon(displayEntry.entry, position, hudTop)
         renderItemCount(displayEntry, position, hudTop)
     end
 
-    local bottomItemCount = math.max(#jacobDisplayEntries, #esauDisplayEntries)
-    if bottomItemCount == 0 then
+    local bottomRowCount = math.max(
+        math.ceil(#jacobDisplayEntries / columnCount),
+        math.ceil(#esauDisplayEntries / columnCount)
+    )
+    if bottomRowCount == 0 then
         return
     end
 
     local dividerBottom = math.min(HUD_BOTTOM, hudTop - HUD_SCROLL_OFFSET
-        + (bottomItemCount - 1) * rowHeight + iconSize)
+        + (bottomRowCount - 1) * rowHeight + iconSize)
     local dividerSprite = getWhitePixelSprite()
     dividerSprite.Color = Color(1, 1, 1, getIconOpacity(), 0, 0, 0)
     local dividerY = hudTop
@@ -666,6 +938,9 @@ local function renderHud()
         return
     end
 
+    local screenSize = getScreenSize()
+    updateHudBounds(screenSize)
+
     local hudTop = getHudTop()
     if hudTop >= HUD_BOTTOM then
         return
@@ -674,7 +949,6 @@ local function renderHud()
     updateScrollInput(hudTop)
     updateScrollAnimation(hudTop)
 
-    local screenSize = getScreenSize()
     local iconSize = getIconSize()
     local jacobPlayer, esauPlayer = getTwinPlayers()
     if jacobPlayer and esauPlayer then
@@ -682,15 +956,17 @@ local function renderHud()
         return
     end
 
+    local columnCount = getConfigValue("ItemListColumns")
     local rightColumnX = screenSize.X - getConfigValue("RightMargin") - iconSize
-    local leftColumnX = rightColumnX - HUD_ICON_GAP - iconSize
+    local columnWidth = iconSize + HUD_ICON_GAP
+    local leftColumnX = rightColumnX - (columnCount - 1) * columnWidth
     local rowHeight = getRowHeight()
     local displayEntries = getDisplayEntries(itemList)
 
     for displayIndex, displayEntry in ipairs(displayEntries) do
-        local column = (displayIndex - 1) % 2
-        local row = math.floor((displayIndex - 1) / 2)
-        local x = column == 0 and leftColumnX or rightColumnX
+        local column = (displayIndex - 1) % columnCount
+        local row = math.floor((displayIndex - 1) / columnCount)
+        local x = leftColumnX + column * columnWidth
         -- The content origin tracks viewport-top changes so later scrolling retains its table position.
         local y = hudTop - HUD_SCROLL_OFFSET + row * rowHeight
 
@@ -707,6 +983,8 @@ local function onPostUpdate()
     end
     wasLoggingEnabled = loggingEnabled
 
+    confirmPendingSwallowedTrinketLists()
+
     if game:GetFrameCount() % getUpdateInterval() == 0 then
         updateItemList()
     end
@@ -715,19 +993,24 @@ end
 MiniExtraHud:AddCallback(ModCallbacks.MC_POST_UPDATE, onPostUpdate)
 MiniExtraHud:AddCallback(ModCallbacks.MC_POST_RENDER, renderHud)
 MiniExtraHud:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isContinued)
-    itemList = {}
-    ownedItemCounts = {}
-    swallowedTrinketCounts = {}
-    jacobItemList = {}
-    jacobOwnedItemCounts = {}
-    jacobSwallowedTrinketCounts = {}
-    esauItemList = {}
-    esauOwnedItemCounts = {}
-    esauSwallowedTrinketCounts = {}
+    resetItemTracking()
+    if isContinued then
+        loadItemTracking()
+    else
+        MiniExtraHud:RemoveData()
+    end
     registerMcm(MiniExtraHud.Name, Config)
     local loggingEnabled = getConfigValue("LoggingEnabled") == true
     if loggingEnabled then
         resetLog(string.format("GAME_STARTED continued=%s", tostring(isContinued)))
     end
     wasLoggingEnabled = loggingEnabled
+end)
+
+MiniExtraHud:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
+    if shouldSave then
+        saveItemTracking()
+    else
+        MiniExtraHud:RemoveData()
+    end
 end)
