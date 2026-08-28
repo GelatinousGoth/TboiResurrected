@@ -237,7 +237,6 @@ do -- gamemodes
 	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_COMPLETION_MARKS_RENDER, function(_, spr)
 		if MenuManager.IsActive() then return end
 		if TRCommunityRemix.saveData.insaneMark and TRCommunityRemix.saveData.insaneMark[isrendermodsprite] then
-			print(isrendermodsprite)
 			spr:ReplaceSpritesheet(0, "gfx/ui/completion_widget_pause_insane.png", true)
 		else
 			spr:ReplaceSpritesheet(0, "gfx/ui/completion_widget_pause.png", true)
@@ -283,12 +282,12 @@ do -- gamemodes
 	end)
 
 	local maxHearts = 0
-	local newHearts = 0
+	TRCommunityRemix.newHearts = 0
 	local heartAdded = false
 	
 	TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(_, p)
 		if DifficultyManager.GetDifficulty() == "Insane" then
-			newHearts = p:GetMaxHearts()
+			TRCommunityRemix.newHearts = p:GetMaxHearts()
 		end
 	end)
 
@@ -307,15 +306,15 @@ do -- gamemodes
 		if DifficultyManager.GetDifficulty() == "Insane" then
 			if Isaac.GetFrameCount() < 10*60 then return end
 			maxHearts = p:GetMaxHearts()
-			if maxHearts == newHearts then
+			if maxHearts == TRCommunityRemix.newHearts then
 				return
 			else
 				Isaac.CreateTimer(function()
-					if heartAdded then newHearts = p:GetMaxHearts() return end
-					maxHearts = p:GetMaxHearts() - newHearts
+					if heartAdded then TRCommunityRemix.newHearts = p:GetMaxHearts() return end
+					maxHearts = p:GetMaxHearts() - TRCommunityRemix.newHearts
 					p:AddMaxHearts(-maxHearts)
 					p:AddBrokenHearts(maxHearts/2)
-					newHearts = p:GetMaxHearts()
+					TRCommunityRemix.newHearts = p:GetMaxHearts()
 				end, 1, 1, true)
 			end
 		end

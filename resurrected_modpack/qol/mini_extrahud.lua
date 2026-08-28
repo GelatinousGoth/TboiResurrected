@@ -78,10 +78,6 @@ local vanillaMapHeldFrames = 0
 local vanillaMapIsLockedLarge = false
 local wasLoggingEnabled = false
 
-MiniExtraHud:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_)
-    print(Minimap.GetItemIconsSprite():GetFilename())
-end)
-
 local function getConfigValue(key)
     if type(ModConfigMenu) == "table" and type(ModConfigMenu.Config) == "table" then
         local mcmConfig = ModConfigMenu.Config[MiniExtraHud.Name]

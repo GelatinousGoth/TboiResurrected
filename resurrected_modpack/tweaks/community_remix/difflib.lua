@@ -205,6 +205,7 @@ return function(parentMod) -- pass mod reference. must have a global savedata ar
 		function DifficultyLibrary.post_player_init(_, player)
 			local TotPlayers = #Isaac.FindByType(EntityType.ENTITY_PLAYER)
 			if TotPlayers == 0 then
+				TRCommunityRemix.newHearts = Isaac.GetPlayer(0):GetMaxHearts()
 				if game:GetFrameCount() == 0 then
 					if menu == MainMenuType.CHARACTER then
 						if menu ~= 0 then

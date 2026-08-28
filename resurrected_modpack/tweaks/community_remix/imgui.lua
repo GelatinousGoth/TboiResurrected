@@ -1,7 +1,7 @@
 return function()
 	local json = include("json")
 	if not ImGui.ElementExists('TRCremixMenu') then
-		print("imgui menu exists")
+
 		ImGui.CreateMenu('TRCremixMenu', '\u{f091} TBOI: Rekindled Options')
 		do -- cosmetic
 		
