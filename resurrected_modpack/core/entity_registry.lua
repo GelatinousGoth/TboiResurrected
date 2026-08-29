@@ -1,0 +1,2 @@
+---@class EntityRegistry
+return {}

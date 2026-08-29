@@ -25,7 +25,7 @@ local pickupConfigs = {}
 ---@param variant integer
 ---@param subtype integer
 local function get_hash(variant, subtype)
-    return string.format("%d.%d", type, variant, subtype)
+    return string.format("%d.%d", variant, subtype)
 end
 
 ---@param pickup EntityPickup
@@ -34,13 +34,9 @@ local function get_data(pickup)
     return pickup:GetData()[PRIVATE_DATA]
 end
 
----@param config NpcConfig
+---@param config EntityRegistry.Config
 local function AddConfig(config)
-    local name = config.Name
-    local variant = Isaac.GetEntityVariantByName(name)
-    local subtype = Isaac.GetEntitySubTypeByName(name)
-
-    pickupConfigs[get_hash(variant, subtype)] = config
+    pickupConfigs[get_hash(config.variant, config.subType)] = config
 end
 
 ---@param pickup EntityPickup

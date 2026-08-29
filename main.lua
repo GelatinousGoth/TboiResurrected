@@ -4,6 +4,7 @@ TR_Manager:Init()
 require("resurrected_modpack.shaders")
 
 require("resurrected_modpack.system.additional_delirium_sprites")
+require("resurrected_modpack.core.entity_bootstrap")
 
 require("resurrected_modpack.modcompat.ANM2")
 require("resurrected_modpack.modcompat.VS_screen")

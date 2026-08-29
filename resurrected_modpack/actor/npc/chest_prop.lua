@@ -1,3 +1,6 @@
+local Utils = require("resurrected_modpack.actor.utils")
+local TYPE, VARIANT, SUBTYPE = Utils.GetIdentity("Chest Prop")
+
 ---@param npc EntityNPC
 local function Update(npc)
     local isHeld = npc:GetEntityFlags() & EntityFlag.FLAG_HELD ~= 0
@@ -10,9 +13,12 @@ local function Update(npc)
     npc.HitPoints = npc.MaxHitPoints
 end
 
+
 ---@type NpcConfig
 local Config = {
-    Name = "Chest Prop",
+    type = TYPE,
+    variant = VARIANT,
+    subType = SUBTYPE,
     Update = Update
 }
 

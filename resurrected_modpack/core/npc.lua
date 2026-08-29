@@ -2,8 +2,7 @@ local manager = require("resurrected_modpack.manager")
 local mod = manager.ModRef
 local PRIVATE_DATA = manager.PrivateData
 
----@class NpcConfig
----@field Name string
+---@class NpcConfig : EntityRegistry.Config
 ---@field Init? fun(npc: EntityNPC, data: table)
 ---@field Update? fun(npc: EntityNPC, data: table)
 
@@ -16,14 +15,9 @@ local function get_hash(type, variant, subtype)
     return string.format("%d.%d.%d", type, variant, subtype)
 end
 
----@param config NpcConfig
+---@param config EntityRegistry.Config
 local function AddConfig(config)
-    local name = config.Name
-    local type = Isaac.GetEntityTypeByName(name)
-    local variant = Isaac.GetEntityVariantByName(name)
-    local subtype = Isaac.GetEntitySubTypeByName(name)
-
-    npcConfigs[get_hash(type, variant, subtype)] = config
+    npcConfigs[get_hash(config.type, config.variant, config.subType)] = config
 end
 
 ---@param npc EntityNPC

@@ -198,5 +198,9 @@
     <entity anm2path="items/pickups/patched_heart.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" friction="1" id="5" name="Patched heart" numGridCollisionPoints="24" shadowSize="17" stageHP="0" variant="10" subtype="3320">
 		<preload-snd id="185" /> <!-- BOSS2_BUBBLES -->
     </entity>
+
+    <entity name="Chest Prop" id="586" variant="21586" subtype="1" anm2path="005.050_Chest.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="12" friction="1" numGridCollisionPoints="24" shadowSize="28" stageHP="0" isactiveenemy="false">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0"/>
+    </entity>
 </entities>
 <!-- OLD ENTRY <entity anm2path="dream_catcher_entity.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" id="960" name="Hanging Dream Catcher" numGridCollisionPoints="0" shadowSize="13" stageHP="0" variant="245" shutdoors="false"/> -->	
