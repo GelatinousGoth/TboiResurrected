@@ -1,5 +1,6 @@
 ---@class EntityRegistry
 local EntityRegistry = require("resurrected_modpack.core.entity_registry")
+local PickupLogic = require("resurrected_modpack.core.pickup")
 local NpcLogic = require("resurrected_modpack.core.npc")
 
 ---@class EntityRegistry.Config
@@ -20,6 +21,7 @@ local CLASS_NPC = 10
 local CLASS_EFFECT = 11
 
 local CLASS_TO_HANDLER = {
+    [CLASS_PICKUP] = PickupLogic,
     [CLASS_NPC] = NpcLogic
 }
 
@@ -45,5 +47,8 @@ local function RegisterEntity(config)
     handler.AddConfig(config)
     return config
 end
+
+EntityRegistry.PICKUP_SLOT_CHEST = RegisterEntity(require("resurrected_modpack.actor.pickup.slot_chest"))
+EntityRegistry.PICKUP_MIMIC_CHEST = RegisterEntity(require("resurrected_modpack.actor.pickup.mimic_chest"))
 
 EntityRegistry.NPC_CHEST_PROP = RegisterEntity(require("resurrected_modpack.actor.npc.chest_prop"))

@@ -1,5 +1,5 @@
 local Utils = require("resurrected_modpack.actor.utils")
-local TYPE, VARIANT, SUBTYPE = Utils.GetIdentity("Chest Prop")
+local TYPE, VARIANT, SUBTYPE = Utils.GetIdentity("[TR] Chest Prop")
 
 ---@param npc EntityNPC
 local function Update(npc)

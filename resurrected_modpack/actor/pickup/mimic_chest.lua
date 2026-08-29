@@ -1,8 +1,10 @@
 --#region Dependencies
 
-
+local ActorUtils = require("resurrected_modpack.actor.utils")
 
 --#endregion
+
+local TYPE, VARIANT, SUBTYPE = ActorUtils.GetIdentity("[TR] Mimic Chest")
 
 ---@alias MimicChest.Switch.PickupLootList fun(ctx: MimicChest.Context.GetLoot)
 
@@ -359,13 +361,11 @@ local function MimicChest_GetLootList(rng, shouldAdvance)
     return lootList
 end
 
----@class Actor.Pickup.MimicChest
-local Module = {}
-
---#region Module
-
-
-
---#endregion
+---@class Actor.Pickup.MimicChest : PickupConfig
+local Module = {
+    type = TYPE,
+    variant = VARIANT,
+    subType = SUBTYPE
+}
 
 return Module

@@ -1,8 +1,11 @@
 --#region Dependencies
 
-local LibEnums = require("lib.enums")
+local LibEnums = require("resurrected_modpack.lib.enums")
+local ActorUtils = require("resurrected_modpack.actor.utils")
 
 --#endregion
+
+local TYPE, VARIANT, SUBTYPE = ActorUtils.GetIdentity("[TR] Slot Chest")
 
 ---@alias SlotChest.Switch.GetLootList fun(ctx: SlotChest.Switch.Ctx)
 
@@ -337,11 +340,12 @@ local function SlotChest_GetLootList(rng, shouldAdvance)
     return lootList
 end
 
----@class Actor.Pickup.SlotChest
-local Module = {}
-
---#region Module
-
---#endregion
+---@class Actor.Pickup.SlotChest : PickupConfig
+local Module = {
+    type = TYPE,
+    variant = VARIANT,
+    subType = SUBTYPE,
+    IsChest = true,
+}
 
 return Module

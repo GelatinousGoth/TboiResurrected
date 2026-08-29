@@ -11,8 +11,7 @@ local PRIVATE_DATA = manager.PrivateData
 ---@alias PickupConfig.GetLootList fun(pickup: EntityPickup, data: table, shouldAdvance: boolean, rng: RNG): LootList
 ---@alias PickupConfig.ShowPickupGhosts fun(pickup: EntityPickup, data: table): boolean
 
----@class PickupConfig
----@field Name string
+---@class PickupConfig : EntityRegistry.Config
 ---@field Init? PickupConfig.Init
 ---@field Update? PickupConfig.Update
 ---@field IsChest? boolean
