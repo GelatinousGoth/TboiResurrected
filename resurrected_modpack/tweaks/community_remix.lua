@@ -16,7 +16,6 @@ local pgd = Isaac.GetPersistentGameData()
 local json = require("json")
 
 local diffLib = require("resurrected_modpack.tweaks.community_remix.difflib")(TRCommunityRemix)
-require("resurrected_modpack.tweaks.community_remix.imgui")()
 require("resurrected_modpack.tweaks.community_remix.clearawards")
 require("resurrected_modpack.tweaks.community_remix.enums")
 require("resurrected_modpack.tweaks.community_remix.patch_hearts")
@@ -311,6 +310,7 @@ do -- gamemodes
 			else
 				Isaac.CreateTimer(function()
 					if heartAdded then TRCommunityRemix.newHearts = p:GetMaxHearts() return end
+					if maxHearts < TRCommunityRemix.newHearts then TRCommunityRemix.newHearts = p:GetMaxHearts() return end
 					maxHearts = p:GetMaxHearts() - TRCommunityRemix.newHearts
 					p:AddMaxHearts(-maxHearts)
 					p:AddBrokenHearts(maxHearts/2)
@@ -582,7 +582,7 @@ do --game feel ?????
 				end
 				
 				if d._gf_hitstun == 1 then
-					e:SetColor(Color(172/255, 140/255, 76/255, 1, 64/255, 48/255, 16/255), 3, 1, false, false)
+					e:SetColor(Color(172/255, 140/255, 76/255, 1, 30/255, 20/255, 5/255), 3, 1, false, false)
 				end
 				
 				d._gf_hitstun = d._gf_hitstun - 1
@@ -657,3 +657,94 @@ do --game feel ?????
 
 
 end
+
+do -- cosmetic
+
+	ImGui.AddElement('TRMenu', 'communityRemixMenu', ImGuiElement.MenuItem, '\u{f5d1} Community Remix Options')
+	ImGui.CreateWindow('communityRemixWindow', 'Community Remix Options')
+	ImGui.LinkWindowToElement('communityRemixWindow', 'communityRemixMenu')
+	ImGui.AddElement('communityRemixWindow', '', ImGuiElement.Text, "\n")
+	ImGui.AddElement('communityRemixWindow', '', ImGuiElement.Separator)
+	do -- tear sfx
+		local id = 'communityRemixTearsSFX'
+		ImGui.AddCombobox('communityRemixWindow', id, 'Tear Sounds', function(i, v)
+			local sd = TRCommunityRemix.GetSaveData()
+			if sd.cfg then
+				sd.cfg.tear_sounds = i
+				sd.cfg.tear_sounds = sd.cfg.tear_sounds or i
+				TRCommunityRemix:SaveData(json.encode(sd))
+			end
+		end, {"Rebirth", "Remix", "Flash"}, 1, true)
+		ImGui.AddCallback(id, ImGuiCallback.Render, function()
+			local sd = TRCommunityRemix.GetSaveData()
+			if sd.cfg then
+				sd.cfg.tear_sounds = sd.cfg.tear_sounds or 0
+				ImGui.UpdateData(id, ImGuiData.Value, sd.cfg.tear_sounds)
+			end
+		end)
+		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.Separator)
+	end
+	do -- gamefeel gfx
+		local id = 'communityRemixStunGFX'
+		ImGui.AddCheckbox('communityRemixWindow', id, 'Stun GFX', nil, true)
+		ImGui.AddCallback(id, ImGuiCallback.Render, function()
+			local sd = TRCommunityRemix.GetSaveData()
+			if sd.cfg then
+				sd.cfg.gamefeel = sd.cfg.gamefeel or true
+				ImGui.UpdateData(id, ImGuiData.Value, sd.cfg.gamefeel)
+			end
+		end)
+		ImGui.AddCallback(id, ImGuiCallback.Edited, function(v)
+			local sd = TRCommunityRemix.GetSaveData()
+			if sd.cfg then
+				sd.cfg.gamefeel = v
+				sd.cfg.gamefeel = sd.cfg.gamefeel or v
+				TRCommunityRemix:SaveData(json.encode(sd))
+			end
+		end)
+		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.TextWrapped, "A stun effect is applied to enemies less powerful than you when you hit them.")
+		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.Separator)
+	end
+	do -- main menu gfx
+		local id = 'communityRemixMainMenuGFX'
+		ImGui.AddCheckbox('communityRemixWindow', id, 'Main Menu GFX', nil, true)
+		ImGui.AddCallback(id, ImGuiCallback.Render, function()
+			local sd = TRCommunityRemix.GetSaveData()
+			if sd.cfg then
+				sd.cfg.mainmenugfx = sd.cfg.mainmenugfx or true
+				ImGui.UpdateData(id, ImGuiData.Value, sd.cfg.mainmenugfx)
+			end
+		end)
+		ImGui.AddCallback(id, ImGuiCallback.Edited, function(v)
+			local sd = TRCommunityRemix.GetSaveData()
+			if sd.cfg then
+				sd.cfg.mainmenugfx = v
+				sd.cfg.mainmenugfx = sd.cfg.mainmenugfx or v
+				TRCommunityRemix:SaveData(json.encode(sd))
+			end
+		end)
+		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.TextWrapped, "Extra main menu graphic details.")
+		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.Separator)
+	end
+	do
+		local id = 'remixMenuCosmeticMainMenuHandPos'
+		ImGui.AddSliderInteger('communityRemixWindow', id, 'Main Menu Hand Position', nil, 0, -100, 100)
+		ImGui.AddCallback(id, ImGuiCallback.Render, function (v) -- Function ran whenever the slider is changed.
+			local sd = TRCommunityRemix.GetSaveData()
+    		if sd.cfg then
+				sd.cfg.mainmenuhandpos = sd.cfg.mainmenuhandpos or 0
+				ImGui.UpdateData(id, ImGuiData.Value, sd.cfg.mainmenuhandpos)
+			end
+		end)
+		ImGui.AddCallback(id, ImGuiCallback.Edited, function(v)
+			local sd = TRCommunityRemix.GetSaveData()
+			if sd.cfg then
+				sd.cfg.mainmenuhandpos = v
+				sd.cfg.mainmenuhandpos = sd.cfg.mainmenuhandpos or v
+				TRCommunityRemix:SaveData(json.encode(sd))
+			end
+		end)
+		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.TextWrapped, "Position of Isaac's hand in the main menu.")
+		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.Separator)
+	end
+	end

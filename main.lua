@@ -2,6 +2,7 @@ local TR_Manager = require("resurrected_modpack.manager")
 TR_Manager:Init()
 
 require("resurrected_modpack.shaders")
+require("resurrected_modpack.imgui")()
 
 require("resurrected_modpack.system.additional_delirium_sprites")
 require("resurrected_modpack.core.entity_bootstrap")

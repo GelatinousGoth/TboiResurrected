@@ -30,8 +30,3 @@ mod:AddCallback(ModCallbacks.MC_POST_PAUSE_SCREEN_RENDER, function(_, spr)
 
     spr:ReplaceSpritesheet(statLayer, pausemenu, true)
 end)
-
-mod:AddCallback(ModCallbacks.MC_PRE_COMPLETION_MARKS_RENDER, function(_, spr)
-    if MenuManager.IsActive() then return end
-    spr.Offset = Vector(-20, 4)
-end)

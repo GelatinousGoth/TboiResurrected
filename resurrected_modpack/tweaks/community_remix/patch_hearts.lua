@@ -96,6 +96,7 @@ PATCH_GLOBAL:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, OnUpdate, PATCH_GLO
 
 local tintedRockDestroyed = false
 local tintedRockPos = {}
+local rng = RNG()
 
 ---@param rock GridEntityRock
 function PATCH_GLOBAL:TintedDestroy(rock)
@@ -121,7 +122,13 @@ function PATCH_GLOBAL:TintedSpawn(pickup)
         end
     end
     if not isInRange then return end
+    rng:SetSeed(pickup.InitSeed, 35)
+    if rng:RandomFloat() > 0.225 then
     pickup:Morph(EntityType.ENTITY_PICKUP, PATCH_GLOBAL.VARIANT, PATCH_GLOBAL.SUBTYPE)
+    else
+        pickup:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_CHEST, 0)
+        pickup:GetSprite().Scale = Vector(0.75, 0.75)
+    end
 end
 PATCH_GLOBAL:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PATCH_GLOBAL.TintedSpawn, PickupVariant.PICKUP_HEART)
 
@@ -139,9 +146,14 @@ PATCH_GLOBAL:AddCallback(ModCallbacks.MC_POST_UPDATE, PATCH_GLOBAL.TintedCount)
 --[[##########################################################################
 ################################## MINIMAPI ##################################
 ##########################################################################]]--
+PATCH_GLOBAL:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, function()
 if MinimapAPI then
+    print("minimapapi init")
     local icons = Sprite()
     icons:Load("gfx/ui/patched_hearts_minimapi_icons.anm2", true)
-    MinimapAPI:AddIcon("PatchedHeart", icons, "PatchedHeart", 0)
-    MinimapAPI:AddPickup("PatchedHeart", "PatchedHeart", 5, PATCH_GLOBAL.VARIANT, 3320,  nil, "hearts", 10650)
+    MinimapAPI:AddIcon("PatchedHeart_icon", icons, "PatchedHeart", 0)
+    MinimapAPI:AddPickup("PatchedHeart", "PatchedHeart_icon", 5, PATCH_GLOBAL.VARIANT, 3320,  nil, "hearts", 10650)
+    print("icons added")
 end
+
+end)

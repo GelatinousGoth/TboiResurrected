@@ -5,7 +5,7 @@ local json = include("resurrected_modpack.graphics.bullet_trails_scripts.json")
 
 local COLOR_RED = Color(0.9, 0.05, 0.05, 1)
 local COLOR_GREEN = Color(0.05, 0.9, 0.05, 1)
-local COLOR_BLUE = Color(0.05, 0.05, 0.9, 1)
+local COLOR_BLUE = Color(0.49,0.79,1,1)
 local COLOR_WHITE = Color(1, 1, 1, 1)
 
 -- defaults
@@ -111,10 +111,10 @@ local function storeSaveData()
     mod:SaveData(json.encode(mod.MenuSaveData))
 end
 
----@param parent EntityProjectile
+---@param parent EntityProjectile|EntityTear
 local function getPositionOffset(parent, scale)
     local angle = parent.Velocity:Normalized() * 2
-    local height = parent.FallingAccel * parent.FallingSpeed
+    local height = (parent.FallingAccel or parent.FallingAcceleration) * parent.FallingSpeed
     local offset = parent.PositionOffset + angle * scale + Vector(0, height / 2)
     return offset
 end
@@ -219,10 +219,12 @@ end
 
 --#region MAIN CODE
 
----@param projectile EntityProjectile
+---@param projectile EntityProjectile|EntityTear
 function mod:NewProjectile(projectile)
     local saveData = loadModData()
-    if projectile.Velocity:Length() < VEC_LENGTH_MIN then return end
+    if saveData.isModOn == false then return end
+    if projectile:ToProjectile() and projectile.Velocity:Length() < VEC_LENGTH_MIN then return end
+    if projectile:ToTear() and projectile.SpawnerEntity:ToPlayer().ShotSpeed < 1.25 then return end
     if projectile.SpawnerEntity then
         if projectile.SpawnerEntity:HasEntityFlags(EntityFlag.FLAG_CHARM) or projectile.SpawnerEntity:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then
             return -- friendly enemies dont get trails, for visibility reasons
@@ -252,8 +254,7 @@ function mod:NewProjectile(projectile)
         if REPENTOGON then
             -- Impossible to know if the tint or colorize values are set for non-rgon users.
             -- So just reserve this for rgon only.
-            if bulletType == ProjectileVariant.PROJECTILE_NORMAL
-            and not syncColor
+            if not syncColor
             and not (allZero(defaultColor:GetColorize()) and allZero(defaultColor:GetOffset()) and allOne(defaultColor:GetTint())) then
                 color = defaultColor
             else
@@ -289,14 +290,17 @@ function mod:NewProjectile(projectile)
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_PROJECTILE_INIT, mod.NewProjectile)
+mod:AddCallback(ModCallbacks.MC_POST_TEAR_INIT, mod.NewProjectile)
 
 ---@param trail EntityEffect
 function mod:TrailUpdate(trail)
     local data = trail:GetData()
     local saveData = loadModData()
+    if saveData.isOn == false then return end
 
     if data.B_ParentProj then
         -- handle position and removing
+        ---@type EntityProjectile|EntityTear
         local parent = data.B_ParentProj
         if parent:Exists() then
             trail.ParentOffset = getPositionOffset(parent, trail.SpriteScale.Y)
@@ -343,6 +347,13 @@ function mod:TrailUpdate(trail)
                 local deliriumColor = #Isaac.FindByType(EntityType.ENTITY_DELIRIUM) > 0 and Color(1, 1, 1, 1)
                 color = deliriumColor or syncColor or bulletTypeToColor[bulletType] or defaultColor
             end
+            if parent.SpawnerType == EntityType.ENTITY_PLAYER then
+                if parent.Variant == TearVariant.BLUE then
+                color = COLOR_BLUE
+                elseif parent.Variant == TearVariant.BLOOD then
+                color = COLOR_RED
+                end
+            end
         end
 
         color.A = transparency
@@ -351,7 +362,7 @@ function mod:TrailUpdate(trail)
 
         -- handle continuum
 
-        if parent.ProjectileFlags & ProjectileFlags.CONTINUUM ~= 0 then
+        if (parent:ToProjectile() and parent.ProjectileFlags & ProjectileFlags.CONTINUUM ~= 0) or (parent:ToTear() and parent.TearFlags & TearFlags.TEAR_CONTINUUM ~= 0) then
             -- check if position is out of the room, and stop the trail if it is
 
             -- it can be this far out of bounds before it stops
@@ -649,3 +660,35 @@ DeadSeaScrollsMenu.AddMenu("Bullet Trails", {
 })
 
 --#endregion
+
+do
+    
+    ImGui.AddElement('TRMenu', 'bulletTrailsMenu', ImGuiElement.MenuItem, '\u{f064} Bullet Trails Options')
+    ImGui.CreateWindow('bulletTrailsWindow', 'Bullet Trails Options')
+    ImGui.LinkWindowToElement('bulletTrailsWindow', 'bulletTrailsMenu')
+    ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.Text, "\n")
+    ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.Separator)
+
+    do -- gamefeel gfx
+        local id = 'bulletTrailsIsOn'
+        ImGui.AddCheckbox('bulletTrailsWindow', id, 'Activate', nil, false)
+        ImGui.AddCallback(id, ImGuiCallback.Render, function()
+            local sd = loadModData()
+            if sd then
+                sd.isOn = sd.isOn or false
+                ImGui.UpdateData(id, ImGuiData.Value, sd.isOn)
+            end
+        end)
+        ImGui.AddCallback(id, ImGuiCallback.Edited, function(v)
+            local sd = loadModData()
+            if sd then
+                sd.isOn = v
+                sd.isOn = sd.isOn or v
+                storeSaveData(json.encode(sd))
+            end
+        end)
+        ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.TextWrapped, "Activate the bullet trails. False by default because it causes lags")
+        ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.Separator)
+    end
+
+end

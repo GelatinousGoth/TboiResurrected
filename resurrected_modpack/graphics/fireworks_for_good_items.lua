@@ -176,9 +176,10 @@ function mod:fireworksCounterTests()
 end
 -- mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.fireworksCounterTests)
 
-local LIFETIME = 3 --secs
+local LIFETIME = 2 --secs
 
 function mod:yayFireworks(pickup)
+  if Game():GetLevel():GetCurrentRoomDesc().VisitedCount > 1 then return end
     if pickup.Variant == PickupVariant.PICKUP_COLLECTIBLE then
         if pickup.FrameCount >= LIFETIME*30 then return end
         if pickup.SubType <= 0 then return end
