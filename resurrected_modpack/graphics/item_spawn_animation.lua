@@ -144,6 +144,7 @@ function mod:canCycle()
                 local item = #poolItems > 0 and poolItems[index].itemID or CollectibleType.COLLECTIBLE_BREAKFAST
                 
                 while #poolItems > 0
+                and itemConfig:GetCollectible(item) ~= nil
                 and (not itemConfig:GetCollectible(item):IsAvailable()
                     or item == pickup.SubType)
                 do
@@ -153,7 +154,7 @@ function mod:canCycle()
                     item = #poolItems > 0 and poolItems[index].itemID or CollectibleType.COLLECTIBLE_BREAKFAST
                 end
 
-                if #poolItems > 0 then
+                if #poolItems > 0 and itemConfig:GetCollectible(item) ~= nil then
                     local itemGfx = itemConfig:GetCollectible(item).GfxFileName
                     data.itemSprites[i] = itemGfx
                     table.remove(poolItems, index)
@@ -210,7 +211,7 @@ function mod:onPedestalCycle(pickup)
         return
     end
 
-    if data.delay > 0 then
+    if data.delay and data.delay > 0 then
         data.delay = data.delay - 1
         return
     end
