@@ -148,12 +148,10 @@ PATCH_GLOBAL:AddCallback(ModCallbacks.MC_POST_UPDATE, PATCH_GLOBAL.TintedCount)
 ##########################################################################]]--
 PATCH_GLOBAL:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, function()
 if MinimapAPI then
-    print("minimapapi init")
     local icons = Sprite()
     icons:Load("gfx/ui/patched_hearts_minimapi_icons.anm2", true)
     MinimapAPI:AddIcon("PatchedHeart_icon", icons, "PatchedHeart", 0)
     MinimapAPI:AddPickup("PatchedHeart", "PatchedHeart_icon", 5, PATCH_GLOBAL.VARIANT, 3320,  nil, "hearts", 10650)
-    print("icons added")
 end
 
 end)

@@ -73,7 +73,7 @@ TR_Manager:LoadMod("resurrected_modpack.graphics.chargebar_fix")
 TR_Manager:LoadMod("resurrected_modpack.graphics.unique_spirit_swords")
 TR_Manager:LoadMod("resurrected_modpack.graphics.bullet_trails")
 TR_Manager:LoadMod("resurrected_modpack.graphics.fireworks_for_good_items")
-TR_Manager:LoadMod("resurrected_modpack.graphics.refined_groundbreaks")
+TR_Manager:LoadMod("resurrected_modpack.graphics.wooden_earthquakes")
 TR_Manager:LoadMod("resurrected_modpack.graphics.pause_screen_stats")
 
 TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")
