@@ -14,6 +14,7 @@ local DEFAULT_SCALE = "sync"
 local DEFAULT_COLOR = "sync"
 local DEFAULT_TRANSPARENCY = 0.4
 local VEC_LENGTH_MIN = 11
+local SHOT_SPEED_MIN = 1.35
 
 local ENEMY_PROJ_COLORS = include("resurrected_modpack.graphics.bullet_trails_scripts.enemyToColor")
 
@@ -224,7 +225,7 @@ function mod:NewProjectile(projectile)
     local saveData = loadModData()
     if saveData.isModOn == false then return end
     if projectile:ToProjectile() and projectile.Velocity:Length() < VEC_LENGTH_MIN then return end
-    if projectile:ToTear() and projectile.SpawnerEntity:ToPlayer().ShotSpeed < 1.25 then return end
+    if projectile:ToTear() and projectile.SpawnerEntity:ToPlayer().ShotSpeed < SHOT_SPEED_MIN then return end
     if projectile.SpawnerEntity then
         if projectile.SpawnerEntity:HasEntityFlags(EntityFlag.FLAG_CHARM) or projectile.SpawnerEntity:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then
             return -- friendly enemies dont get trails, for visibility reasons
