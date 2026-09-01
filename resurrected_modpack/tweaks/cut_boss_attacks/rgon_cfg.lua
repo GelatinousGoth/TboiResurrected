@@ -1,7 +1,7 @@
 local cba = CutBossesAttacks
 
-ImGui.CreateMenu("CutBossesAttacks", "\u{f043} CBA")
-ImGui.AddElement("CutBossesAttacks", "CBASettingsButton", ImGuiElement.MenuItem, "\u{f085} Settings")
+--ImGui.CreateMenu("CutBossesAttacks", "\u{f043} CBA")
+ImGui.AddElement("TRMenu", "CBASettingsButton", ImGuiElement.MenuItem, "\u{f043} Cut Boss Attacks Options")
 ImGui.CreateWindow("CBASettingsWindow", "Settings")
 ImGui.LinkWindowToElement("CBASettingsWindow", "CBASettingsButton")
 ImGui.AddTabBar("CBASettingsWindow", "CBASettingsTabBar")
@@ -64,8 +64,8 @@ AddNumSetting("HandsHP", "MS2", 500, 1000, "Hands HP", "Defines what number of H
 
 --Debugging--
 
-ImGui.AddElement("CutBossesAttacks", "CBADebuggingButton", ImGuiElement.MenuItem, "\u{f552} Debugging")
-ImGui.CreateWindow("CBADebuggingWindow", "Debugging")
+ImGui.AddElement("TRMenu", "CBADebuggingButton", ImGuiElement.MenuItem, "\u{f552} CBA Debugging")
+ImGui.CreateWindow("CBADebuggingWindow", "CBA Debugging")
 ImGui.LinkWindowToElement("CBADebuggingWindow", "CBADebuggingButton")
 
 ImGui.AddButton("CBADebuggingWindow", "CBADebuggingToWitnessButton", "TP to Witness",

@@ -1,6 +1,6 @@
 local imguiSupport = {}
 
-local menu = "uniqueProgressBarIcon"
+local menu = "TRMenu"
 
 local settingsData = {
 	{ Name = "Display Co-op Players", DefaultValue = true,  Helpmarker = "Displays co-op players." },
@@ -17,10 +17,9 @@ local settingsData = {
 }
 
 function imguiSupport:CreateMenu()
-	if not ImGui.ElementExists(menu) then
-		ImGui.CreateMenu(menu, "\u{f5b3} UPB Icon")
-		ImGui.AddElement(menu, "UPBI_settingsMenuButton", ImGuiElement.MenuItem, "Mod Settings")
-		ImGui.CreateWindow("UPBI_settingsWindow", "Unique Progress Bar Icon Settings")
+	if ImGui.ElementExists(menu) then
+		ImGui.AddElement(menu, "UPBI_settingsMenuButton", ImGuiElement.MenuItem, "\u{f828} Unique Progress Bar Options")
+		ImGui.CreateWindow("UPBI_settingsWindow", "Unique Progress Bar Options")
 		ImGui.LinkWindowToElement("UPBI_settingsWindow", "UPBI_settingsMenuButton")
 	end
 end

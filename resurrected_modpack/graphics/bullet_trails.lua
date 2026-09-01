@@ -13,8 +13,8 @@ local DEFAULT_LENGTH = 0.15
 local DEFAULT_SCALE = "sync"
 local DEFAULT_COLOR = "sync"
 local DEFAULT_TRANSPARENCY = 0.4
-local VEC_LENGTH_MIN = 11
-local SHOT_SPEED_MIN = 1.35
+local VEC_LENGTH_MIN = 13
+local SHOT_SPEED_MIN = 1.5
 
 local ENEMY_PROJ_COLORS = include("resurrected_modpack.graphics.bullet_trails_scripts.enemyToColor")
 
@@ -42,6 +42,12 @@ local scales = {
     [4] = 3,
     [5] = 3.5,
     [6] = "sync"
+}
+
+local selection = {
+    player = 0,
+    enemy = 1,
+    off = 2
 }
 
 local function rgbToColor(r, g, b)
@@ -223,9 +229,10 @@ end
 ---@param projectile EntityProjectile|EntityTear
 function mod:NewProjectile(projectile)
     local saveData = loadModData()
-    if saveData.isModOn == false then return end
+    if mod.sd.trailSelected == selection.enemy then if projectile:ToTear() then return end end
+    if mod.sd.trailSelected == selection.off then return end
     if projectile:ToProjectile() and projectile.Velocity:Length() < VEC_LENGTH_MIN then return end
-    if projectile:ToTear() and projectile.SpawnerEntity:ToPlayer().ShotSpeed < SHOT_SPEED_MIN then return end
+    if projectile:ToTear() and projectile.SpawnerEntity:ToPlayer() and projectile.SpawnerEntity:ToPlayer().ShotSpeed < SHOT_SPEED_MIN then return end
     if projectile.SpawnerEntity then
         if projectile.SpawnerEntity:HasEntityFlags(EntityFlag.FLAG_CHARM) or projectile.SpawnerEntity:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then
             return -- friendly enemies dont get trails, for visibility reasons
@@ -296,8 +303,8 @@ mod:AddCallback(ModCallbacks.MC_POST_TEAR_INIT, mod.NewProjectile)
 ---@param trail EntityEffect
 function mod:TrailUpdate(trail)
     local data = trail:GetData()
-    local saveData = loadModData()
-    if saveData.isOn == false then return end
+    if mod.sd.trailSelected == selection.enemy then if projectile:ToTear() then return end end
+    if mod.sd.trailSelected == selection.off then return end
 
     if data.B_ParentProj then
         -- handle position and removing
@@ -662,34 +669,45 @@ DeadSeaScrollsMenu.AddMenu("Bullet Trails", {
 
 --#endregion
 
-do
-    
-    ImGui.AddElement('TRMenu', 'bulletTrailsMenu', ImGuiElement.MenuItem, '\u{f064} Bullet Trails Options')
+mod:AddCallback(ModCallbacks.MC_POST_SAVESLOT_LOAD, function()
+    if mod:HasData() then
+        mod.sd = json.decode(mod:LoadData())
+        if not mod.sd then mod.sd = {} end
+        local encoded = json.encode(mod.sd)
+        mod:SaveData(encoded)
+    else
+        mod.sd = {}
+        local encoded = json.encode(mod.sd)
+        mod:SaveData(encoded)
+    end
+
+end)
+
+local function createImGuiMenu()
+ImGui.AddElement('TRMenu', 'bulletTrailsMenu', ImGuiElement.MenuItem, '\u{f064} Bullet Trails Options')
     ImGui.CreateWindow('bulletTrailsWindow', 'Bullet Trails Options')
     ImGui.LinkWindowToElement('bulletTrailsWindow', 'bulletTrailsMenu')
     ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.Text, "\n")
     ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.Separator)
 
-    do -- gamefeel gfx
-        local id = 'bulletTrailsIsOn'
-        ImGui.AddCheckbox('bulletTrailsWindow', id, 'Activate', nil, false)
+    do
+        local id = 'bulletTrailsSlider'
+        ImGui.AddCombobox('bulletTrailsWindow', id, '', function(i, v)
+            local sd = mod.sd
+            sd.trailSelected = i
+            sd.trailSelected = sd.trailSelected or i
+            mod:SaveData(json.encode(sd))
+        end, { "Players/Enemies", "Enemies", "Off"}, 2, true)
         ImGui.AddCallback(id, ImGuiCallback.Render, function()
-            local sd = loadModData()
-            if sd then
-                sd.isOn = sd.isOn or false
-                ImGui.UpdateData(id, ImGuiData.Value, sd.isOn)
-            end
+            local sd = mod.sd
+                sd.trailSelected = sd.trailSelected or 2
+                ImGui.UpdateData(id, ImGuiData.Value, sd.trailSelected)
+            mod:SaveData(json.encode(sd))
         end)
-        ImGui.AddCallback(id, ImGuiCallback.Edited, function(v)
-            local sd = loadModData()
-            if sd then
-                sd.isOn = v
-                sd.isOn = sd.isOn or v
-                storeSaveData(json.encode(sd))
-            end
-        end)
-        ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.TextWrapped, "Activate the bullet trails. False by default because it causes lags")
+        ImGui.SetHelpmarker(id, "Selects who the bullet trails affects. Off by default because it causes lags")
         ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.Separator)
     end
 
 end
+
+createImGuiMenu()

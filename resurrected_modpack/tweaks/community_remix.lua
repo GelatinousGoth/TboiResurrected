@@ -125,7 +125,7 @@ TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_MAIN_MENU_RENDER, CallbackP
 	isaacheadsprite:Update()
 	diffShadowOverlay:Update()
 	winStreakOverlay:Update()
-	local headX = TRCommunityRemix.saveData.cfg.mainmenuhandpos
+	local headX = TRCommunityRemix.saveData.cfg.mainmenuhandpos or 0
 
 	if Isaac.GetFrameCount()%2==0 then diffOverlay:Update() end
 	local charpage = CharacterMenu.GetBigCharPageSprite()
@@ -137,7 +137,7 @@ TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_MAIN_MENU_RENDER, CallbackP
 	end
 	isrendermodsprite = tostring(CharacterMenu.GetSelectedCharacterPlayerType())
 
-	if TRCommunityRemix.saveData.cfg.mainmenugfx then
+	if TRCommunityRemix.saveData.cfg.mainmenugfx == nil or TRCommunityRemix.saveData.cfg.mainmenugfx then
 	if showhead_bl[MenuManager.GetActiveMenu()] then
 		if headY < 96 then headY = headY + 1 end
 		headY = headY * 1.05
@@ -702,7 +702,7 @@ do -- cosmetic
 				TRCommunityRemix:SaveData(json.encode(sd))
 			end
 		end)
-		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.TextWrapped, "A stun effect is applied to enemies less powerful than you when you hit them.")
+		ImGui.SetHelpmarker(id, "A stun effect is applied to enemies less powerful than you when you hit them.")
 		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.Separator)
 	end
 	do -- main menu gfx
@@ -723,7 +723,7 @@ do -- cosmetic
 				TRCommunityRemix:SaveData(json.encode(sd))
 			end
 		end)
-		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.TextWrapped, "Extra main menu graphic details.")
+		ImGui.SetHelpmarker(id, "Extra main menu graphic details.")
 		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.Separator)
 	end
 	do
@@ -744,7 +744,7 @@ do -- cosmetic
 				TRCommunityRemix:SaveData(json.encode(sd))
 			end
 		end)
-		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.TextWrapped, "Position of Isaac's hand in the main menu.")
+		ImGui.SetHelpmarker(id, "Position of Isaac's hand in the main menu.")
 		ImGui.AddElement('communityRemixWindow', '', ImGuiElement.Separator)
 	end
 	end
