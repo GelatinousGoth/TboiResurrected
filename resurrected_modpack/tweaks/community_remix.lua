@@ -137,6 +137,7 @@ TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_MAIN_MENU_RENDER, CallbackP
 	end
 	isrendermodsprite = tostring(CharacterMenu.GetSelectedCharacterPlayerType())
 
+	print(TRCommunityRemix.saveData.cfg.mainmenugfx)
 	if TRCommunityRemix.saveData.cfg.mainmenugfx == nil or TRCommunityRemix.saveData.cfg.mainmenugfx then
 	if showhead_bl[MenuManager.GetActiveMenu()] then
 		if headY < 96 then headY = headY + 1 end
@@ -686,19 +687,19 @@ do -- cosmetic
 	end
 	do -- gamefeel gfx
 		local id = 'communityRemixStunGFX'
-		ImGui.AddCheckbox('communityRemixWindow', id, 'Stun GFX', nil, true)
+		ImGui.AddCheckbox('communityRemixWindow', id, 'Stun GFX', nil, false)
 		ImGui.AddCallback(id, ImGuiCallback.Render, function()
 			local sd = TRCommunityRemix.GetSaveData()
 			if sd.cfg then
-				sd.cfg.gamefeel = sd.cfg.gamefeel or true
+				if sd.cfg.gamefeel == nil then sd.cfg.gamefeel = true end
 				ImGui.UpdateData(id, ImGuiData.Value, sd.cfg.gamefeel)
 			end
 		end)
 		ImGui.AddCallback(id, ImGuiCallback.Edited, function(v)
 			local sd = TRCommunityRemix.GetSaveData()
 			if sd.cfg then
+				if sd.cfg.gamefeel == nil then sd.cfg.gamefeel = v end
 				sd.cfg.gamefeel = v
-				sd.cfg.gamefeel = sd.cfg.gamefeel or v
 				TRCommunityRemix:SaveData(json.encode(sd))
 			end
 		end)
@@ -707,19 +708,19 @@ do -- cosmetic
 	end
 	do -- main menu gfx
 		local id = 'communityRemixMainMenuGFX'
-		ImGui.AddCheckbox('communityRemixWindow', id, 'Main Menu GFX', nil, true)
+		ImGui.AddCheckbox('communityRemixWindow', id, 'Main Menu GFX', nil, false)
 		ImGui.AddCallback(id, ImGuiCallback.Render, function()
 			local sd = TRCommunityRemix.GetSaveData()
 			if sd.cfg then
-				sd.cfg.mainmenugfx = sd.cfg.mainmenugfx or true
+				if sd.cfg.mainmenugfx == nil then sd.cfg.mainmenugfx = true end
 				ImGui.UpdateData(id, ImGuiData.Value, sd.cfg.mainmenugfx)
 			end
 		end)
 		ImGui.AddCallback(id, ImGuiCallback.Edited, function(v)
 			local sd = TRCommunityRemix.GetSaveData()
 			if sd.cfg then
+				if sd.cfg.mainmenugfx == nil then sd.cfg.mainmenugfx = v end
 				sd.cfg.mainmenugfx = v
-				sd.cfg.mainmenugfx = sd.cfg.mainmenugfx or v
 				TRCommunityRemix:SaveData(json.encode(sd))
 			end
 		end)
