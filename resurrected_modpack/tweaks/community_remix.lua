@@ -137,7 +137,6 @@ TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_MAIN_MENU_RENDER, CallbackP
 	end
 	isrendermodsprite = tostring(CharacterMenu.GetSelectedCharacterPlayerType())
 
-	print(TRCommunityRemix.saveData.cfg.mainmenugfx)
 	if TRCommunityRemix.saveData.cfg.mainmenugfx == nil or TRCommunityRemix.saveData.cfg.mainmenugfx then
 	if showhead_bl[MenuManager.GetActiveMenu()] then
 		if headY < 96 then headY = headY + 1 end
