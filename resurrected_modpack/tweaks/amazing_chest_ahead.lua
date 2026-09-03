@@ -4,10 +4,10 @@ local mod = TR_Manager:RegisterMod("Amazing Chest Ahead", 1, true)
 
 local game = Game()
 
-local woodenChestPercent = 5
-local oldChestPercent = 5
+local woodenChestPercent = 4.5
+local oldChestPercent = 3
 
-local crackedKeyPercent = 1.75
+local crackedKeyPercent = 1.5
 
 --Chest Replacements
 
