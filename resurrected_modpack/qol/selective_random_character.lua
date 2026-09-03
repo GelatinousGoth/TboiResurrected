@@ -6,8 +6,6 @@ local json = require("json")
 
 -- this code is messy don't mind me
 
-SkipRender = false
-
 local function copyColor(color)
     local colorize = color:GetColorize()
 
@@ -19,23 +17,45 @@ local function copyColor(color)
 
 end
 
+local STEP = 0.05
+
+local savedAlphas = {}
+
+---@param playerType PlayerType
+---@param sprite Sprite
+---@param pos Vector
+---@param scale number
+---@param color Color
 mod:AddCallback(ModCallbacks.MC_PRE_RENDER_CHARACTER_SELECT_PORTRAIT, function(_, playerType, sprite, pos, scale, color)
-    if not SkipRender then
-        local charData = SelectedChars[tostring(playerType)]
-        if charData then
-            SkipRender = true
-            local color = copyColor(sprite.Color)
-            sprite.Color = Color(0,0,0,1,.75)
-    
-            local offset = Vector(1, 0) * scale
-            for i = 0, 3 do
-                sprite:Render(pos + offset:Rotated(i * 90))
-            end
-    
-            sprite.Color = color
-            SkipRender = false
+    local pType = tostring(playerType)
+    local selectedAndQmark = CharacterMenu.GetSelectedCharacterPlayerType() == nil and SelectedChars[pType]
+
+    if not (savedAlphas[pType] or selectedAndQmark) then return end
+
+    local color = copyColor(sprite.Color)
+
+    local offset = Vector(1, 0) * scale
+
+    local outlineOpacity = 0
+
+    if savedAlphas[pType] then
+        outlineOpacity = savedAlphas[pType] - STEP
+        
+        if outlineOpacity < STEP then
+            savedAlphas[pType] = nil
+        else
+            savedAlphas[pType] = outlineOpacity
         end
+    elseif selectedAndQmark then outlineOpacity = 1
     end
+
+    sprite.Color = Color(0, 0, 0, outlineOpacity, .75)
+
+    for i = 0, 3 do
+        sprite:Render(pos + offset:Rotated(i * 90))
+    end
+
+    sprite.Color = color 
 end)
 
 if mod:HasData() then
@@ -141,6 +161,7 @@ local sfx = SFXManager()
 local wasOnCharMenu = false
 mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
 
+    local shouldPaperShow = CharacterMenu.GetCharacterPortraitSprite():GetAnimation() == "00_Random"
     local isOnCharMenu = MenuManager.GetActiveMenu() == MainMenuType.CHARACTER
     if isOnCharMenu then
         if Input.IsButtonTriggered(Keyboard.KEY_G, 0) or Input.IsButtonTriggered(RSTICK_PRESS, 1) then
@@ -162,6 +183,7 @@ mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
                     CharSprites[playerType] = nil
                     sfx:Play(SoundEffect.SOUND_CHARACTER_SELECT_LEFT, nil, nil, nil, .85)
                 else
+                    savedAlphas[playerType] = 1
                     SelectedChars[playerType] = true
                     loadSpriteForChar(playerTypeNum)
                     sfx:Play(SoundEffect.SOUND_CHARACTER_SELECT_RIGHT, nil, nil, nil, .85)
@@ -217,7 +239,6 @@ mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
     
     local isFinished = bgPaper:IsFinished() or anim == ""
 
-    local shouldPaperShow = #sprites > 0
 
     if isFinished then
         if not TeamMenuSecret then
@@ -279,29 +300,31 @@ mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
         end
 
         local sprite = CharSprites[playerTypeNum]
-        if sprite then
-            local frontDist = 27.5
-            local backDist = 82.5
-            local span = backDist - frontDist
+        if shouldPaperShow then
+            if sprite then
+                local frontDist = 27.5
+                local backDist = 82.5
+                local span = backDist - frontDist
 
-            local distFromFront = math.abs(distFromCenter - posOffset.Y)
-            local t = math.min(math.max(distFromFront - frontDist, 0), span)
+                local distFromFront = math.abs(distFromCenter - posOffset.Y)
+                local t = math.min(math.max(distFromFront - frontDist, 0), span)
 
-            local camDist = span * backScale / (1 - backScale)
+                local camDist = span * backScale / (1 - backScale)
 
-            local depthScale = camDist / (camDist + t)
-            local toBackPercent = 1 - depthScale
+                local depthScale = camDist / (camDist + t)
+                local toBackPercent = 1 - depthScale
 
-            sprite.Color = Color.Lerp(Color(1,1,1,1), Color(.19,.19,.19,1,.75,.7,.7), toBackPercent)
+                sprite.Color = Color.Lerp(Color(1,1,1,1), Color(.19,.19,.19,1,.75,.7,.7), toBackPercent)
 
-            sprite.Scale = Vector.One * spriteScale * (depthScale) * paperScale
+                sprite.Scale = Vector.One * spriteScale * (depthScale) * paperScale
 
-            posOffset.X = posOffset.X * depthScale * 2
-            posOffset.Y = posOffset.Y * depthScale
+                posOffset.X = posOffset.X * depthScale * 2
+                posOffset.Y = posOffset.Y * depthScale
 
-            sprite:Render(circleCenterPos + posOffset + paperPos)
-            
-            closestToFront = playerTypeNum
+                sprite:Render(circleCenterPos + posOffset + paperPos)
+
+                closestToFront = playerTypeNum
+            end
         end
     end
 
