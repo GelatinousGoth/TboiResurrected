@@ -231,6 +231,7 @@ function mod:NewProjectile(projectile)
     local saveData = loadModData()
     if mod.sd.trailSelected == selection.enemy then if projectile:ToTear() then return end end
     if mod.sd.trailSelected == selection.off then return end
+    if projectile.SpawnerEntity:ToFamiliar() then return end -- familars dont get trails because they work weird 
     if projectile:ToProjectile() and projectile.Velocity:Length() < VEC_LENGTH_MIN then return end
     if projectile:ToTear() and projectile.SpawnerEntity:ToPlayer() and projectile.SpawnerEntity:ToPlayer().ShotSpeed < SHOT_SPEED_MIN then return end
     if projectile.SpawnerEntity then
@@ -302,8 +303,8 @@ mod:AddCallback(ModCallbacks.MC_POST_TEAR_INIT, mod.NewProjectile)
 
 ---@param trail EntityEffect
 function mod:TrailUpdate(trail)
+    local saveData = loadModData()
     local data = trail:GetData()
-    if mod.sd.trailSelected == selection.enemy then if projectile:ToTear() then return end end
     if mod.sd.trailSelected == selection.off then return end
 
     if data.B_ParentProj then

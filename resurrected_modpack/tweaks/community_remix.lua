@@ -121,7 +121,7 @@ TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_RENDER_CHARACTER_SELECT_PORTRA
 	isrendermodsprite = tostring(CharacterMenu.GetSelectedCharacterPlayerType())
 end)
 
-TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_MAIN_MENU_RENDER, CallbackPriority.LATE, function()
+TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_MAIN_MENU_RENDER, CallbackPriority.IMPORTANT, function()
 	isaacheadsprite:Update()
 	diffShadowOverlay:Update()
 	winStreakOverlay:Update()

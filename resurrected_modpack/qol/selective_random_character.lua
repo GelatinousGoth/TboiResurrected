@@ -161,7 +161,7 @@ local sfx = SFXManager()
 local wasOnCharMenu = false
 mod:AddCallback(ModCallbacks.MC_MAIN_MENU_RENDER, function(_)
 
-    local shouldPaperShow = CharacterMenu.GetCharacterPortraitSprite():GetAnimation() == "00_Random"
+    local shouldPaperShow = CharacterMenu.GetSelectedCharacterID() == 0
     local isOnCharMenu = MenuManager.GetActiveMenu() == MainMenuType.CHARACTER
     if isOnCharMenu then
         if Input.IsButtonTriggered(Keyboard.KEY_G, 0) or Input.IsButtonTriggered(RSTICK_PRESS, 1) then
