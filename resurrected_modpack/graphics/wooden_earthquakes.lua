@@ -19,9 +19,7 @@ mod:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, function (_, effect)
         spr:ReplaceSpritesheet(0, path .. "arcade.png", true)
 
     elseif stage == (LevelStage.STAGE1_1 or LevelStage.STAGE1_2) then
-        if stageType == StageType.STAGETYPE_ORIGINAL then
-            spr:ReplaceSpritesheet(0,path .. "basement.png", true)
-        elseif stageType == StageType.STAGETYPE_WOTL then
+        if stageType == StageType.STAGETYPE_WOTL then
             spr:ReplaceSpritesheet(0,path .. "cellar.png", true)
         elseif stageType == StageType.STAGETYPE_AFTERBIRTH then
             spr:ReplaceSpritesheet(0,path .. "ardent.png", true)
