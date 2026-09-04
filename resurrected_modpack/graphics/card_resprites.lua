@@ -11,6 +11,7 @@ local FloopedCreatureCardBack = Isaac.GetEntitySubTypeByName("FloopedCreatureCar
 local GoldCardBack = Isaac.GetEntitySubTypeByName("GoldCardBack")
 local StoneSlabCardBack = Isaac.GetEntitySubTypeByName("StoneSlabCardBack")
 local ExpressoCardBack = Isaac.GetEntitySubTypeByName("ExpressoCardBack")
+local LuckyDuckBack = Isaac.GetEntitySubTypeByName("LuckyDuckBack")
 
 ---@type table<integer, string>
 local cardFronts = {}
@@ -28,6 +29,7 @@ cardBacks[FiendFolio.ITEM.CARD.GROTTO_BEAST] = FloopedCreatureCardBack
 cardBacks[FiendFolio.ITEM.CARD.KING_OF_DIAMONDS] = GoldCardBack
 cardBacks[FiendFolio.ITEM.CARD.REVERSE_KING_OF_PENTACLES] = StoneSlabCardBack
 cardBacks[FiendFolio.ITEM.CARD.YELLOW_CAR] = ExpressoCardBack
+cardBacks[FiendFolio.ITEM.CARD.LUCKY_DUCK] = LuckyDuckBack
 
     cardFronts[FiendFolio.ITEM.CARD.GLASS_AZURITE_SPINDOWN] = "gfx/alt_fiend_folio_cards.png"
 cardFronts[FiendFolio.ITEM.CARD.THREE_OF_HEARTS] = "gfx/alt_fiend_folio_cards.png"
@@ -44,6 +46,7 @@ cardFronts[FiendFolio.ITEM.CARD.GROTTO_BEAST] = "gfx/alt_fiend_folio_cards.png"
 cardFronts[FiendFolio.ITEM.CARD.KING_OF_CLUBS] = "gfx/alt_fiend_folio_cards.png"
 cardFronts[FiendFolio.ITEM.CARD.REVERSE_KING_OF_PENTACLES] = "gfx/alt_fiend_folio_cards_2.png"
 cardFronts[FiendFolio.ITEM.CARD.YELLOW_CAR] = "gfx/alt_fiend_folio_cards.png"
+cardFronts[FiendFolio.ITEM.CARD.LUCKY_DUCK] = "gfx/alt_fiend_folio_cards.png"
 end
 
     for card, cardBack in pairs(cardBacks) do
