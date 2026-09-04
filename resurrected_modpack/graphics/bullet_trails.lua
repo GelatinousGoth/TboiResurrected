@@ -229,8 +229,6 @@ end
 ---@param projectile EntityProjectile|EntityTear
 function mod:NewProjectile(projectile)
     local saveData = loadModData()
-    if mod.sd.trailSelected == selection.enemy then if projectile:ToTear() then return end end
-    if mod.sd.trailSelected == selection.off then return end
     if projectile.SpawnerEntity and projectile.SpawnerEntity:ToFamiliar() then return end -- familars dont get trails because they work weird 
     if projectile:ToProjectile() and projectile.Velocity:Length() < VEC_LENGTH_MIN then return end
     if projectile:ToTear() and projectile.SpawnerEntity:ToPlayer() and projectile.SpawnerEntity:ToPlayer().ShotSpeed < SHOT_SPEED_MIN then return end
@@ -298,14 +296,10 @@ function mod:NewProjectile(projectile)
     trail:GetData().B_ParentProj = projectile
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_PROJECTILE_INIT, mod.NewProjectile)
-mod:AddCallback(ModCallbacks.MC_POST_TEAR_INIT, mod.NewProjectile)
-
 ---@param trail EntityEffect
 function mod:TrailUpdate(trail)
     local saveData = loadModData()
     local data = trail:GetData()
-    if mod.sd.trailSelected == selection.off then return end
 
     if data.B_ParentProj then
         -- handle position and removing
@@ -403,8 +397,6 @@ function mod:TrailUpdate(trail)
         end
     end
 end
-
-mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.TrailUpdate, EffectVariant.SPRITE_TRAIL)
 
 --#endregion
 
@@ -684,31 +676,45 @@ mod:AddCallback(ModCallbacks.MC_POST_SAVESLOT_LOAD, function()
 
 end)
 
-local function createImGuiMenu()
+local function checkTrailSelected()
+        if mod.sd.trailSelected == selection.off then
+            mod:RemoveCallback(ModCallbacks.MC_POST_PROJECTILE_INIT, mod.NewProjectile)
+            mod:RemoveCallback(ModCallbacks.MC_POST_TEAR_INIT, mod.NewProjectile)
+            mod:RemoveCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.TrailUpdate)
+        elseif mod.sd.trailSelected == selection.player then
+            mod:AddCallback(ModCallbacks.MC_POST_PROJECTILE_INIT, mod.NewProjectile)
+            mod:AddCallback(ModCallbacks.MC_POST_TEAR_INIT, mod.NewProjectile)
+            mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.TrailUpdate, EffectVariant.SPRITE_TRAIL)
+        elseif mod.sd.trailSelected == selection.enemy then
+            mod:AddCallback(ModCallbacks.MC_POST_PROJECTILE_INIT, mod.NewProjectile)
+            mod:RemoveCallback(ModCallbacks.MC_POST_TEAR_INIT, mod.NewProjectile)
+            mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.TrailUpdate, EffectVariant.SPRITE_TRAIL)
+        end
+end
+
 ImGui.AddElement('TRMenu', 'bulletTrailsMenu', ImGuiElement.MenuItem, '\u{f064} Bullet Trails Options')
     ImGui.CreateWindow('bulletTrailsWindow', 'Bullet Trails Options')
     ImGui.LinkWindowToElement('bulletTrailsWindow', 'bulletTrailsMenu')
     ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.Text, "\n")
     ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.Separator)
 
-    do
-        local id = 'bulletTrailsSlider'
-        ImGui.AddCombobox('bulletTrailsWindow', id, '', function(i, v)
-            local sd = mod.sd
-            sd.trailSelected = i
-            sd.trailSelected = sd.trailSelected or i
-            mod:SaveData(json.encode(sd))
-        end, { "Players/Enemies", "Enemies", "Off"}, 2, true)
-        ImGui.AddCallback(id, ImGuiCallback.Render, function()
-            local sd = mod.sd
-                sd.trailSelected = sd.trailSelected or 2
-                ImGui.UpdateData(id, ImGuiData.Value, sd.trailSelected)
-            mod:SaveData(json.encode(sd))
-        end)
-        ImGui.SetHelpmarker(id, "Selects who the bullet trails affects. Off by default because it causes lags")
-        ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.Separator)
-    end
+    local sliderid = 'bulletTrailsSlider'
+    ImGui.AddCombobox('bulletTrailsWindow', sliderid, '', function(i, v)
+        local sad = mod.sd
+        sad.trailSelected = i
+        sad.trailSelected = sad.trailSelected or i
+        mod:SaveData(json.encode(sad))
+        checkTrailSelected()
+    end, { "Players/Enemies", "Enemies", "Off"}, 2, true)
+    ImGui.AddCallback(sliderid, ImGuiCallback.Render, function()
+        local sd = mod.sd
+            sd.trailSelected = sd.trailSelected or 2
+            ImGui.UpdateData(sliderid, ImGuiData.Value, sd.trailSelected)
+        mod:SaveData(json.encode(sd))
+    end)
+    ImGui.SetHelpmarker(sliderid, "Selects who the bullet trails affects. Off by default because it causes lags")
+    ImGui.AddElement('bulletTrailsWindow', '', ImGuiElement.Separator)
 
-end
-
-createImGuiMenu()
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
+    checkTrailSelected()
+end)
