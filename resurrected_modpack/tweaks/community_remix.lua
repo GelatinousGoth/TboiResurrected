@@ -121,7 +121,7 @@ TRCommunityRemix:AddCallback(ModCallbacks.MC_POST_RENDER_CHARACTER_SELECT_PORTRA
 	isrendermodsprite = tostring(CharacterMenu.GetSelectedCharacterPlayerType())
 end)
 
-TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_MAIN_MENU_RENDER, CallbackPriority.IMPORTANT, function()
+TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_MAIN_MENU_RENDER, CallbackPriority.LATE, function()
 	isaacheadsprite:Update()
 	diffShadowOverlay:Update()
 	winStreakOverlay:Update()
@@ -153,7 +153,9 @@ TRCommunityRemix:AddPriorityCallback(ModCallbacks.MC_MAIN_MENU_RENDER, CallbackP
 	local X = Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, charpage.Offset).X --39
 	local Y = Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, charpage.Offset).Y--15
 	diffOverlay:Render((Vector(X-39, Y-15)), Vector(0,0), Vector(0,0))
-	winStreakOverlay:Render(Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, charpage.Offset), Vector(0,0), Vector(0,0))
+	if CharacterMenu.GetSelectedCharacterID() ~= 0 then
+		winStreakOverlay:Render(Isaac.WorldToMenuPosition(MainMenuType.CHARACTER, charpage.Offset), Vector(0,0), Vector(0,0))
+	end
 	diffShadowOverlay:Render(Vector(0,0), Vector(0,0), Vector(0,0))
 	diffShadowOverlay.Scale = Vector(Isaac.GetScreenWidth()/480, Isaac.GetScreenHeight()/270)
 	if DifficultyManager.GetDifficultySelected().Name ~= "Insane" then return end
