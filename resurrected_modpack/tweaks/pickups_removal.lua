@@ -7,6 +7,8 @@ local CardsIWantToBlock = {}
 
 local availabilityConditions = {}
 
+local PickupsIWantToReplace = {}
+
 local function NotAvailable()
 	return false
 end
@@ -19,7 +21,6 @@ end
 
 local function InitRemovedPickupsList()
 	local blockedCards_FF = {}
-
 	if not FiendFolio then
 		goto END_OF_FF
 	end
@@ -70,6 +71,8 @@ local function InitRemovedPickupsList()
 		FiendFolio.ITEM.CARD.PLUS_3_FIREBALLS
 	}
 
+	PickupsIWantToReplace[FiendFolio.PICKUP.VARIANT.FOOLS_GOLD_HEART] = PickupVariant.PICKUP_HEART
+
 	::END_OF_FF::
 
 	table_append(CardsIWantToBlock, blockedCards_FF)
@@ -106,3 +109,13 @@ end
 function mod.post_enable_mod()
 	BlockCards()
 end
+
+---@param pickup EntityPickup
+local function morphPickup(_, pickup)
+  local newVariant = PickupsIWantToReplace[pickup.Variant]
+
+  if newVariant then
+    pickup:Morph(pickup.Type, newVariant, 0)
+  end
+end
+mod:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, morphPickup)
