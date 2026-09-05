@@ -412,7 +412,7 @@ end
 ---@param e EntityNPC
 TRCommunityRemix:AddCallback(ModCallbacks.MC_NPC_UPDATE, function(_, e)
 	if DifficultyManager.GetDifficulty() == "Insane" then
-		if e.SubType == 1 then return end -- no creep for gushers
+		if e.Variant == 1 then return end -- no creep for pacers
 		local d = e:GetData()
 		d.creep_cd = d.creep_cd or 0
 		if d.creep_cd > 0 then d.creep_cd = d.creep_cd - 1 end
