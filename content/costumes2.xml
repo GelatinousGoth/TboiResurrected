@@ -26,4 +26,27 @@
 	
     <costume anm2path="necromancercostumenewzz.anm2" priority="35" type="none" />
     <costume anm2path="necromancerbodypart.anm2"  priority="35" type="none" />
+	
+	<costume anm2path="080_The Pact.anm2" type="none" skinColor="1" overwriteColor="true" /> <!-- 80 -->
+	<costume anm2path="083_The Nail.anm2" type="none" skinColor="1" overwriteColor="true" /> <!-- 83 -->
+	<costume anm2path="118_Brimstone.anm2" type="none" priority="23" skinColor="1" overwriteColor="true" /> <!-- 118 -->
+	<costume anm2path="122_Whore of Babylon.anm2" type="none" priority="1" skinColor="1" overwriteColor="true" /> <!-- 122 -->
+	<costume anm2path="126_Razor Blade.anm2" type="none" skinColor="3" overwriteColor="true" /> <!-- 126 active -->
+	<costume anm2path="148_Infestation.anm2" type="none" skinColor="4" overwriteColor="true" /> <!-- 148 -->
+	<costume anm2path="159_Spirit of the night.anm2" type="none" skinColor="1" isFlying="true" overwriteColor="true" /> <!-- 159 -->
+	<costume anm2path="184_Holy Grail.anm2" type="none"  isFlying="true" hasSkinAlt="true" /> <!-- 184 -->
+	<costume anm2path="185_Dead Dove.anm2" type="none" skinColor="0" isFlying="true" overwriteColor="true" /> <!-- 185 -->
+	<costume anm2path="189_SMB Super Fan.anm2" type="none" skinColor="3" overwriteColor="true" /> <!-- 189 -->
+	<costume type="none" anm2path="222_antigravity.anm2" skinColor="2" overwriteColor="true" /> <!-- 222 -->
+	<costume type="none" anm2path="230_abaddon.anm2" skinColor="1" overwriteColor="true" /> <!-- 230 -->
+	<costume type="none" anm2path="231_balloftar.anm2" skinColor="1" overwriteColor="true" /> <!-- 231 -->
+	<costume type="none" anm2path="304_libra.anm2" hasSkinAlt="true" /> <!-- 304 -->
+	<costume type="none" anm2path="309_pisces.anm2"  hasSkinAlt="true" /> <!-- 309 -->
+	<costume type="none" anm2path="317_mysteriousliquid.anm2" hasSkinAlt="true" /> <!-- 317 -->
+	<costume type="none" anm2path="340_caffeine pill.anm2"  hasSkinAlt="true" /> <!-- 340 -->
+	<costume type="none" anm2path="399_MawOfTheVoid.anm2" skinColor="1" overwriteColor="true" priority="200" /> <!-- 399 -->
+	<costume type="none" anm2path="001x_2Spooky.anm2" priority="20" skinColor="3" overwriteColor="true" /> <!-- 554 -->
+	<costume type="none" anm2path="039x_Terra.anm2" priority="1" skinColor="5" overwriteColor="true" /> <!-- 592 -->
+	<costume type="none" anm2path="043x_Uranus.anm2" priority="1" skinColor="0" overwriteColor="true" /> <!-- 596 -->
+	<costume type="none" anm2path="044x_Neptunus.anm2" priority="22" skinColor="2" overwriteColor="true" /> <!-- 597 -->
 </costumes>

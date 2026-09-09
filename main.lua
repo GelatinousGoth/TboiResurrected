@@ -76,6 +76,7 @@ TR_Manager:LoadMod("resurrected_modpack.graphics.fireworks_for_good_items")
 TR_Manager:LoadMod("resurrected_modpack.graphics.wooden_earthquakes")
 TR_Manager:LoadMod("resurrected_modpack.graphics.pause_screen_stats")
 TR_Manager:LoadMod("resurrected_modpack.graphics.better_gold_coloring")
+TR_Manager:LoadMod("resurrected_modpack.graphics.consistent_tear_costumes")
 
 TR_Manager:LoadMod("resurrected_modpack.tweaks.lamb_intro_invincibility")
 TR_Manager:LoadMod("resurrected_modpack.tweaks.chests_before_mother")
