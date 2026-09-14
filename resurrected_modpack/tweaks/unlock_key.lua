@@ -10,8 +10,8 @@ mod.MoleVariant = Isaac.GetEntityVariantByName("Mr. Unlocki")
 mod.EnemyHPIncrease = 22.5 -- In percent
 
 -- Time limits (minutes * seconds * frames)
-mod.TimeLimit   = 1.25 * 60 * 30
-mod.TimeLimitXL = 2.5 * 60 * 30
+mod.TimeLimit   = 1.15 * 60 * 30
+mod.TimeLimitXL = 2.3 * 60 * 30
 
 
 
