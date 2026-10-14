@@ -7,4 +7,6 @@
 	
 	<track name="Unicorn Music" path="unicorn-music.ogg" loop="false" />
     <track name="Unicorn Music Extended" path="unicorn-music-extended.ogg" loop="true" />
+	
+	<track name="Anguish Alt" intro="anguishintrocalm.ogg" path="anguishcalm.ogg" layerintro="anguishintrofight.ogg" layer="anguishfight.ogg" loop="true" layermode="2" layerfadespeed="0.005" mul="1.0" layermul="1.0"/>
 </music>
