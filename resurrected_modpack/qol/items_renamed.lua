@@ -1,5 +1,5 @@
 local TR_Manager = require("resurrected_modpack.manager")
-
+ 
 local ModName = "Items Renamed"
 local mod = TR_Manager:RegisterMod(ModName, 1)
 local LockCallbackRecord = false
@@ -17,7 +17,6 @@ function mod:InitItemsRenamed()
         {CollectibleType.COLLECTIBLE_ISAACS_HEART, "Veyeral Heart", "Void Rains Upon It"},
         {CollectibleType.COLLECTIBLE_PYRO, "Arson", "99 Bombs"},
         {CollectibleType.COLLECTIBLE_HOT_BOMBS, "Flare Bombs", "Incendiary Blast +5 Bombs"},
-        {CollectibleType.COLLECTIBLE_ALMOND_MILK, "Almond Water", "Backroom Beverage"},
         {CollectibleType.COLLECTIBLE_PSY_FLY, "Grey Matter", "Cerebral Discharge"},
 		{CollectibleType.COLLECTIBLE_SMALL_ROCK, "Small Rock", "Dmg Up? I can't remember"},
 		{CollectibleType.COLLECTIBLE_BRITTLE_BONES, "Vitamin Deficiency", "Brittle Bones..."},
