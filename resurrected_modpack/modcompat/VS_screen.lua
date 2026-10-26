@@ -66,11 +66,13 @@ end
 
 local function onPostModLoad()
     local reworkedPortraits = {
-        ["gfx/ui/boss/portrait_102.1_bluebaby.png"] = true
+        ["gfx/ui/boss/portrait_102.1_bluebaby.png"] = true,
+		["gfx/ui/boss/portrait_99.0_gurdyjr.png"] = true
     }
 
     local reworkedNames = {
-        ["gfx/ui/boss/bossname_102.1_bluebaby.png"] = true
+        ["gfx/ui/boss/bossname_102.1_bluebaby.png"] = true,
+		["gfx/ui/boss/bossname_99.0_gurdyjr.png"] = true
     }
 
     if not ReworkedFoes then
