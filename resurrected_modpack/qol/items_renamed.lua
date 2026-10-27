@@ -49,8 +49,13 @@ function mod:InitItemsRenamed()
 			{FiendFolio.ITEM.COLLECTIBLE.ONION_DISC, "Malformed Onion", "Tears Up, Trial Onions?"},
 			{FiendFolio.ITEM.COLLECTIBLE.ANARCHISTS_EASY_BAKE, "Knock-Off Easy-Bake", "Summon Bombs, Kids Edition!"},
 			{FiendFolio.ITEM.COLLECTIBLE.DEVILSKNIFE, "Devil's Knife", "The World Revolving"},
-			{FiendFolio.ITEM.COLLECTIBLE.KALU, "Trauma Dog", "Oh the Horror..."},		
-			{FiendFolio.ITEM.COLLECTIBLE.KALUS_HEAD, "Severed Dog Head", "Horrifying Visage"},				
+			{FiendFolio.ITEM.COLLECTIBLE.KALU, "Trauma Dog", "Dog-Eat-Dog World"},		
+			{FiendFolio.ITEM.COLLECTIBLE.KALUS_HEAD, "Man's Best Friend", "Horrifying Visage"},	
+            {FiendFolio.ITEM.COLLECTIBLE.KALUS_TAIL, "Writhing Tail", "They Love Chasing It"},
+            {FiendFolio.ITEM.COLLECTIBLE.KALUS_EYE, "All-Seeing Eye", "Tears Up, Seeing Ghosts"},
+            {FiendFolio.ITEM.COLLECTIBLE.KALUS_WICKED_PAW, "Wicked Paw", "Malignant Converter"},
+            {FiendFolio.ITEM.COLLECTIBLE.KALUS_HARVESTED_NOSE, "Snout of the Harvester", "Sniffing out Treasure!"},
+            {FiendFolio.ITEM.COLLECTIBLE.KALUS_HEART, "Still-Beating Heart", "Power of Rot"},
         }
         for _, itemInfo in ipairs(ffItems) do
             table.insert(items, itemInfo)
@@ -77,6 +82,8 @@ function mod:InitItemsRenamed()
 			{FiendFolio.ITEM.TRINKET.BERRY_PENNY, "Wildberry", "Better Out than In"},
 			{FiendFolio.ITEM.TRINKET.MAP_PENNY, "Cardboard Penny", "It's scribbled on..."},
 			{FiendFolio.ITEM.TRINKET.DADS_LOST_PENNY, "Dad's Lost Coin 2", "I Forgot This..."},
+			{FiendFolio.ITEM.TRINKET.KALUS_TONGUE, "Salivary Gland", "Ritual Feasting"},
+			{FiendFolio.ITEM.TRINKET.KALUS_CLAW, "Dog Claw", "Needs to be Trimmed"},
         }
         for _, trinketInfo in ipairs(ffTrinkets) do
             table.insert(trinkets, trinketInfo)
