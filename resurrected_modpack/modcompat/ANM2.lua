@@ -22,6 +22,7 @@ local validSpritesSheets = {
     ["gfx/bosses/afterbirthplus/deliriumforms/afterbirth/thestain.png"] = true,
     ["gfx/bosses/afterbirthplus/deliriumforms/afterbirthplus/boss_sistersvis.png"] = true,
 	["gfx/bosses/afterbirthplus/deliriumforms/afterbirthplus/boss_ragmega.png"] = true,
+	["gfx/bosses/afterbirthplus/deliriumforms/rebirth/91_megagurdy.png"] = true,
     ["gfx/bosses/afterbirthplus/deliriumforms/classic/boss_035_chad.png"] = true,
     ["gfx/bosses/afterbirthplus/deliriumforms/classic/boss_051_gish.png"] = true,
     ["gfx/bosses/afterbirthplus/deliriumforms/classic/boss_062_scolex.png"] = true,
@@ -42,7 +43,8 @@ local validSpritesSheets = {
 	["gfx/bosses/classic/boss_057_maskofinfamy_yellow.png"] = true,
     ["gfx/bosses/classic/miniboss_09_pride.png"] = true,
     ["gfx/bosses/classic/miniboss_10_superpride.png"] = true,
-    ["gfx/bosses/rebirth/megafred.png"] = true,
+    ["gfx/bosses/rebirth/91_megagurdy.png"] = true,
+    ["gfx/bosses/rebirth/megafred.png"] = true,	
 	["gfx/monsters/rebirth/monster_230_camillojr.png"] = true,
 	["gfx/monsters/rebirth/monster_230_camillojr_champion.png"] = true,
 	["gfx/monsters/afterbirth/278.000_blackglobin.png"] = true,
@@ -184,7 +186,7 @@ local function OnPostModLoad()
         ["gfx/401.000_thestain.anm2"] = {anm2 = true},
         ["gfx/403.000_theforsaken.anm"] = {anm2 = true},
 		["gfx/097.000_mask of infamy.anm"] = {anm2 = true},
-
+        ["gfx/266.000_mega gurdy.anm"] = {anm2 = true},
         ["gfx/062.001_scolex.anm2"] = {anm2 = false},
         ["gfx/265.001_sistersvis.anm2"] = {anm2 = false},
 
