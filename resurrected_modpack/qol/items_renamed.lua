@@ -49,6 +49,7 @@ function mod:InitItemsRenamed()
 			{FiendFolio.ITEM.COLLECTIBLE.ONION_DISC, "Malformed Onion", "Tears Up, Trial Onions?"},
 			{FiendFolio.ITEM.COLLECTIBLE.ANARCHISTS_EASY_BAKE, "Knock-Off Easy-Bake", "Summon Bombs, Kids Edition!"},
 			{FiendFolio.ITEM.COLLECTIBLE.DEVILSKNIFE, "Devil's Knife", "The World Revolving"},
+			{FiendFolio.ITEM.COLLECTIBLE.BOTTLE_CAP, "Bottle Cap", "Fiend a penny"},
 			{FiendFolio.ITEM.COLLECTIBLE.KALU, "Trauma Dog", "Dog-Eat-Dog World"},		
 			{FiendFolio.ITEM.COLLECTIBLE.KALUS_HEAD, "Man's Best Friend", "Horrifying Visage"},	
             {FiendFolio.ITEM.COLLECTIBLE.KALUS_TAIL, "Writhing Tail", "They Love Chasing It"},

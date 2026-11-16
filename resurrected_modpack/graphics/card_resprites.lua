@@ -11,7 +11,8 @@ local FloopedCreatureCardBack = Isaac.GetEntitySubTypeByName("FloopedCreatureCar
 local GoldCardBack = Isaac.GetEntitySubTypeByName("GoldCardBack")
 local StoneSlabCardBack = Isaac.GetEntitySubTypeByName("StoneSlabCardBack")
 local ExpressoCardBack = Isaac.GetEntitySubTypeByName("ExpressoCardBack")
-local LuckyDuckBack = Isaac.GetEntitySubTypeByName("LuckyDuckBack")
+local LuckyDuckBack = Isaac.GetEntitySubTypeByName("LuckyDuckCardBack")
+local PushPopBack = Isaac.GetEntitySubTypeByName("PushPopCardBack")
 
 ---@type table<integer, string>
 local cardFronts = {}
@@ -30,6 +31,7 @@ cardBacks[FiendFolio.ITEM.CARD.KING_OF_DIAMONDS] = GoldCardBack
 cardBacks[FiendFolio.ITEM.CARD.REVERSE_KING_OF_PENTACLES] = StoneSlabCardBack
 cardBacks[FiendFolio.ITEM.CARD.YELLOW_CAR] = ExpressoCardBack
 cardBacks[FiendFolio.ITEM.CARD.LUCKY_DUCK] = LuckyDuckBack
+cardBacks[FiendFolio.ITEM.CARD.HORSE_PUSHPOP] = PushPopBack
 
     cardFronts[FiendFolio.ITEM.CARD.GLASS_AZURITE_SPINDOWN] = "gfx/alt_fiend_folio_cards.png"
 cardFronts[FiendFolio.ITEM.CARD.THREE_OF_HEARTS] = "gfx/alt_fiend_folio_cards.png"
