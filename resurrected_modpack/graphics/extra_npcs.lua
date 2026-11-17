@@ -61,6 +61,7 @@ ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Co
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Common 19", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Common 19", "Common", false)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Common 20", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Common 20", "Common", false)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Common 21", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Common 21", "Common", false)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Common 22", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Common 22", "Common", false)
 
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies.anm2", "Uncommon 1", "gfx/rare shopkeeps/sitting_buddies.anm2", "Nickel Uncommon 1", "Uncommon", false)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies.anm2", "Uncommon 2", "gfx/rare shopkeeps/sitting_buddies.anm2", "Nickel Uncommon 2", "Uncommon", false)
@@ -83,6 +84,7 @@ ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Un
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Uncommon 22", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Uncommon 22", "Uncommon", false)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Uncommon 23", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Uncommon 23", "Uncommon", false)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Uncommon 24", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Uncommon 24", "Uncommon", false)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Uncommon 25", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Uncommon 25", "Uncommon", false)
 
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies.anm2", "Rare 1", "gfx/rare shopkeeps/sitting_buddies.anm2", "Nickel Rare 1", "Rare", false)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies.anm2", "Rare 2", "gfx/rare shopkeeps/sitting_buddies.anm2", "Nickel Rare 2", "Rare", false)
@@ -100,6 +102,11 @@ ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Ra
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Rare 14", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Rare 14", "Rare", false)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Rare 15", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Rare 15", "Rare", false)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Rare 16", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Rare 16", "Rare", false)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Rare 17", "", "", "Rare", false)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Rare 18", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Rare 18", "Rare", false)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Rare 19", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "Nickel Rare 19", "Rare", false)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "You Shouldn't Be There", "gfx/rare shopkeeps/sitting_buddies_pt2.anm2", "You Shouldn't Be There 2", "Rare", false)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies_pt3.anm2", "Rare 20", "gfx/rare shopkeeps/sitting_buddies_pt3.anm2", "Nickel Rare 20", "Rare", false)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/sitting_buddies.anm2", "Hey Lois", "", "", "Rare", false)
 
 
@@ -131,6 +138,10 @@ ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Co
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Common 24", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Common 24", "Common", true)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Common 25", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Common 25", "Common", true)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Common 26", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Common 26", "Common", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Common 27", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Common 27", "Common", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Common 28", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Common 28", "Common", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Common 29", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Common 29", "Common", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Common 30", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Common 30", "Common", true)
 
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies.anm2", "Uncommon 1", "gfx/rare shopkeeps/hanging_buddies.anm2", "Nickel Uncommon 1", "Uncommon", true)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies.anm2", "Uncommon 2", "gfx/rare shopkeeps/hanging_buddies.anm2", "Nickel Uncommon 2", "Uncommon", true)
@@ -141,6 +152,11 @@ ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies.anm2", "Uncomm
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies.anm2", "Uncommon 7", "gfx/rare shopkeeps/hanging_buddies.anm2", "Nickel Uncommon 7", "Uncommon", true)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Uncommon 8", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Uncommon 8", "Uncommon", true)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Uncommon 9", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Uncommon 9", "Uncommon", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Uncommon 10", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Uncommon 10", "Uncommon", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Uncommon 11", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Uncommon 11", "Uncommon", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Uncommon 12", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Uncommon 12", "Uncommon", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Uncommon 13", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Uncommon 13", "Uncommon", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Uncommon 14", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Uncommon 14", "Uncommon", true)
 
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies.anm2", "Rare 1", "gfx/rare shopkeeps/hanging_buddies.anm2", "Nickel Rare 1", "Rare", true)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies.anm2", "Rare 2", "gfx/rare shopkeeps/hanging_buddies.anm2", "Nickel Rare 2", "Rare", true)
@@ -154,6 +170,9 @@ ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Ra
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Rare 9", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Rare 9", "Rare", true)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Rare 10", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Rare 10", "Rare", true)
 ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Rare 11", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Rare 11", "Rare", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Rare 12", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Rare 12", "Rare", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Rare 13", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Rare 13", "Rare", true)
+ENShopkeeps:AddShopkeepToPool("gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Rare 14", "gfx/rare shopkeeps/hanging_buddies_pt2.anm2", "Nickel Rare 14", "Rare", true)
 
 
 if (ENShopkeepsDebug) then
@@ -178,63 +197,63 @@ function ENShopkeeps:ShopkeeperUpdate(npc)
 	end
 end
 function ENShopkeeps:RandomiseShopkeep(npc)
-	local sprite = npc:GetSprite()
-	local secret = false
-	if (npc.Variant == 1 or npc.Variant == 4) then 		secret = true 		end	
-	local special = false
-	if (npc.Variant == 3 or npc.Variant == 4) then		special = true		end
-	
-	
-	math.randomseed(npc.InitSeed)
-	local shopkeepRNG = math.random(0, shopkeepRarities["totalWeights"] * 100)
-	if (ENShopkeepsDebug) then Isaac.ConsoleOutput("rng: " .. (shopkeepRNG / 100.0)) end
-	
-	for i = 1, #revRarities do
-		local rarityName = revRarities[i]
-		local rarityWeight = shopkeepRarities[rarityName] * 100
-		
-		if (shopkeepRNG < rarityWeight) then		
-			if (ENShopkeepsDebug) then print(" ... " .. rarityName) end
-			
-			local rarityVariants
-			if (secret) then 
-				rarityVariants = secretShopkeepVariants[rarityName]
-			else
-				rarityVariants = shopkeepVariants[rarityName]
-			end
-			
-			ENShopkeeps:RandomiseShopkeepVarient(npc, sprite, secret, special, rarityVariants)
-			
-			break;
-		else
-			shopkeepRNG = shopkeepRNG - rarityWeight
-		end
-	end
+    local sprite = npc:GetSprite()
+    local secret = false
+    if (npc.Variant == 1 or npc.Variant == 4) then         secret = true         end    
+    local special = false
+    if (npc.Variant == 3 or npc.Variant == 4) then        special = true        end
+    
+    
+    
+    local shopkeepRNG = npc.InitSeed % (shopkeepRarities["totalWeights"] * 100)
+    if (ENShopkeepsDebug) then Isaac.ConsoleOutput("rng: " .. (shopkeepRNG / 100.0)) end
+    
+    for i = 1, #revRarities do
+        local rarityName = revRarities[i]
+        local rarityWeight = shopkeepRarities[rarityName] * 100
+        
+        if (shopkeepRNG < rarityWeight) then        
+            if (ENShopkeepsDebug) then print(" ... " .. rarityName) end
+            
+            local rarityVariants
+            if (secret) then 
+                rarityVariants = secretShopkeepVariants[rarityName]
+            else
+                rarityVariants = shopkeepVariants[rarityName]
+            end
+            
+            ENShopkeeps:RandomiseShopkeepVarient(npc, sprite, secret, special, rarityVariants, 0)
+            
+            break;
+        else
+            shopkeepRNG = shopkeepRNG - rarityWeight
+        end
+    end
 end
-function ENShopkeeps:RandomiseShopkeepVarient(npc, sprite, secret, special , rarityVariants)
+function ENShopkeeps:RandomiseShopkeepVarient(npc, sprite, secret, special , rarityVariants, seedModifier)
 
-	local shopkeepVariantRNG = math.random(1, #rarityVariants) --+ 1
-	local shopkeepData = rarityVariants[shopkeepVariantRNG]
-	npc.SubType = shopkeepVariantRNG
-	
-	if (ENShopkeepsDebug) then Isaac.ConsoleOutput("subtype: " .. shopkeepVariantRNG) end
-	
-	if (shopkeepData == nil) then 
-		print("ShopkeepData is nil for some reason")
-	else
-		if (special) then
-			if (shopkeepData[3] == "") then 
-				if (ENShopkeepsDebug) then print("Shopkeep lacks a nickel varient, rerolling...") end
-				ENShopkeeps:RandomiseShopkeepVarient(npc, sprite, secret, special, rarityVariants)
-			else
-				sprite:Load(shopkeepData[3], true)
-				sprite:Play(shopkeepData[4], true)
-			end
-		else
-			sprite:Load(shopkeepData[1], true)
-			sprite:Play(shopkeepData[2], true)
-		end
-	end
+    local shopkeepVariantRNG = ((npc.InitSeed + seedModifier) % #rarityVariants) + 1
+    local shopkeepData = rarityVariants[shopkeepVariantRNG]
+    npc.SubType = shopkeepVariantRNG
+    
+    if (ENShopkeepsDebug) then print("subtype: " .. shopkeepVariantRNG) end
+    
+    if (shopkeepData == nil) then 
+        print("ShopkeepData is nil for some reason")
+    else
+        if (special) then
+            if (shopkeepData[3] == "") then 
+                if (ENShopkeepsDebug) then print("Shopkeep lacks a nickel varient, rerolling...") end
+                ENShopkeeps:RandomiseShopkeepVarient(npc, sprite, secret, special, rarityVariants, seedModifier + 1)
+            else
+                sprite:Load(shopkeepData[3], true)
+                sprite:Play(shopkeepData[4], true)
+            end
+        else
+            sprite:Load(shopkeepData[1], true)
+            sprite:Play(shopkeepData[2], true)
+        end
+    end
 end
 
 ENShopkeeps:AddCallback( ModCallbacks.MC_NPC_UPDATE, ENShopkeeps.ShopkeeperUpdate, 17);
