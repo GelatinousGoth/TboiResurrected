@@ -85,6 +85,11 @@ function mod:InitItemsRenamed()
 			{FiendFolio.ITEM.TRINKET.DADS_LOST_PENNY, "Dad's Lost Coin 2", "I Forgot This..."},
 			{FiendFolio.ITEM.TRINKET.KALUS_TONGUE, "Salivary Gland", "Ritual Feasting"},
 			{FiendFolio.ITEM.TRINKET.KALUS_CLAW, "Dog Claw", "Needs to be Trimmed"},
+			{FiendFolio.ITEM.TRINKET.REDHAND, "Red Hand", "Caught You!"},
+			{FiendFolio.ITEM.TRINKET.JUSTICE_AXE, "Old Hammer", "Dusty..."},
+			{FiendFolio.ITEM.TRINKET.STACK_OF_PENNY, "Stack of Pennies", "Wealth in numbers"},
+			{FiendFolio.ITEM.TRINKET.SPADE_OF_CLUBS, "No. of Suits", "Bombs are, Key are; Bombs."},
+			{FiendFolio.ITEM.TRINKET.SHARPSHOOTING_PENNY, "Illegal Penny", "Wealth of lawbreaking"},
         }
         for _, trinketInfo in ipairs(ffTrinkets) do
             table.insert(trinkets, trinketInfo)
