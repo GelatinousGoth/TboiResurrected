@@ -4,15 +4,11 @@ local game = Game()
 local sound = SFXManager()
 local music = MusicManager()
 
--- Gravestones --
+-- Gravestones
 ---@param entity EntityEffect
-function mod:gravePostSlot(entity)
-
+function mod:GraveEntity(entity)
     -- Removes gravestones if necessary
-    if not self.ConfigSpecial["grave"] then
-        entity:Remove()
-        return
-    end
+    if not self:HasConfig("grave_objects") then entity:Remove() return end
 
     -- Spawn gravestone
     if entity:GetData().ec_gravestone_spawn == nil then
@@ -65,12 +61,25 @@ function mod:gravePostSlot(entity)
         dust:ToEffect():Update()
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_SLOT_UPDATE, mod.gravePostSlot, 90)
+mod:AddCallback(ModCallbacks.MC_POST_SLOT_UPDATE, mod.GraveEntity, 90)
 
 -- Grave Dirt
 ---@param effect EntityEffect
-function mod:graveDirt(effect)
+function mod:GraveDirt(effect)
     local level = game:GetLevel()
+
+    -- Death music
+    if self:HasConfig("grave_ambience") then
+        if effect.FrameCount > 0
+        and level:GetStage() == LevelStage.STAGE6
+        and self:CheckRoom(RoomType.ROOM_DEFAULT, "Grave")
+        and music:GetCurrentMusicID() ~= Music.MUSIC_GAME_OVER then
+            music:Play(Music.MUSIC_GAME_OVER, Options.MusicVolume)
+        end
+    end
+
+    -- Old chest
+    if not self:HasConfig("grave_oldchest") then return end
 
     -- Start dirt patch
     if effect:GetSprite():IsFinished("Idle") and not effect:GetData().ec_dirt_dug then
@@ -92,13 +101,5 @@ function mod:graveDirt(effect)
             end
         end
     end
-
-    -- Death music
-    if effect.FrameCount > 0
-    and level:GetStage() == LevelStage.STAGE6
-    and self.checkRoom(RoomType.ROOM_DEFAULT, "Grave")
-    and music:GetCurrentMusicID() ~= Music.MUSIC_GAME_OVER then
-        music:Play(Music.MUSIC_GAME_OVER, Options.MusicVolume)
-    end
 end
-mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.graveDirt, EffectVariant.DIRT_PATCH)
+mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.GraveDirt, EffectVariant.DIRT_PATCH)

@@ -1,80 +1,136 @@
 --[[ Compatibility ]]--
 local mod = EnhancementChamber
+local game = Game()
 
 -- Repentogon
 if not REPENTOGON then
 	mod:Log("Repentogon not found!")
 end
 
-local function ModSetup()
-	-- External Item Descriptions
-	if EID and mod.ConfigSpecial["sacrifice"] then
-		EID.Config["DisplaySacrificeInfo"] = nil
+-- External Item Description
+if EID and mod:HasConfig("sacrifice_altars") then
+	EID.Config["DisplaySacrificeInfo"] = nil
+end
+
+-- Mod Config Menu
+if ModConfigMenu then
+
+	local function AddConfigSetting(category, cfg)
+		ModConfigMenu.AddSetting(mod.Name, category, {
+			Type = ModConfigMenu.OptionType.BOOLEAN,
+
+			CurrentSetting = function()
+				return cfg.bool
+			end,
+
+			Display = function()
+				local enabled = cfg.bool
+				return cfg.name .. ": " .. (enabled and "Enabled" or "Disabled")
+			end,
+
+			OnChange = function(b)
+				cfg.bool = b
+				mod:saveAll()
+			end,
+
+			Info = { cfg.desc }
+		})
 	end
 
-	-- Mod Config Menu
-	if ModConfigMenu then
-		local csOrder = {"ambush", "blackmarket", "boss", "bossrush", "curse",
-						 "dice", "error", "grave", "library", "sacrifice", "shop"}
+	-- Special Rooms
+	do
+		local category = "Rooms"
+		local modules = {}
 
-		local cmOrder = {"itemSound", "redHeartDamage"}
-
-		-- Special Rooms
-		ModConfigMenu.AddSpace(mod.Name, "Rooms")
-		ModConfigMenu.AddTitle(mod.Name, "Rooms", "Special Rooms")
-		ModConfigMenu.AddSpace(mod.Name, "Rooms")
-
-		for _, entry in ipairs(csOrder) do
-			ModConfigMenu.AddSetting(mod.Name, "Rooms", {
-				Type = ModConfigMenu.OptionType.BOOLEAN,
-
-				CurrentSetting = function()
-					return mod.ConfigSpecial[entry]
-				end,
-
-				Display = function()
-					local enabled = mod.ConfigSpecial[entry]
-					return entry:gsub("^%l", string.upper) .. ": " ..
-						(enabled and "Enabled" or "Disabled")
-				end,
-
-				OnChange = function(b)
-					mod.ConfigSpecial[entry] = b
-					mod:saveAll()
-				end,
-
-				Info = { mod.ConfigDescSpecial[entry] }
-			})
+		-- Group config by module
+		for _, cfg in pairs(mod.Config) do
+			if cfg.module ~= "Miscellaneous" then
+				modules[cfg.module] = modules[cfg.module] or {}
+				table.insert(modules[cfg.module], cfg)
+			end
 		end
 
-		-- Miscellaneous
-		ModConfigMenu.AddSpace(mod.Name, "Others")
-		ModConfigMenu.AddTitle(mod.Name, "Others", "Miscellaneous")
-		ModConfigMenu.AddSpace(mod.Name, "Others")
+		-- Sort modules alphabetically
+		local moduleNames = {}
 
-		for _, entry in ipairs(cmOrder) do
-			ModConfigMenu.AddSetting(mod.Name, "Others", {
-				Type = ModConfigMenu.OptionType.BOOLEAN,
+		for moduleName in pairs(modules) do
+			table.insert(moduleNames, moduleName)
+		end
 
-				CurrentSetting = function()
-					return mod.ConfigMisc[entry]
-				end,
+		table.sort(moduleNames)
 
-				Display = function()
-					local enabled = mod.ConfigMisc[entry]
-					return entry:gsub("^%l", string.upper) .. ": " ..
-						(enabled and "Enabled" or "Disabled")
-				end,
+		-- Modules
+		for _, moduleName in ipairs(moduleNames) do
+			local configs = modules[moduleName]
 
-				OnChange = function(b)
-					mod.ConfigMisc[entry] = b
-					mod:saveAll()
-				end,
+			-- Separate module
+			ModConfigMenu.AddSpace(mod.Name, category)
+			ModConfigMenu.AddTitle(mod.Name, category, moduleName)
 
-				Info = { mod.ConfigDescMisc[entry] }
-			})
+			-- Sort configs alphabetically
+			table.sort(configs, function(a, b)
+				return a.name < b.name
+			end)
+
+			for _, cfg in ipairs(configs) do
+				AddConfigSetting(category, cfg)
+			end
+		end
+	end
+
+	-- Miscellaneous
+	do
+		local category = "Misc"
+
+		ModConfigMenu.AddSpace(mod.Name, category)
+		ModConfigMenu.AddTitle(mod.Name, category, "Miscellaneous")
+		ModConfigMenu.AddSpace(mod.Name, category)
+
+		local configs = {}
+
+		for _, cfg in pairs(mod.Config) do
+			if cfg.module == "Miscellaneous" then
+				table.insert(configs, cfg)
+			end
+		end
+
+		-- Sort miscellaneous settings alphabetically
+		table.sort(configs, function(a, b)
+			return a.name < b.name
+		end)
+
+		for _, cfg in ipairs(configs) do
+			AddConfigSetting(category, cfg)
 		end
 	end
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, ModSetup)
+--[[ Fix Ultra Hard challenge ]]--
+
+-- Ultra Hard variable
+local ultraHard = false
+
+-- Fix crash related to Double Trouble in Ultra Hard Challenge
+function mod:bossPreUltraHard()
+	---@diagnostic disable-next-line
+    if ChampionOverhaul then return end
+
+    if game.Challenge ~= Challenge.CHALLENGE_ULTRA_HARD then return end
+
+    ultraHard = true
+    game.Challenge = Challenge.CHALLENGE_NULL
+end
+mod:AddCallback(ModCallbacks.MC_PRE_LEVEL_INIT, mod.bossPreUltraHard)
+
+-- Adds missing curses to Ultra Hard challenge
+function mod:bossPostUltraHard()
+    if not ultraHard then return end
+
+    local level = game:GetLevel()
+    ultraHard = false
+    ---@type integer
+    local flags = 1 << 2 | 1 << 5 | 1 << 6
+    level:AddCurse(flags, true)
+    game.Challenge = Challenge.CHALLENGE_ULTRA_HARD
+end
+mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.bossPostUltraHard)

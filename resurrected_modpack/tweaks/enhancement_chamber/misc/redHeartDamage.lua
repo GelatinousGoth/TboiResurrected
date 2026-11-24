@@ -6,22 +6,25 @@ local DAMAGEFLAG_MAUSOLEUM_DOOR = 301998208
 
 ---@param player EntityPlayer
 ---@param amount integer
----@param flags DamageFlag
+---@param flags integer | DamageFlag
 ---@param source EntityRef
 ---@param countdown integer
-function mod.RedHeartDamage(player, amount, flags, source, countdown)
+function EnhancementChamber:RedHeartDamage(player, amount, flags, source, countdown)
     ---@type integer
-    flags = flags | DamageFlag.DAMAGE_RED_HEARTS
-    player:TakeDamage(amount, flags, source, countdown)
+    local newFlags = flags | DamageFlag.DAMAGE_RED_HEARTS
+    player:TakeDamage(amount, newFlags, source, countdown)
 end
 
 -- Mausoleum Door: Pre Red Heart Damage
 ---@param player EntityPlayer
 ---@param flags DamageFlag
 function mod:MausoleumDoorPreDamage(player, _, flags)
+    if not self:HasConfig("mausoleumdoor_redheartdamage") then return end -- config
     local room = game:GetLevel():GetCurrentRoom()
 
     -- Detects mausoleum door
+    player:AddTrinketEffect(TrinketType.TRINKET_CROW_HEART, false, 5)
+
     if room:GetType() == RoomType.ROOM_BOSS
     and flags == DAMAGEFLAG_MAUSOLEUM_DOOR
     and not player:HasTrinket(TrinketType.TRINKET_CROW_HEART) then

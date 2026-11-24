@@ -14,42 +14,48 @@ end
 
 -- Shops can replace sacks with trinkets
 ---@param pickup EntityPickup
-function mod:shopPickupInit(pickup)
+function mod:ShopTrinketSpawn(pickup)
+    if not self:HasConfig("shop_selltrinket") then return end -- config
+
     local room = game:GetLevel():GetCurrentRoom()
-    if room:GetType() == RoomType.ROOM_SHOP and pickup:IsShopItem() and pickup.Variant ~= 100 then
-        local chance = room:GetDecorationSeed() % 2
-        local replacePickup = false
-        -- 50% Chance to replace grab bag with trinket --
-        if chance == 0 and pickup.Variant == 69 then
-            replacePickup = true
-        end
-        -- Replaces pickup with trinket --
-        if replacePickup then
-            local price = pickup.Price
-            local shopId = pickup.ShopItemId
-            pickup:Remove()
-            local trinket = Isaac.Spawn(5, 350, 0, pickup.Position, Vector.Zero, nil):ToPickup()
-            trinket.Price = price
-            trinket.ShopItemId = shopId
-            trinket.AutoUpdatePrice = true
-        end
+    if room:GetType() ~= RoomType.ROOM_SHOP or not pickup:IsShopItem() or pickup.Variant == 100 then
+        return
+    end
+
+    local chance = room:GetDecorationSeed() % 2
+    local replacePickup = false
+    -- 50% Chance to replace grab bag with trinket --
+    if chance == 0 and pickup.Variant == 69 then
+        replacePickup = true
+    end
+    -- Checks if current shop is the junk variant --
+    local isJunkShop = self:CheckRoom(RoomType.ROOM_SHOP, "Junk")
+    -- Replaces pickup with trinket --
+    if replacePickup or isJunkShop then
+        local price = pickup.Price
+        local shopId = pickup.ShopItemId
+        pickup:Remove()
+        local trinket = Isaac.Spawn(5, 350, 0, pickup.Position, Vector.Zero, nil):ToPickup()
+        trinket.Price = price
+        trinket.ShopItemId = shopId
+        trinket.AutoUpdatePrice = true
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, mod.shopPickupInit)
+mod:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, mod.ShopTrinketSpawn)
 
 -- Trinket Price
 ---@param pickupVar integer
 ---@param pickupSub integer
 ---@param price integer
-function mod:shopPickupPrice(pickupVar, pickupSub, _, price)
+function mod:ShopTrinketPrice(pickupVar, pickupSub, _, price)
     local room = game:GetLevel():GetCurrentRoom()
-    if room:GetType() == RoomType.ROOM_SHOP then
-        if pickupVar == 350 then
-            local scale = 1.4
-            if isGoldenTrinket(pickupSub) then scale = 2.0 end -- Golden trinket
-            local value = math.floor(price * scale)
-            return value
-        end
+    if room:GetType() ~= RoomType.ROOM_SHOP then return end
+
+    if pickupVar == 350 then
+        local scale = 1.4
+        if isGoldenTrinket(pickupSub) then scale = 2.0 end -- Golden trinket
+        local value = math.floor(price * scale)
+        return value
     end
 end
-mod:AddCallback(ModCallbacks.MC_GET_SHOP_ITEM_PRICE, mod.shopPickupPrice)
+mod:AddCallback(ModCallbacks.MC_GET_SHOP_ITEM_PRICE, mod.ShopTrinketPrice)

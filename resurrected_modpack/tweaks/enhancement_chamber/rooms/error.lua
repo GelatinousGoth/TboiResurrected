@@ -3,32 +3,29 @@ local mod = EnhancementChamber
 local game = Game()
 local music = MusicManager()
 
--- Glitched Items --
-function mod:errorPostRoom()
-    local room = game:GetLevel():GetCurrentRoom()
+-- Error Jingle
+function mod:ErrorJingle(room)
+    if not self:HasConfig("error_jingle") then return end -- config
+    if room:GetType() ~= RoomType.ROOM_ERROR then return end
 
-    -- Checks error room
-    if room:GetType() == RoomType.ROOM_ERROR and room:IsFirstVisit() then
-
-        -- Glitch Item
-        local glitchUnlock = Isaac.GetPersistentGameData():Unlocked(Achievement.TMTRAINER)
-        if glitchUnlock then
-            local player = Isaac.GetPlayer(0)
-            if not player:HasCollectible(CollectibleType.COLLECTIBLE_TMTRAINER, false) then
-                local currentMusic = music:GetCurrentMusicID()
-                player:AddCollectible(CollectibleType.COLLECTIBLE_TMTRAINER, 0, true, 0, 0)
-                player:UseActiveItem(CollectibleType.COLLECTIBLE_D6, false, false, true, false, -1)
-                player:RemoveCollectible(721, false, 0, true)
-                music:Play(currentMusic, Options.MusicVolume)
-                local effects = Isaac.FindByType(1000, 15, -1)
-                for i = 1, #effects do effects[i]:Remove() end
-            end
-        end
-
-        -- Jingle
-        local jingleChance = math.random(3)
-        local getJingle = Isaac.GetMusicIdByName("Error Room Entry (jingle) " .. tostring(jingleChance))
-        music:PlayJingle(getJingle, 150)
-    end
+    local jingleChance = math.random(3)
+    local getJingle = Isaac.GetMusicIdByName("Error Room Entry (jingle) " .. tostring(jingleChance))
+    music:PlayJingle(getJingle, 150)
 end
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.errorPostRoom)
+mod:AddCallback(ModCallbacks.MC_PRE_NEW_ROOM, mod.ErrorJingle)
+
+-- Error Item Pool
+---@param seed integer
+---@return integer?
+function mod:ErrorItemPool(_, _, seed)
+    if not self:HasConfig("error_itempool") then return end -- config
+
+    local room = game:GetRoom()
+    if room:GetType() ~= RoomType.ROOM_ERROR then return end
+
+    local glitchUnlock = Isaac.GetPersistentGameData():Unlocked(Achievement.TMTRAINER)
+    if not glitchUnlock then return end
+
+    return ProceduralItemManager.CreateProceduralItem(seed, 0)
+end
+mod:AddCallback(ModCallbacks.MC_PRE_GET_COLLECTIBLE, mod.ErrorItemPool)

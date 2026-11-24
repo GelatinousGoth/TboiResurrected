@@ -4,22 +4,20 @@ local game = Game()
 local sound = SFXManager()
 
 -- Changes choir sound when getting an item
----@param id SoundEffect
-function mod:ItemSound(id)
-    local room = game:GetLevel():GetCurrentRoom()
+---@return boolean?
+function mod:GetItemSound()
+    local room = game:GetRoom()
+    if not self.Config.item_sounds.bool then return end
+    if room:GetType() == RoomType.ROOM_BOSS or room:GetType() == RoomType.ROOM_ANGEL then return end
 
-    if id == SoundEffect.SOUND_CHOIR_UNLOCK then
+    local itemSound = {
+        [RoomType.ROOM_CURSE] = SoundEffect.SOUND_DEVILROOM_DEAL,
+        [RoomType.ROOM_PLANETARIUM] = SoundEffect.SOUND_POWERUP1
+    }
 
-        if room:GetType() == RoomType.ROOM_CURSE then
-            sound:Play(SoundEffect.SOUND_DEVILROOM_DEAL) -- Evil sound
-            return false
-        elseif room:GetType() == RoomType.ROOM_PLANETARIUM then
-            sound:Play(SoundEffect.SOUND_POWERUP1) -- Treasure sound
-            return false
-        elseif room:GetType() ~= RoomType.ROOM_BOSS and room:GetType() ~= RoomType.ROOM_ANGEL then
-            sound:Play(SoundEffect.SOUND_POWERUP2) -- Boss sound
-            return false
-        end
-    end
+    local snd = itemSound[room:GetType()] or SoundEffect.SOUND_POWERUP2
+    sound:Play(snd)
+
+    return false
 end
-mod:AddCallback(ModCallbacks.MC_PRE_SFX_PLAY, mod.ItemSound, SoundEffect.SOUND_CHOIR_UNLOCK)
+mod:AddCallback(ModCallbacks.MC_PRE_SFX_PLAY, mod.GetItemSound, SoundEffect.SOUND_CHOIR_UNLOCK)

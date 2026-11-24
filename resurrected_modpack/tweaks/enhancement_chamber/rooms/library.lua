@@ -3,7 +3,7 @@ local mod = EnhancementChamber
 local game = Game()
 
 -- Library requirement
-local function tryGenerateLibrary()
+local function TryGenerateLibrary()
     local level = game:GetLevel()
 
     -- Avoids multiple libraries in the floor
@@ -45,8 +45,10 @@ local function tryGenerateLibrary()
 end
 
 -- Library Generation
-function mod:libraryPostLevel()
-    local player = Isaac.GetPlayer(0)
+function mod:LibraryBookGeneration()
+    if not self:HasConfig("library_generation") then return end -- config
+
+    local player = Isaac.GetPlayer()
     local bookCount = 0
     local primaryItem = Isaac.GetItemConfig():GetCollectible(player:GetActiveItem(ActiveSlot.SLOT_PRIMARY))
     local secondaryItem = Isaac.GetItemConfig():GetCollectible(player:GetActiveItem(ActiveSlot.SLOT_SECONDARY))
@@ -57,23 +59,22 @@ function mod:libraryPostLevel()
     if bookCount > 0 then
         local rng = self.RNG
         local chance = rng:RandomInt(5 - bookCount) -- 25-33% chance
-        if chance == 0 then tryGenerateLibrary() end
+        if chance == 0 then TryGenerateLibrary() end
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.libraryPostLevel)
+mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.LibraryBookGeneration)
 
 -- One Item Choice
-function mod:libraryPostRoom()
-    local room = game:GetLevel():GetCurrentRoom()
+function mod:LibraryItemChoice()
+    if not self:HasConfig("library_choice") then return end -- config
 
-    -- Checks library room
-    if room:GetType() == RoomType.ROOM_LIBRARY and room:IsFirstVisit() then
+    local room = game:GetRoom()
+    if room:GetType() ~= RoomType.ROOM_LIBRARY or not room:IsFirstVisit() then return end
 
-        -- Choice items
-        local items = Isaac.FindByType(5, 100)
-        for i = 1, #items do
-            if not items[i]:ToPickup():IsShopItem() then items[i]:ToPickup().OptionsPickupIndex = 1 end
-        end
+    -- Choice items
+    local items = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE)
+    for i = 1, #items do
+        if not items[i]:ToPickup():IsShopItem() then items[i]:ToPickup().OptionsPickupIndex = 1 end
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.libraryPostRoom)
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.LibraryItemChoice)

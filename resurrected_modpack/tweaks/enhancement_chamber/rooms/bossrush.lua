@@ -3,30 +3,41 @@ local mod = EnhancementChamber
 local game = Game()
 local sound = SFXManager()
 local music = MusicManager()
-local bossrush_item = false
+
+local BOSSRUSH_PENTAGRAM_ID = 1662
 
 -- Wave Amount
-function mod:bossrushGameStarted()
+function mod:BossRushWaveAmount()
+    if not self:HasConfig("bossrush_pentagram") then return end -- config
+
     Ambush.SetMaxBossrushWaves(10)
 end
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.bossrushGameStarted)
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.BossRushWaveAmount)
 
 -- Pentagram Animation
 ---@param effect EntityEffect
-function mod:bossrushPostEffect(effect)
+function mod:BossRushPentagram(effect)
     local room = game:GetLevel():GetCurrentRoom()
     local player = game:GetNearestPlayer(effect.Position)
     local distance = (player.Position - effect.Position):Length()
 
     -- Spawn
-    if effect.Variant ~= 1661 then return end
+    if effect.Variant ~= BOSSRUSH_PENTAGRAM_ID then return end
     if effect:GetData().ec_bossrush_wave == nil then effect:GetData().ec_bossrush_wave = 0 end
 
     -- Start Event
-    if effect:GetSprite():IsFinished("Idle") and distance < 15 then
-        effect:GetSprite():Play("Start")
-        music:Fadeout()
-        music:PlayJingle(Music.MUSIC_JINGLE_CHALLENGE_ENTRY, 300)
+    if effect:GetSprite():IsFinished("Idle") then
+        if distance > 15 then
+            -- Particles
+            local pos = Vector(effect.Position.X + 30 * math.random() - 15, effect.Position.Y)
+            local velocity = Vector(0, -3.5)
+            local eff = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.EMBER_PARTICLE, 0, pos, velocity, effect)
+            eff:GetSprite().Color = Color(0.5,0,0,1)
+        else
+            effect:GetSprite():Play("Start")
+            music:Fadeout()
+            music:PlayJingle(Music.MUSIC_JINGLE_CHALLENGE_ENTRY, 300)
+        end
     end
 
     -- Prevents players from getting away
@@ -46,22 +57,26 @@ function mod:bossrushPostEffect(effect)
         effect:GetData().ec_bossrush_wave = 1
         effect:GetSprite():Play("Wave" .. effect:GetData().ec_bossrush_wave, true)
         Ambush:StartChallenge()
+
+        -- Unlock items
+        local items = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE)
+        for i = 1, #items do
+            items[i]:GetSprite().Color = Color(1,1,1,1)
+            items[i]:ToPickup().Wait = 0
+
+            local pickup = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF01, 0, items[i].Position, Vector.Zero, items[i])
+            pickup:SetColor(Color(1.0, 0.5, 0.5, 1.0, 0.0, 0.0, 0.0), 1, 0, false, false)
+        end
+
+        -- Remove marks
+        local marks = Isaac.FindByType(EntityType.ENTITY_EFFECT, EffectVariant.REDEMPTION)
+        for i = 1, #marks do marks[i]:Remove() end
     end
 
-    -- Waves --
+    -- Waves
     local wave = Ambush:GetCurrentWave()
     if wave then
         if wave ~= effect:GetData().ec_bossrush_wave and effect:GetData().ec_bossrush_wave <= 10 then
-
-            if bossrush_item then
-                bossrush_item = false
-                local items = Isaac.FindByType(5, 100)
-                for i = 1, #items do
-                    local pickup = Isaac.Spawn(1000, 15, 0, items[i].Position, Vector.Zero, items[i])
-                    pickup:SetColor(Color(1.0, 0.5, 0.5, 1.0, 0.0, 0.0, 0.0), 1, 0, false, false)
-                end
-            end
-
             sound:Play(SoundEffect.SOUND_SATAN_BLAST, 1, 2, false, 1)
             effect:GetData().ec_bossrush_wave = wave
             effect:GetSprite():Play("Wave" .. effect:GetData().ec_bossrush_wave)
@@ -72,41 +87,65 @@ function mod:bossrushPostEffect(effect)
         end
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.bossrushPostEffect, 1661)
-
--- Avoids items
----@param pickup EntityPickup
-function mod:bossrushPostPickup(pickup)
-    if bossrush_item then
-        pickup:SetColor(Color(1.0, 0.5, 0.5, 1.0, 0.0, 0.0, 0.0), 1, 0, false, false)
-        pickup.Wait = 1
-    end
-end
-mod:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, mod.bossrushPostPickup, PickupVariant.PICKUP_COLLECTIBLE)
-mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, mod.bossrushPostPickup, PickupVariant.PICKUP_COLLECTIBLE)
+mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.BossRushPentagram, BOSSRUSH_PENTAGRAM_ID)
 
 -- Creates Pentagram
-function mod:bossrushPostRoom()
-    local room = game:GetLevel():GetCurrentRoom()
+function mod:BossRushSpawnPentagram()
+    if not self:HasConfig("bossrush_pentagram") then return end -- config
 
-    -- Item effect
-    if bossrush_item then bossrush_item = false end
+    local room = game:GetRoom()
+    if room:GetType() ~= RoomType.ROOM_BOSSRUSH then return end
 
-    -- Checks boss rush
-    if room:GetType() == RoomType.ROOM_BOSSRUSH then
+    -- Removes grid around effect
+    self:ClearEffectPos(160)
 
-        -- Removes grid around effect
-        self.clearEffectPos(160)
-        -- Spawn effect
-        local effect = Isaac.Spawn(1000, 1661, 0, room:GetCenterPos(), Vector.Zero, nil)
-        if not room:IsAmbushDone() then
-            bossrush_item = true
-            effect:GetSprite():Play("Idle")
-        else
-            effect:GetData().ec_bossrush_wave = 11
-            effect:GetSprite():Play("Finished")
+    -- Spawn effect
+    local effect = Isaac.Spawn(1000, BOSSRUSH_PENTAGRAM_ID, 0, room:GetCenterPos(), Vector.Zero, nil)
+    if not room:IsAmbushDone() then
+        effect:GetSprite():Play("Idle")
+        local items = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE)
+        for i = 1, #items do
+            -- Item color
+            items[i]:GetSprite().Color = Color(0.35, 0.35, 0.35, 1)
+            items[i]:ToPickup().Wait = 9999999999999
+            -- Mark
+            local eff = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.REDEMPTION, 0, items[i].Position, Vector.Zero, items[i])
+            eff:ToEffect():FollowParent(items[i])
+            eff:GetSprite().Color = Color(1,0,0,1)
         end
-        effect.DepthOffset = -200
+    else
+        effect:GetData().ec_bossrush_wave = 11
+        effect:GetSprite():Play("Finished")
     end
+    effect.DepthOffset = -200
 end
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.bossrushPostRoom)
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.BossRushSpawnPentagram)
+
+---@param pos Vector
+function mod:BossRushReward(_, pos)
+    if not self:HasConfig("bossrush_pentagram") then return end -- config
+
+    local room = game:GetRoom()
+    if room:GetType() ~= RoomType.ROOM_BOSSRUSH then return end
+
+    local center = room:GetCenterPos()
+
+    -- Spawn item in the center
+    Isaac.CreateTimer(function()
+        local closest
+        local closestDistance = math.huge
+
+        for _, item in ipairs(Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE)) do
+            local distance = item.Position:DistanceSquared(pos)
+            if distance < closestDistance then
+                closest = item
+                closestDistance = distance
+            end
+        end
+
+        if closest then
+            closest.Position = center
+        end
+    end, 1, 1, false)
+end
+mod:AddCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, mod.BossRushReward)
