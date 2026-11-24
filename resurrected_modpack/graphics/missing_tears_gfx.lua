@@ -37,7 +37,7 @@ local VARIANT_BLUE = TearVariant.BLUE
 local VARIANT_BLOOD = TearVariant.BLOOD
 --local VARIANT_TOOTH = TearVariant.TOOTH
 local VARIANT_METALLIC = TearVariant.METALLIC
-local VARIANT_FIRE = TearVariant.FIRE_MIND
+local VARIANT_FIRE = TearVariant.FIRE
 local VARIANT_DARK = TearVariant.DARK_MATTER
 local VARIANT_MYSTERIOUS = TearVariant.MYSTERIOUS
 --local VARIANT_SCHYTHE = TearVariant.SCHYTHE
@@ -80,7 +80,7 @@ local FLAG_EXPLOSIVO
 local FLAG_PIERCING
 local FLAG_SPECTRAL
 
-if REPENTANCE then	
+if REPENTANCE then
 	FLAG_BOOMERANG = 1<<8
 	FLAG_BURN = 1<<22
 	FLAG_FEAR = 1<<20
@@ -726,6 +726,9 @@ function mod:main(tear)
       frame = tearsFrameDelay[1][seed][1]
       tearsFrameDelay[1][seed][3] = false
       PlayCustom(tearSpr, TEAR_ANM_NAME, frame % 24, TEAR_POINTER)
+      if player:HasCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND) then
+                  tearSpr.Rotation = (tear.Velocity + Vector(0, tear.FallingSpeed)):GetAngleDegrees()
+      end
       if isVariant(TEAR_VARIANT, {TEAR_FACING_MULTID, TEAR_CUPID_MULTID}) then
         if tear.StickTarget == nil then
           tearSpr.Rotation = (tear.Velocity + Vector(0, tear.FallingSpeed)):GetAngleDegrees()
@@ -749,7 +752,7 @@ function mod:main(tear)
           sprite:LoadGraphics()
           trail:SetColor(multiD_Fade((tear.FrameCount % 24), {0, 0, 0, 1.0, 190, 190, 190}, {0, 0, 0, 1.0, 14, 14, 14}, TEAR_COLOR.A), 0, 0, false, false)
         end
-      end      
+      end
     end
   end
   
