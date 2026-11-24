@@ -1,6 +1,25 @@
 local TR_Manager = require("resurrected_modpack.manager")
 
-local mod = TR_Manager:RegisterMod("Refined Chargebar", 1)
+RefinedChargebar = TR_Manager:RegisterMod("Refined Chargebar", 1)
+
+local mod = RefinedChargebar
+
+
+--the following function is meant to be used by mods if you want your active item to not render the special shits of the chargebar. the check is done every frame so enable/disable the chargebar at your will.
+---@param status boolean
+---@param itemID CollectibleType
+function RefinedChargebar:SetRChargebarStatus(itemID, status)
+    RefinedChargebar[itemID] = status
+end
+
+---@param itemID CollectibleType
+function RefinedChargebar:GetRChargebarStatus(itemID)
+    if RefinedChargebar[itemID] ~= nil then
+        return RefinedChargebar[itemID]
+    else
+        return true --returns true for every item not identified
+    end
+end
 
 local chargeBarSprite = Sprite()
 chargeBarSprite:Load("gfx/ui/ui_chargebar.anm2", true)
@@ -284,6 +303,8 @@ mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.hudRender)
 ---@param scale number
 ---@param chargeBarOffset Vector
 function mod:chargeBarEdits(player, slot, offset, alpha, scale, chargeBarOffset)
+    local itemID = player:GetActiveItem(slot)
+    if not RefinedChargebar:GetRChargebarStatus(itemID) then return end
     chargeBarFix(player, slot, offset, alpha, scale, chargeBarOffset)
     readyToFireUp2(player, slot, offset, alpha, scale, chargeBarOffset)
     readyToFireUpOvercharge(player, slot, offset, alpha, scale, chargeBarOffset)
