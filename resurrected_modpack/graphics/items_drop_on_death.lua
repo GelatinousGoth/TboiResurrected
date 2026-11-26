@@ -44,7 +44,9 @@ local function getPlayerCollectibles(player)
     for id = 1, 9999 do
         local config = itemConfig:GetCollectible(id)
         if config and config.ID and player:HasCollectible(config.ID) then
+        if config.Type == ItemType.ITEM_FAMILIAR then goto continue end
             table.insert(items, config.ID)
+        ::continue::
         end
     end
     return items
