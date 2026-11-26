@@ -63,6 +63,33 @@ function mod:InitItemsRenamed()
         end
     end
 
+    if Epiphany then
+        local epiphanyItems = {
+            --{Epiphany.Item.ITEM_NAME.ID, "Example name", "Example description"}
+        }
+        for _, itemInfo in ipairs(epiphanyItems) do
+            table.insert(items, itemInfo)
+        end
+    end
+
+    if REVEL then
+        local reveltems = {
+            --{REVEL.ITEM.ITEM_NAME, "Example name", "Example description"}
+        }
+        for _, itemInfo in ipairs(reveltems) do
+            table.insert(items, itemInfo)
+        end
+    end
+
+    if Retribution then
+        local retItems = {
+            --{Retribution.Item.ITEM_NAME, "Example name", "Example description"}
+        }
+        for _, itemInfo in ipairs(retItems) do
+            table.insert(items, itemInfo)
+        end
+    end
+
     trinkets = {
         {TrinketType.TRINKET_NOSE_GOBLIN, "Mucus", "Nose Goblin"},
 		{TrinketType.TRINKET_MOMS_PEARL, "Clam Pearl", "It Emanates Purity"},
@@ -96,6 +123,33 @@ function mod:InitItemsRenamed()
         end
     end
 
+    if Epiphany then
+        local epiphanyTrinkets = {
+            --{Epiphany.Trinket.TRINKET_NAME.ID, "Example name", "Example description"}
+        }
+        for _, trinketInfo in ipairs(epiphanyTrinkets) do
+            table.insert(trinkets, trinketInfo)
+        end
+    end
+
+    if REVEL then
+        local revelTrinkets = {
+            --{REVEL.ITEM.TRINKET_NAME, "Example name", "Example description"}
+        }
+        for _, trinketInfo in ipairs(revelTrinkets) do
+            table.insert(trinkets, trinketInfo)
+        end
+    end
+
+    if Retribution then
+        local retTrinkets = {
+            --{Retribution.Trinket.TRINKET_NAME, "Example name", "Example description"}
+        }
+        for _, trinketInfo in ipairs(retTrinkets) do
+            table.insert(trinkets, trinketInfo)
+        end
+    end
+
     -- Cards
 
     cards = {
@@ -121,6 +175,35 @@ function mod:InitItemsRenamed()
         end
     end
 
+    if Epiphany then
+        local epiphanyCards = {
+            --{Epiphany.Card.TRINKET_NAME.ID, "Example name", "Example description"}
+        }
+        for _, cardInfo in ipairs(epiphanyCards) do
+            table.insert(cards, cardInfo)
+        end
+    end
+
+    if REVEL then
+        local revelCards = {
+            --{REVEL.POCKETITEM.CARD_NAME, "Example name", "Example description"}
+        }
+        for _, cardInfo in ipairs(revelCards) do
+            table.insert(cards, cardInfo)
+        end
+    end
+
+    if Retribution then
+        local retCards = {
+            --{Retribution.Card.CARD_NAME, "Example name", "Example description"}
+            --{Retribution.Rune.RUNE_NAME, "Example name", "Example description"}
+        }
+        for _, cardInfo in ipairs(retCards) do
+            table.insert(cards, cardInfo)
+        end
+    end
+
+
     for _, cardInfo in ipairs(cards) do
         local cardConfig = itemConfig:GetCard(cardInfo[1])
         cardConfig.Name = cardInfo[2]
@@ -140,6 +223,33 @@ function mod:InitItemsRenamed()
         }
 
         for _, pillInfo in ipairs(ffPills) do
+            table.insert(pills, pillInfo)
+        end
+    end
+
+    if Epiphany then
+        local epiphanyPills = {
+            -- epiphany doesn't add any pills, remove this if you see fit
+        }
+        for _, pillInfo in ipairs(epiphanyPills) do
+            table.insert(pills, pillInfo)
+        end
+    end
+
+    if REVEL then
+        local revelPills = {
+            -- revelations doesn't add any pills, remove this if you see fit
+        }
+        for _, pillInfo in ipairs(revelPills) do
+            table.insert(pills, pillInfo)
+        end
+    end
+
+    if Retribution then
+        local retPills = {
+            --{Retribution.Pill.PILL_NAME, "Example name", "Example description"}
+        }
+        for _, pillInfo in ipairs(retPills) do
             table.insert(pills, pillInfo)
         end
     end
@@ -232,9 +342,16 @@ mod:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, mod.InitItemsRenamed)
 -- Adds pills defined in pills
 function mod:EIDPillNames()
     if not EID then return end
+    local pillsEID = {}
     for _, pill in ipairs(pills) do
-        local EIDdescription = EID:getDescriptionObj(5, PickupVariant.PICKUP_PILL, pill[1]).Description
-        EID:addPill(pill[1], EIDdescription, pill[2], "en_us")
+        table.insert(pillsEID, Game():GetItemPool():GetPillColor(pill[1]))
+        print(Game():GetItemPool():GetPillColor(pill[1]))
+    end
+    for _, pill in ipairs(pills) do
+        for _, pillEffect in ipairs(pillsEID) do
+            local EIDdescription = EID:getDescriptionObj(5, PickupVariant.PICKUP_PILL, pillEffect).Description
+            EID:addPill(pill[1], EIDdescription, pill[2], "en_us")
+        end
     end
 end
 mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED , mod.EIDPillNames)
