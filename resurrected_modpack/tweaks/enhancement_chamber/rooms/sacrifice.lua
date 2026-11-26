@@ -102,3 +102,12 @@ function mod:sacrificeRoomClear(gridIndex, roomShape)
 end
 end
 mod:AddCallback(ModCallbacks.MC_PRE_SPAWN_CLEAN_AWARD, mod.sacrificeRoomClear)
+
+
+function mod:sacRoomSoftlock()
+    if didRunThisFloor == true then return end
+    if Game():GetRoom():GetType() == RoomType.ROOM_SACRIFICE then
+        sacrificeCondition(true)
+    end
+end
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.sacRoomSoftlock)
