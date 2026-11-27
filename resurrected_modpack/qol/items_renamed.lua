@@ -65,7 +65,8 @@ function mod:InitItemsRenamed()
 
     if Epiphany then
         local epiphanyItems = {
-            --{Epiphany.Item.ITEM_NAME.ID, "Example name", "Example description"}
+            {Epiphany.Item.ZIP_BOMBS.ID, "Sequence Bombs", "Recursive blast +5 bombs"},
+            {Epiphany.Item.PLASMA_BALL.ID, "Tesla Coil", "Conductive tears"},
         }
         for _, itemInfo in ipairs(epiphanyItems) do
             table.insert(items, itemInfo)
@@ -344,14 +345,19 @@ function mod:EIDPillNames()
     if not EID then return end
     local pillsEID = {}
     for _, pill in ipairs(pills) do
-        table.insert(pillsEID, Game():GetItemPool():GetPillColor(pill[1]))
-        print(Game():GetItemPool():GetPillColor(pill[1]))
+        local pillID = Game():GetItemPool():GetPillColor(pill[1])
+        if pillID == -1 then goto continue end
+        if pillID == 14 then goto continue end
+        local addPill = {
+            {pillID, pill[1], pill[2]}
+        }
+        table.insert(pillsEID, addPill[1])
+        ::continue::
     end
-    for _, pill in ipairs(pills) do
-        for _, pillEffect in ipairs(pillsEID) do
-            local EIDdescription = EID:getDescriptionObj(5, PickupVariant.PICKUP_PILL, pillEffect).Description
-            EID:addPill(pill[1], EIDdescription, pill[2], "en_us")
-        end
+
+    for _, pill in ipairs(pillsEID) do
+        local EIDdescription = EID:getDescriptionObj(5, PickupVariant.PICKUP_PILL, pill[1]).Description
+        EID:addPill(pill[2], EIDdescription, pill[3], "en_us")
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED , mod.EIDPillNames)
+mod:AddPriorityCallback(ModCallbacks.MC_POST_GAME_STARTED, CallbackPriority.LATE, mod.EIDPillNames)
