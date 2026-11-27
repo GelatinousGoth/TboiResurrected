@@ -265,18 +265,18 @@ function mod:InitItemsRenamed()
     local pickup = EntityType.ENTITY_PICKUP
         -- Adds trinkets defined in trinkets
         for _, trinket in ipairs(trinkets) do
-            local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_TRINKET, trinket[1]).Description
+            local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_TRINKET, trinket[1], nil, false).Description
             EID:addTrinket(trinket[1], EIDdescription, trinket[2], "en_us")
         end
 
         -- Adds items defined in items
         for _, item in ipairs(items) do
-            local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_COLLECTIBLE, item[1]).Description
+            local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_COLLECTIBLE, item[1], nil, false).Description
             EID:addCollectible(item[1], EIDdescription, item[2], "en_us")
         end
         -- Adds cards defined in cards
         for _, card in ipairs(cards) do
-            local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_TAROTCARD, card[1]).Description
+            local EIDdescription = EID:getDescriptionObj(pickup, PickupVariant.PICKUP_TAROTCARD, card[1], nil, false).Description
             EID:addCard(card[1], EIDdescription, card[2], "en_us")
         end
     end
@@ -346,8 +346,8 @@ function mod:EIDPillNames()
     local pillsEID = {}
     for _, pill in ipairs(pills) do
         local pillID = Game():GetItemPool():GetPillColor(pill[1])
-        if pillID == -1 then goto continue end
-        if pillID == 14 then goto continue end
+        if pillID == -1 then goto continue end --not in the pill pool
+        if pillID == 14 then goto continue end --in the golden pill pool
         local addPill = {
             {pillID, pill[1], pill[2]}
         }
