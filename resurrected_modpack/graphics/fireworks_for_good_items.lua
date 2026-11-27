@@ -177,9 +177,12 @@ end
 -- mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.fireworksCounterTests)
 
 local LIFETIME = 2 --secs
+local shouldFire = {}
 
 function mod:yayFireworks(pickup)
   if Game():GetLevel():GetCurrentRoomDesc().VisitedCount > 1 then return end
+  local ptrHash = GetPtrHash(Game():GetLevel():GetCurrentRoomDesc())
+  if not shouldFire[ptrHash] then return end
     if pickup.Variant == PickupVariant.PICKUP_COLLECTIBLE then
         if pickup.FrameCount >= LIFETIME*30 then return end
         if pickup.SubType <= 0 then return end
@@ -221,7 +224,6 @@ function mod:yayFireworksUpdate(fireworks)
   if settings.experimental or settings.singular then
     if fireworks.SubType == 1 and fireworks.SpawnerEntity ~= nil and fireworks.SpawnerEntity:GetData().FireworksForGoodItemsIsPedestalFirework == true then
       fireworks.SpawnerEntity:Remove()
-      print("firework 1")
       return
     end
   else
@@ -245,3 +247,17 @@ local sprite = effect:GetSprite()
 
 end
 mod:AddCallback(ModCallbacks.MC_PRE_EFFECT_UPDATE, mod.fireworkSoundCancel, EffectVariant.FIREWORKS)
+
+local timesRan = 0
+mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function(_)
+  local ptrHash = GetPtrHash(Game():GetLevel():GetCurrentRoomDesc())
+  shouldFire[ptrHash] = true
+  Isaac.CreateTimer(function ()
+    if timesRan == 0 then
+      timesRan = 1
+    else
+      shouldFire[ptrHash] = false
+      timesRan = 0
+    end
+  end, LIFETIME*30,2,true)
+end)
